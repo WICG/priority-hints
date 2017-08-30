@@ -40,6 +40,9 @@ want to avoid them interfering with e.g. loading of viewport images.
 medium/high priority, but developers may wish to load them all at low 
 priority. Similarly, developers may wish to load all first-party 
 resources that are critical with a high priority.
+* Single-page applications can kick off multiple API requests to
+bootstrap the user experience. Developers may wish to load critical 
+API requests at a high priority and have better control over scheduling priority for the rest.
 
 ### Signal a resource as non-critical
 Using `<link rel=preload>` in order to get the browser to early
