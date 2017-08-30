@@ -36,6 +36,10 @@ address that use-case.
 * Blocking scripts are often of high/medium priority (depends on their
   location in the page and other heuristics), yet sometimes developers
 want to avoid them interfering with e.g. loading of viewport images.
+* Third-party resources (e.g scripts from ads) are often loaded with 
+medium/high priority, but developers may wish to load them all at low 
+priority. Similarly, developers may wish to load all first-party 
+resources that are critical with a high priority.
 
 ### Signal a resource as non-critical
 Using `<link rel=preload>` in order to get the browser to early
