@@ -40,6 +40,11 @@ want to avoid them interfering with e.g. loading of viewport images.
 medium/high priority, but developers may wish to load them all at low 
 priority. Similarly, developers may wish to load all first-party 
 resources that are critical with a high priority.
+* Resources fetched as a result of user-interaction often have varying
+priorities. Developers may wish to load these with a much higher priority
+as they can anticipate better exactly what the user needs.
+
+
 
 ### Signal a resource as non-critical
 Using `<link rel=preload>` in order to get the browser to early
