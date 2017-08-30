@@ -1,4 +1,4 @@
-# Priority API
+# Resource Priorities
 
 Currently there is no way for web developers to tell the browser
 about the importance of the resources that they are loading. Browsers
