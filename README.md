@@ -71,6 +71,16 @@ their first buffer is often more important than their last. Developers
 can use the ability to reprioritize resources to reflect that when
 downloading such resources.
 
+### Downgrade priority of an iframe and its subresources
+When developers load a third party iframe, they may wish to make sure
+that it does not contend on bandwidth and/or CPU with the more important
+first party content of the page. Alternatively, they may wish to
+signal the browser that a certain third party iframe is as important as
+the main page content and should be given CPU and bandwidth resources
+accordingly.
+When such a signal is applied to an iframe, it should be equally applied
+to all the subresources that the iframe loads.
+
 ## Usage Examples
 
 TBD
