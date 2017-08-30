@@ -43,8 +43,9 @@ resources that are critical with a high priority.
 * Resources fetched as a result of user-interaction often have varying
 priorities. Developers may wish to load these with a much higher priority
 as they can anticipate better exactly what the user needs.
-
-
+* Single-page applications can kick off multiple API requests to
+bootstrap the user experience. Developers may wish to load critical 
+API requests at a high priority and have better control over scheduling priority for the rest.
 
 ### Signal a resource as non-critical
 Using `<link rel=preload>` in order to get the browser to early
@@ -79,6 +80,16 @@ resources that are parsed on-the-fly (most notably HTML and progressive images),
 their first buffer is often more important than their last. Developers
 can use the ability to reprioritize resources to reflect that when
 downloading such resources.
+
+### Downgrade priority of an iframe and its subresources
+When developers load a third party iframe, they may wish to make sure
+that it does not contend on bandwidth and/or CPU with the more important
+first party content of the page. Alternatively, they may wish to
+signal the browser that a certain third party iframe is as important as
+the main page content and should be given CPU and bandwidth resources
+accordingly.
+When such a signal is applied to an iframe, it should be equally applied
+to all the subresources that the iframe loads.
 
 ## Usage Examples
 
