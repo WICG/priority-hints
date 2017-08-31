@@ -91,3 +91,31 @@ to all the subresources that the iframe loads.
 ## Usage Examples
 
 TBD
+
+## Open questions
+
+**What form will this API take?**
+
+TBD. We are currently considering a declarative markup solution and an argument to `fetch()`.
+
+An early sketch for what a declarative solution could look like uses the notion of `fetch-class` groups:
+
+```html
+<img fetch-class="shop-branding" src="logo.png" higher-priority-than="shop-scripts" lower-priority-than="shop-item">
+
+<script fetch-class="shop-scripts" src="lazy-loader.js">
+
+<img fetch-class="shop-item" src="product-01.png">
+<img fetch-class="shop-item" src="product-02.png">
+```
+
+This is how we conceptually think about different resource types under the hood in browsers today.
+It may translate well to user-space where different types of content share similar properties.
+
+**Does there need to be a mechanism for limiting priorities per domain?**
+
+Scenario: Third-party iframes could mark all of their resources as the highest priority.
+This could negatively impact the performance of the top-level document or origin. 
+
+Possible solution: each individual origin could have a priority controller for its 
+connection(s) and an overall priority controller for the page load balancing them.
