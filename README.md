@@ -61,6 +61,9 @@ want to avoid them interfering with e.g. loading of viewport images.
 medium/high priority, but developers may wish to load them all at low 
 priority. Similarly, developers may wish to load all first-party 
 resources that are critical with a high priority.
+* Single-page applications can kick off multiple API requests to
+bootstrap the user experience. Developers may wish to load critical 
+API requests at a high priority and have better control over scheduling priority for the rest.
 
 ### Signal a resource as non-critical
 Using `<link rel=preload>` in order to get the browser to early
@@ -142,8 +145,15 @@ We propose to address the above use-cases using the following concepts:
 groups
    * This is necessary in order to be able to define two "levels" of
      resource importance between existing groups.
+   * This also adds a lot of complexity - what if the group definitions
+     as resource attributes don't match? If a group is declared to be
+fetched after a not-yet-discovered group, should the browser wait? How
+long?
    * TODO: Is this use case worth the extra complexity? Any examples
      where this is required?
+
+ is how we conceptually think about different resource types under the hood in browsers today.
+It may translate well to user-space where different types of content share similar properties.
 
 ## Usage Examples
 
@@ -168,3 +178,28 @@ experience.
   iframe and all its subresources.
 * TBD - what does the fetch API parameter look like?
 * TBD - how does explicit reprioritization look like?
+
+## Open questions
+
+**What final form will this API take?**
+
+### Alternative approach to the above proposal
+An early sketch for what a declarative solution could look like uses the notion of `fetch-class` groups:
+
+```html
+<img fetch-class="shop-branding" src="logo.png" higher-priority-than="shop-scripts" lower-priority-than="shop-item">
+
+<script fetch-class="shop-scripts" src="lazy-loader.js">
+
+<img fetch-class="shop-item" src="product-01.png">
+<img fetch-class="shop-item" src="product-02.png">
+```
+
+
+**Does there need to be a mechanism for limiting priorities per domain?**
+
+Scenario: Third-party iframes could mark all of their resources as the highest priority.
+This could negatively impact the performance of the top-level document or origin. 
+
+Possible solution: each individual origin could have a priority controller for its 
+connection(s) and an overall priority controller for the page load balancing them.
