@@ -1,20 +1,21 @@
 # Priority Hints
 
-The browser's resource loading process is a complex process in which it
-discovers resources and downloads them according to its heuristic
-priority for that resource. Often browsers also delay the sending of
-certain requests in order to avoid bandwidth contention of these
-resources with more critical ones, again based on heuristic "importance".
+The browser's resource loading process is a complex one. Browsers discover
+needed resources and download them according to their heuristic priority.
+Browsers may also use this heuristic resource priority to delay sending
+certain requests in order to avoid bandwidth contention of these resources
+with more critical ones.
 
-Currently there is no way for web developers to tell the browser
-about the importance of the resources that they are loading. Browsers
-make many assumptions on the importance of resources based on the
+Currently web developers have very little control over the heuristic
+importance of loaded resources, other than speeding up their discovery
+using `<link rel=preload>`.
+Browsers make many assumptions on the importance of resources based on the
 resource's type (AKA its request destination), and based on its location
 in the containing document.
 
 This document will detail use cases and an API/markup sketch that will
-provide developers with the required controls to indicate the browser
-with a resource's relative importance, and enable the browser to act on
+provide developers with the control to indicate a resource's
+relative importance to the browser, and enable the browser to act on
 those indications to modify the time it sends out the request and its
 HTTP/2 dependency/weight so that important resources are fetched and used
 earlier, in order to improve the user's experience.
@@ -39,7 +40,8 @@ The browser uses various heuristics in order to do the above, which are
 based on the type of resource, its location in the document and more.
 
 Occasionally, web developers are in a better position to know which
-resources are more impactful than others on their users' loading experience, and need a way to communicate that to the browser.
+resources are more impactful than others on their users' loading experience,
+and need a way to communicate that to the browser.
 
 A few examples:
 * Markup images are typically loaded with low/medium priority, but may
@@ -63,16 +65,20 @@ priority. Similarly, developers may wish to load all first-party
 resources that are critical with a high priority.
 * Single-page applications can kick off multiple API requests to
 bootstrap the user experience. Developers may wish to load critical 
-API requests at a high priority and have better control over scheduling priority for the rest.
+API requests at a high priority and have better control over scheduling
+priority for the rest.
 
 ### Signal a resource as non-critical
 Using `<link rel=preload>` in order to get the browser to early
-discover certain resources, especially in its header form,  means that the browser may discover these
-resources before other, more critical resources and send their request
-to the server first. That can result in loading regressions as the
-server may start sending those non-critical resources before other, more
+discover certain resources, especially in its header form,  means that the
+browser may discover these resources before other, more critical resources and
+send their request to the server first. That can result in loading regressions
+as the server may start sending those non-critical resources before other, more
 critical ones, which may fill up the TCP socket sending queues.
-While better transport protocols (e.g. QUIC) may address that at a lower layer for the single origin case, developers should be able to signal to the browser that a certain resource is not critical, and therefore should be queued until such resources are discovered.
+While better transport protocols (e.g. QUIC) may address that at a lower layer
+for the single origin case, developers should be able to signal to the browser
+that a certain resource is not critical, and therefore should be queued until
+such resources are discovered.
 Such marking as "non-critical" should be orthogonal to the signaling of
 the resource's "importance" (e.g. this could be applied to high priority
 resources that shouldn't contend with rendering-critical resources as
@@ -152,30 +158,29 @@ long?
    * TODO: Is this use case worth the extra complexity? Any examples
      where this is required?
 
- is how we conceptually think about different resource types under the hood in browsers today.
+This is how we conceptually think about different resource types under the hood in browsers today.
 It may translate well to user-space where different types of content share similar properties.
 
 ## Usage Examples
 
-* `<img src=foo group=visual>` - would signify that an img is to be loaded
-with relatively high priority as it's impacting the initial visual.
-* `<img src=foo before=visual>` - would signify that an img is to be loaded
-with higher priority than other visually impacting resources. (e.g.
-since it's a hero image, more important than other in-viewport images)
-* `<link rel=preload href=foo as=image group=visual>` - signifies that
-  the image should be preloaded as impacting the initial visual, but not
-load before critical resources were discovered, as it will likely
-contend on bandwidth with them.
-* `<link rel=preload href=foo as=image group=critical>` - A page which
-  has no critical resources (e.g. they are all inlined) can tell the
-browser to kick off an image preload as soon as it encounters it.
-    * That's already the default behavior of browsers, but developers
-      would be able to explicitly state that preference.
+* `<img src=foo group=visual>` - An image is to be loaded with relatively high
+  priority as it's impacting the initial visual.
+* `<img src=foo before=visual>` - An image is to be loaded with higher priority
+  than other visually impacting resources. (e.g. since it's a hero image, more
+  important than other in-viewport images)
+* `<link rel=preload href=foo as=image group=visual>` - An image should be
+  preloaded as impacting the initial visual, but not load before critical
+  resources were discovered, as it will likely contend on bandwidth with them.
+* `<link rel=preload href=foo as=image group=critical>` - An image should be
+  preloaded as a critical resource (e.g. potentially because the page has no
+  other critical resources as they are all inlined)
+    * That's already the default behavior of browsers in current
+      implementations, but developers would be able to explicitly state that
+      preference.
 * `<link rel=stylesheet href=foo group=late>` - can be used to indicate
-  non-blocking style which isn't impacting the initial visual
-experience.
-* `<iframe src=foo group=late>` - would downgrade the importance of the
-  iframe and all its subresources.
+  non-blocking style which isn't impacting the initial visual experience.
+* `<iframe src=foo group=late>` - would downgrade the importance of the iframe
+  and all its subresources.
 * TBD - what does the fetch API parameter look like?
 * TBD - how does explicit reprioritization look like?
 
