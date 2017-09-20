@@ -40,9 +40,10 @@ want to avoid them interfering with e.g. loading of viewport images.
 medium/high priority, but developers may wish to load them all at low 
 priority. Similarly, developers may wish to load all first-party 
 resources that are critical with a high priority.
-* Resources fetched as a result of user-interaction often have varying
-priorities. Developers may wish to load these with a much higher priority
-as they can anticipate better exactly what the user needs.
+* When developers download a group of resources as a result of user interaction, those 
+resources download priorities don't take into account the eventual usage and importance 
+of those resources. Developers may wish to load these resources with priorities and 
+dependencies which better represent their usage and the user's needs
 * Single-page applications can kick off multiple API requests to
 bootstrap the user experience. Developers may wish to load critical 
 API requests at a high priority and have better control over scheduling priority for the rest.
