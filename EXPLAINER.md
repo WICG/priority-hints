@@ -34,9 +34,9 @@ the signals.
 
 ## Solution
 We propose to address the above use-cases using the following concepts:
-* We will define a new set of standard `importance` attribute that will map to current
+* We will define a new standard `importance` attribute that will map to current
   browser priorities: `critical`, `high`, `medium`, `low`, `unimportant`
-* Developers would be able to assign resources into those groups or
+* Developers would be able to assign resources into one of these importance groups or
   define resources as more or less important than said groups.
 * Developers would be able to define custom importance groups, and assign
   resources to them, or define them as more or less important than said
