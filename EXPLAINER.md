@@ -34,41 +34,15 @@ the signals.
 
 ## Solution
 We propose to address the above use-cases using the following concepts:
-* We will define a new set of standard `fetch-groups` that will map to current
-  browser priorities: `critical`, `fonts`, `functional`, `visual`, `late`
-    * Names TBB (to be bikeshedded)
-* Developers would be able to assign resources into those groups or
+* We will define a new standard `importance` attribute that will map to current
+  browser priorities: `critical`, `high`, `medium`, `low`, `unimportant`
+* Developers would be able to assign resources into one of these importance groups or
   define resources as more or less important than said groups.
-* Developers would be able to define custom fetch groups, and assign
-  resources to them, or define them as more or less important than said
-groups
-   * This is necessary in order to be able to define two "levels" of
-     resource importance between existing groups.
-   * This also adds a lot of complexity - what if the group definitions
-     as resource attributes don't match? If a group is declared to be
-fetched after a not-yet-discovered group, should the browser wait? How
-long?
-   * TODO: Is this use case worth the extra complexity? Any examples
-     where this is required?
 
 This is how we conceptually think about different resource types under the hood in browsers today.
 It may translate well to user-space where different types of content share similar properties.
 
 ## Open questions
-
-**What final form will this API take?**
-
-### Alternative approach to the above proposal
-An early sketch for what a declarative solution could look like uses the notion of `fetch-class` groups:
-
-```html
-<img fetch-class="shop-branding" src="logo.png" higher-priority-than="shop-scripts" lower-priority-than="shop-item">
-
-<script fetch-class="shop-scripts" src="lazy-loader.js">
-
-<img fetch-class="shop-item" src="product-01.png">
-<img fetch-class="shop-item" src="product-02.png">
-```
 
 **Does there need to be a mechanism for limiting priorities per domain?**
 
