@@ -38,17 +38,6 @@ We propose to address the above use-cases using the following concepts:
   browser priorities: `critical`, `high`, `medium`, `low`, `unimportant`
 * Developers would be able to assign resources into one of these importance groups or
   define resources as more or less important than said groups.
-* Developers would be able to define custom importance groups, and assign
-  resources to them, or define them as more or less important than said
-groups
-   * This is necessary in order to be able to define two "levels" of
-     resource importance between existing groups.
-   * This also adds a lot of complexity - what if the group definitions
-     as resource attributes don't match? If a group is declared to be
-fetched after a not-yet-discovered group, should the browser wait? How
-long?
-   * TODO: Is this use case worth the extra complexity? Any examples
-     where this is required?
 
 This is how we conceptually think about different resource types under the hood in browsers today.
 It may translate well to user-space where different types of content share similar properties.
