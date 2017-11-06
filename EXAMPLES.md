@@ -1,23 +1,15 @@
 ## Usage Examples
 
-* `<img src=foo group=visual>` - An image is to be loaded with relatively high
-  priority as it's impacting the initial visual.
-* `<img src=foo before=visual>` - An image is to be loaded with higher priority
-  than other visually impacting resources. (e.g. since it's a hero image, more
-  important than other in-viewport images)
-* `<link rel=preload href=foo as=image group=visual>` - An image should be
-  preloaded as impacting the initial visual, but not load before critical
-  resources were discovered, as it will likely contend on bandwidth with them.
-* `<link rel=preload href=foo as=image group=critical>` - An image should be
-  preloaded as a critical resource (e.g. potentially because the page has no
-  other critical resources as they are all inlined)
+* `<script src=foo importance=critical>` - A script is to be loaded with critical importance as it is necessary for the core user experience.
+* `<img src=foo importance=high>` - An image is to be loaded with high importance. It could be important (e.g hero image, brand logo, other in-viewport image) but not critical to the overall experience loading up.
+* `<link rel=preload href=foo as=image importance=medium>` - An image should be preloaded with medium importance, but not load before critical resources were discovered, as it will likely contend on bandwidth with them.
+* `<link rel=preload href=foo as=image importance=critical>` - An image should be preloaded as a critical resource (e.g. potentially because the page has no other critical resources as they are all inlined)
     * That's already the default behavior of browsers in current
       implementations, but developers would be able to explicitly state that
       preference.
-* `<link rel=stylesheet href=foo group=late>` - can be used to indicate
-  non-blocking style which isn't impacting the initial visual experience.
-* `<iframe src=foo group=late>` - would downgrade the importance of the iframe
-  and all its subresources.
+* `<link rel=stylesheet href=foo importance=low>` - can be used to indicate
+  low importance/non-blocking style which isn't impacting the core experience. 
+* `<iframe src=foo importance=low>` - would downgrade the importance of the iframe and all its subresources.
 * TBD - what does the fetch API parameter look like?
 * TBD - how does explicit reprioritization look like?
 
