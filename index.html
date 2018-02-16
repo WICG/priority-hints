@@ -1,0 +1,80 @@
+<h2 id="examples">Examples</h2>
+
+
+<p>Async Javascript files may be loaded by default with low priority, but some of them may be of high priority and should
+    be loaded at the same time as the page's render blocking resources. Developers currently use
+    <a href="https://twitter.com/cramforce/status/900445266750263296">hacks</a> to address that use-case.</p>
+<div class="example" title="Example 1">
+      <p>FastCorp Inc. have a web app with a mix of async scripts that are critical and non-critical to the initial experience. They want to signify the importance of these resources to the browser. They can accomplish this by annotating these requests with the `importance` attribute:
+      </p>
+      <p>The browser will attempt to fetch main.js with a high priority and the other scripts with a lower priority.</p>
+  <pre highlight="html">
+&lt;script src=&quot;main.js&quot; async importance=&quot;high&quot; /&gt; 
+
+&lt;script src=&quot;non-critical-1.js&quot; async importance=&quot;low&quot;/&gt;
+
+&lt;script src=&quot;non-critical-2.js&quot; async importance=&quot;low&quot;/&gt;
+  </pre>
+</div>
+
+
+    <p>
+      <p>Third-party resources (e.g scripts from ads) are often loaded with medium/high priority, but developers may wish to load
+      them all at low priority. Similarly, developers may wish to load all first-party resources that are critical with a high
+      priority.</p>
+    <div class="example" title="Example 2">
+      <p>FastCorp Inc. have a page that includes a number of 
+        <b>third-party</b> resources which are not-critical to first paint. They would like to signify to the browser that the importance
+        of these resources is low so that requests for them don't content with other network requests for more important resources. They can accomplish this by annotating these requests with an `importance` of `low`:
+      </p>
+      <pre highlight="html">
+&lt;script src=&quot;https://foo.com/non-critical.js&quot; importance=&quot;low&quot;/&gt; 
+
+&lt;script src=&quot;https://foo.com/ads.js&quot; importance=&quot;low&quot;/&gt; 
+
+&lt;link rel=&quot;stylesheet&quot; href=&quot;https://foo.com/footer.css&quot; importance=&quot;low&quot;/&gt;
+      </pre>
+    </div>
+  </p>
+  
+
+    <p>
+      <p>Markup images are typically loaded with low priority, but may be critical to the user experience, so for certain images,
+      the developer may want to indicate that their importance only falls short of the page's render blocking resources. A prominent
+      example of that is the page's image in an image sharing site, where the image is the main content users are looking for.
+      Another example is a single-page-app where route fetches must run at highest priority.
+      </p>
+      <div class="example" title="Example 3">
+        <p>FastCorp Inc. have an image sharing section of their site where individual images have their own dedicated pages. Although there are several resources loaded for each of these pages, the image is the main content users are interested in. Related images are the next most important. They want to indicate this importance to the browser.
+        </p>
+        <pre highlight="html">
+ 
+&lt;main&gt; 
+  &lt;img src=&quot;family.jpg&quot; importance=&quot;high&quot;/&gt; 
+&lt;/main&gt; 
+
+&lt;section id=&quot;related&quot;&gt;
+  &lt;img src=&quot;graduation.jpg&quot; importance=&quot;high&quot;/&gt; 
+  &lt;img src=&quot;wedding.jpg&quot; importance=&quot;high&quot;/&gt; 
+&lt;/section&gt; 
+&lt;script src=&quot;social-buttons.js&quot; importance=&quot;low&quot;/&gt; 
+
+&lt;script src=&quot;analytics.js&quot; importance=&quot;low&quot;/&gt;
+          </pre>
+      </div>
+    </p>
+
+<ul>
+
+
+  <li>Blocking scripts are often of high priority (depends on their location in the page and other heuristics), yet sometimes
+    developers want to avoid them interfering with e.g. loading of viewport images.</li>
+
+  <li>When developers download a group of resources as a result of user interaction, those resources download priorities don't
+    take into account the eventual usage and importance of those resources. Developers may wish to load these resources with
+    priorities and dependencies which better represent their usage and the user's needs</li>
+
+  <li>Single-page applications can kick off multiple API requests to bootstrap the user experience. Developers may wish to load
+    critical API requests at a high priority and have better control over scheduling priority for the rest.</li>
+</ul>
+
