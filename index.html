@@ -86,7 +86,7 @@
 <h2 id="examples">Examples</h2>
 
 
-<p>Async Javascript files may be loaded by default with low priority, but some of them may be of high priority and should
+<p>Async JavaScript files may be loaded by default with low priority, but some of them may be of high priority and should
     be loaded at the same time as the page's render blocking resources. Developers currently use
     <a href="https://twitter.com/cramforce/status/900445266750263296">hacks</a> to address that use-case.</p>
 <div class="example" title="Example 1">
@@ -242,9 +242,9 @@
 
 <p>Using
   <code>&lt;link rel=preload&gt;</code> in order to get the browser to early discover certain resources, especially in its header form, means that the browser
-  may discover these resources before other, more critical resources and send their request to the server first. That can
+  may discover these resources before other, more critical resources and send their request to the server first. This can
   result in loading regressions as the server may start sending those non-critical resources before other, more critical
-  ones, which may fill up the TCP socket sending queues. While better transport protocols (e.g. QUIC) may address that at
+  ones, which may fill up the TCP socket, sending queues. While better transport protocols (e.g. QUIC) may address that at
   a lower layer for the single origin case, developers should be able to signal to the browser that a certain resource is
   not critical, and therefore should be queued until such resources are discovered. Such marking as "non-critical" should
   be orthogonal to the signaling of the resource's "importance" (e.g. this could be applied to high priority resources that
@@ -265,7 +265,7 @@
 
 <h3 id="provideprioritysignalsfordynamicallyloadedresources">Provide priority signals for dynamically loaded resources</h3>
 
-<p>Developers need a way to provide the above signals for resources that are fetched through Javascript, e.g. using the
+<p>Developers need a way to provide the above signals for resources that are fetched through JavaScript, e.g. using the
   <code>fetch()</code> API. That would enable them both to upgrade and downgrade those resource's "importance".
 </p>
 
