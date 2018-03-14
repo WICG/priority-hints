@@ -55,7 +55,7 @@
 <body>
   <section id="abstract">
     <p>
-      This specification describes a browser API to enable developers signal the priorities of the resources they need to download.
+      This specification describes a browser API to enable developers to signal the priorities of the resources they need to download.
     </p>
   </section>
   <section id="sotd">
@@ -66,27 +66,27 @@
   <section id="introduction">
     <h2>Introduction</h2>
 <p><em>This section is non-normative.</em></p>
-<p>
-  The browser's resource loading process is a complex one. Browsers discover needed resources and download them according to
+<p>The browser's resource loading process is a complex one. Browsers discover needed resources and download them according to
   their heuristic priority. Browsers may also use this heuristic resource priority to delay sending certain requests in order
   to avoid bandwidth contention of these resources with more critical ones.</p>
 
 <p>Currently web developers have very little control over the heuristic importance of loaded resources, other than speeding
   up their discovery using
   <code>&lt;link rel=preload&gt;</code>. Browsers make many assumptions on the importance of resources based on the resource's type (AKA its request destination),
-  and based on its location in the containing document.</p>
+  and its location in the containing document.</p>
 
 <p>This document will detail use cases and a markup sketch that will provide developers with the control to indicate a
   resource's relative importance to the browser, and enable the browser to act on those indications to modify the time it
   sends out the request and its HTTP/2 dependency/weight so that important resources are fetched and used earlier, in order
   to improve the user's experience.</p>
 
-  </section>
+</section>
+
 <section>
 <h2 id="examples">Examples</h2>
 
 
-<p>Async Javascript files may be loaded by default with low priority, but some of them may be of high priority and should
+<p>Async JavaScript files may be loaded by default with low priority, but some of them may be of high priority and should
     be loaded at the same time as the page's render blocking resources. Developers currently use
     <a href="https://twitter.com/cramforce/status/900445266750263296">hacks</a> to address that use-case.</p>
 <div class="example" title="Example 1">
@@ -94,70 +94,67 @@
       </p>
       <p>The browser will attempt to fetch main.js with a high priority and the other scripts with a lower priority.</p>
   <pre highlight="html">
-&lt;script src=&quot;main.js&quot; async importance=&quot;high&quot; /&gt; 
+&lt;script src=&quot;main.js&quot; async importance=&quot;high&quot;&gt;&lt;script&gt;
 
-&lt;script src=&quot;non-critical-1.js&quot; async importance=&quot;low&quot;/&gt;
+&lt;script src=&quot;non-critical-1.js&quot; async importance=&quot;low&quot;&gt;&lt;script&gt;
 
-&lt;script src=&quot;non-critical-2.js&quot; async importance=&quot;low&quot;/&gt;
+&lt;script src=&quot;non-critical-2.js&quot; async importance=&quot;&gt;&lt;low&quot;&gt;&lt;script&gt;
   </pre>
 </div>
 
 
-    <p>
-      <p>Third-party resources (e.g scripts from ads) are often loaded with medium/high priority, but developers may wish to load
-      them all at low priority. Similarly, developers may wish to load all first-party resources that are critical with a high
-      priority.</p>
-    <div class="example" title="Example 2">
-      <p>FastCorp Inc. have a page that includes a number of 
-        <b>third-party</b> resources which are not-critical to first paint. They would like to signify to the browser that the importance
-        of these resources is low so that requests for them don't content with other network requests for more important resources. They can accomplish this by annotating these requests with an `importance` of `low`:
+<p>Third party resources (e.g scripts from ads) are often loaded with medium/high priority, but developers may wish to load
+    them all at low priority. Similarly, developers may wish to load all first-party resources that are critical with a high
+    priority.</p>
+<div class="example" title="Example 2">
+      <p>FastCorp Inc. have a page that includes a number of
+         <b>third party</b> resources which are not-critical to first paint. They would like to signify to the browser that the importance
+         of these resources is low so that requests for them don't contend with network requests for more important resources. They can accomplish
+         this by annotating these requests with an `importance` of `low`:
       </p>
       <pre highlight="html">
-&lt;script src=&quot;https://foo.com/non-critical.js&quot; importance=&quot;low&quot;/&gt; 
+&lt;script src=&quot;https://foo.com/non-critical.js&quot; importance=&quot;low&quot;&gt;&lt;script&gt;
 
-&lt;script src=&quot;https://foo.com/ads.js&quot; importance=&quot;low&quot;/&gt; 
+&lt;script src=&quot;https://foo.com/ads.js&quot; importance=&quot;low&quot;&gt;&lt;script&gt;
 
-&lt;link rel=&quot;stylesheet&quot; href=&quot;https://foo.com/footer.css&quot; importance=&quot;low&quot;/&gt;
+&lt;link rel=&quot;stylesheet&quot; href=&quot;https://foo.com/footer.css&quot; importance=&quot;low&quot;&gt;
       </pre>
-    </div>
-  </p>
-  
+</div>
 
-    <p>
-      <p>Markup images are typically loaded with low priority, but may be critical to the user experience, so for certain images,
-      the developer may want to indicate that their importance only falls short of the page's render blocking resources. A prominent
-      example of that is the page's image in an image sharing site, where the image is the main content users are looking for.
-      Another example is a single-page-app where route fetches must run at highest priority.
+
+<p>Markup images are typically loaded with low priority, but may be critical to the user experience, so for certain images,
+    the developer may want to indicate that their importance only falls short of the page's render blocking resources. A prominent
+    example of that is the page's image in an image sharing site, where the image is the main content users are looking for.
+    Another example is a single-page-app where route fetches must run at highest priority.</p>
+<div class="example" title="Example 3">
+      <p>FastCorp Inc. have an image sharing section of their site where individual images have their own dedicated pages. Although
+      there are several resources loaded for each of these pages, the image is the main content users are interested in. Related images
+      are the next most important. They want to indicate this importance to the browser:
       </p>
-      <div class="example" title="Example 3">
-        <p>FastCorp Inc. have an image sharing section of their site where individual images have their own dedicated pages. Although there are several resources loaded for each of these pages, the image is the main content users are interested in. Related images are the next most important. They want to indicate this importance to the browser.
-        </p>
-        <pre highlight="html">
- 
-&lt;main&gt; 
-  &lt;img src=&quot;family.jpg&quot; importance=&quot;high&quot;/&gt; 
-&lt;/main&gt; 
+      <pre highlight="html">
+&lt;main&gt;
+  &lt;img src=&quot;family.jpg&quot; importance=&quot;high&quot;&gt;
+&lt;/main&gt;
 
 &lt;section id=&quot;related&quot;&gt;
-  &lt;img src=&quot;graduation.jpg&quot; importance=&quot;high&quot;/&gt; 
-  &lt;img src=&quot;wedding.jpg&quot; importance=&quot;high&quot;/&gt; 
-&lt;/section&gt; 
-&lt;script src=&quot;social-buttons.js&quot; importance=&quot;low&quot;/&gt; 
+  &lt;img src=&quot;graduation.jpg&quot; importance=&quot;high&quot;&gt;
+  &lt;img src=&quot;wedding.jpg&quot; importance=&quot;high&quot;&gt;
+&lt;/section&gt;
+&lt;script src=&quot;social-buttons.js&quot; importance=&quot;low&quot;&gt;&lt;script&gt;
 
-&lt;script src=&quot;analytics.js&quot; importance=&quot;low&quot;/&gt;
-          </pre>
-      </div>
-    </p>
+&lt;script src=&quot;analytics.js&quot; importance=&quot;low&quot;&gt;&lt;script&gt;
+      </pre>
+</div>
 
 <ul>
 
 
   <li>Blocking scripts are often of high priority (depends on their location in the page and other heuristics), yet sometimes
-    developers want to avoid them interfering with e.g. loading of viewport images.</li>
+    developers want to avoid them interfering with e.g., loading of viewport images.</li>
 
-  <li>When developers download a group of resources as a result of user interaction, those resources download priorities don't
+  <li>When developers download a group of resources as a result of user interaction, those resources' download priorities don't
     take into account the eventual usage and importance of those resources. Developers may wish to load these resources with
-    priorities and dependencies which better represent their usage and the user's needs</li>
+    priorities and dependencies which better represent their usage and the user's needs.</li>
 
   <li>Single-page applications can kick off multiple API requests to bootstrap the user experience. Developers may wish to load
     critical API requests at a high priority and have better control over scheduling priority for the rest.</li>
@@ -165,11 +162,11 @@
 
 <h3 id="adoptionpath">Adoption path</h3>
 
-<p>Markup based signal should be added in a way such that non-supporting browsers will simply ignore them and load all resources,
-  potentially not in the intended priority and dependency. Script based signaling APIs should be created in a way that non-supporting
+<p>Markup-based signals should be added in a way such that non-supporting browsers will simply ignore them and load all resources,
+  potentially not with the intended priority and dependency. Script-based signaling APIs should be created in a way that non-supporting
   browsers simply ignore the signals.</p>
 
-<h2 id="outofscope">Out of scope</h2>
+<h3 id="outofscope">Out of scope</h3>
 
 <ul>
   <li>Signal that certain images should not block the load event</li>
@@ -185,32 +182,32 @@
   <li>We will define a new attribute called <code>importance</code> which informs the browser of the importance a developer intends for a resource to have.</li>
   <li>This attribute will have three states that will map to current browser priorities:
     <ul>
-      <li><code>high</code> - The developer considers the resource as being high priority. </li>
+      <li><code>high</code> - The developer considers the resource as being high priority.</li>
       <li>
         <code>low</code> - The developer considers the resource as being low priority.
       </li>
       <li>
         <code>auto</code> - The developer does not indicate a preference. This also serves as the default value if the attribute is not specified.
       </li>
-      </ul>
+    </ul>
   </li>
 
-  <li>Developers would annotate resource requesting tags
+  <li>Developers would annotate resource-requesting tags
   such as <code>script</code> and <code>link</code> using the <code>importance</code> attribute as a hint of the preferred priority with which the resource should be fetched.</li>
 
   <li>Developers would be able to specify that certain
   resources are more or less important than others using this attribute. It would act as a hint of the intended
   priority rather than an instruction to the browser.</li>
-
 </ul>
 
 <p>With this attribute, the browser should make an effort to respect the developer's preference for the importance
-  of a resource when fetching it. Note that this is intentionally weak language, allowing for a browser to apply its own preferences for resource priority or heuristics if deemed important.
+  of a resource when fetching it. Note that this is intentionally weak language, allowing for a browser to apply its
+  own preferences for resource priority or heuristics if deemed important.
 </p>
 
 <p>This is how we conceptually think about different resource types under the hood in browsers today. It may translate well
   to user-space where different types of content share similar properties.</p>
-</section>
+  </section>
 
   <section>
     <h2>Use Cases</h2>
@@ -232,7 +229,7 @@
 </ul>
 
 <p>The browser uses various heuristics in order to do the above, which are based on the type of resource, its location in the
-  document and more.</p>
+  document, and more.</p>
 
 <p>Occasionally, web developers are in a better position to know which resources are more impactful than others on their users'
   loading experience, and need a way to communicate that to the browser.</p>
@@ -241,7 +238,7 @@
 <h3 id="signalaresourceasnoncritical">Signal a resource as non-critical</h3>
 
 <p>Using
-  <code>&lt;link rel=preload&gt;</code> in order to get the browser to early discover certain resources, especially in its header form, means that the browser
+  <code>&lt;link rel=preload&gt;</code> in order to get the browser to early-discover certain resources, especially in its header form, means that the browser
   may discover these resources before other, more critical resources and send their request to the server first. That can
   result in loading regressions as the server may start sending those non-critical resources before other, more critical
   ones, which may fill up the TCP socket sending queues. While better transport protocols (e.g. QUIC) may address that at
@@ -265,7 +262,7 @@
 
 <h3 id="provideprioritysignalsfordynamicallyloadedresources">Provide priority signals for dynamically loaded resources</h3>
 
-<p>Developers need a way to provide the above signals for resources that are fetched through Javascript, e.g. using the
+<p>Developers need a way to provide the above signals for resources that are fetched through JavaScript, e.g., using the
   <code>fetch()</code> API. That would enable them both to upgrade and downgrade those resource's "importance".
 </p>
 
@@ -274,7 +271,7 @@
 <ul>
   <li>"Resource priority" is not always the right way of looking at it. For resources that are parsed on-the-fly (most notably
     HTML and progressive images), their first buffer is often more important than their last. Developers can use the ability
-    to reprioritize resources to reflect that when downloading such resources.</li>
+    to reprioritize resources to reflect this notion when downloading such resources.</li>
 
   <li>There are also cases where the priority of a resource changes due to user action or condition changes. One example is the
     loading of images, where in-viewport images (or soon-to-be in-viewport images) are of higher priority than images that
