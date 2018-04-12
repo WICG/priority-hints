@@ -94,11 +94,11 @@
       </p>
       <p>The browser will attempt to fetch main.js with a high priority and the other scripts with a lower priority.</p>
   <pre highlight="html">
-&lt;script src=&quot;main.js&quot; async importance=&quot;high&quot;&gt;&lt;script&gt;
+&lt;script src=&quot;main.js&quot; async importance=&quot;high&quot;&gt;&lt;/script&gt;
 
-&lt;script src=&quot;non-critical-1.js&quot; async importance=&quot;low&quot;&gt;&lt;script&gt;
+&lt;script src=&quot;non-critical-1.js&quot; async importance=&quot;low&quot;&gt;&lt;/script&gt;
 
-&lt;script src=&quot;non-critical-2.js&quot; async importance=&quot;low&quot;&gt;&lt;script&gt;
+&lt;script src=&quot;non-critical-2.js&quot; async importance=&quot;low&quot;&gt;&lt;/script&gt;
   </pre>
 </div>
 
@@ -113,9 +113,9 @@
          this by annotating these requests with an `importance` of `low`:
       </p>
       <pre highlight="html">
-&lt;script src=&quot;https://foo.com/non-critical.js&quot; importance=&quot;low&quot;&gt;&lt;script&gt;
+&lt;script src=&quot;https://foo.com/non-critical.js&quot; importance=&quot;low&quot;&gt;&lt;/script&gt;
 
-&lt;script src=&quot;https://foo.com/ads.js&quot; importance=&quot;low&quot;&gt;&lt;script&gt;
+&lt;script src=&quot;https://foo.com/ads.js&quot; importance=&quot;low&quot;&gt;&lt;/script&gt;
 
 &lt;link rel=&quot;stylesheet&quot; href=&quot;https://foo.com/footer.css&quot; importance=&quot;low&quot;&gt;
       </pre>
@@ -140,9 +140,9 @@
   &lt;img src=&quot;graduation.jpg&quot; importance=&quot;high&quot;&gt;
   &lt;img src=&quot;wedding.jpg&quot; importance=&quot;high&quot;&gt;
 &lt;/section&gt;
-&lt;script src=&quot;social-buttons.js&quot; importance=&quot;low&quot;&gt;&lt;script&gt;
+&lt;script src=&quot;social-buttons.js&quot; importance=&quot;low&quot;&gt;&lt;/script&gt;
 
-&lt;script src=&quot;analytics.js&quot; importance=&quot;low&quot;&gt;&lt;script&gt;
+&lt;script src=&quot;analytics.js&quot; importance=&quot;low&quot;&gt;&lt;/script&gt;
       </pre>
 </div>
 
