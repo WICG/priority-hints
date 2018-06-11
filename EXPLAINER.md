@@ -33,21 +33,30 @@ the signals.
   grouping, execution dependency, etc
 
 ## Solution
+
 We propose to address the above use-cases using the following concepts:
-* We will define a new standard `importance` attribute that will map to current
-  browser priorities: `critical`, `high`, `medium`, `low`, `unimportant`
-* Developers would be able to assign resources into one of these importance groups or
-  define resources as more or less important than said groups.
+
+* We will define a new standard `importance` attribute to signal to the browser the relative importance of a resource.
+
+* The `importance` attribute may be used with elements including link, img, script and iframe. This keyword hints to the browser the relative fetch priority a developer intends for a resource to have. Consider it an upgrade/downgrade mechanism for hinting at resource priority.
+
+* The importance attribute will have three states that will map to current browser priorities:
+
+  * `high` - The developer considers the resource as being high priority.
+  * `low` - The developer considers the resource as being low priority.
+  * `auto` - The developer does not indicate a preference. This also serves as the default value if the attribute is not specified.
+
+* Developers would annotate resource-requesting tags such as script and link using the importance attribute as a hint of the preferred priority with which the resource should be fetched.
+
+* Developers would be able to specify that certain resources are more or less important than others using this attribute. It would act as a hint of the intended priority rather than an instruction to the browser.
+
+* With the `importance` attribute, the browser should make an effort to respect the developer's preference for the importance of a resource when fetching it. Note that this is intentionally weak language, allowing for a browser to apply its own preferences for resource priority or heuristics if deemed important.
+
+* Priority Hints compliment existing browser loading primitives such as preload. Preload is a mandatory and high-priority fetch for a resource that is necessary for the current navigation. Priority Hints can hint that a resource's priority should be lower or higher than its default, and can also be used to provide more granular prioritization to preloads.
 
 This is how we conceptually think about different resource types under the hood in browsers today.
 It may translate well to user-space where different types of content share similar properties.
 
-## Open questions
+## Further reading
 
-**Does there need to be a mechanism for limiting priorities per domain?**
-
-Scenario: Third-party iframes could mark all of their resources as the highest priority.
-This could negatively impact the performance of the top-level document or origin. 
-
-Possible solution: each individual origin could have a priority controller for its 
-connection(s) and an overall priority controller for the page load balancing them.
+For a more complete overview of the Priority Hints proposal, please see the [draft specification](https://wicg.github.io/priority-hints/).
