@@ -57,7 +57,8 @@
     <p>
       This specification describes a browser API enabling developers to signal the priority of each resource they need to download.
       It introduces the
-      <a href="#solution">importance</a> keyword that may be used with elements such as img, link, script and iframe.
+      <a href="#solution">importance</a> <a data-lt="enumerated attribute">attribute</a> that may be used with elements such as
+      <code>img</code>, <code>link</code>, <code>script</code> and <code>iframe</code>.
     </p>
   </section>
   <section id="sotd">
@@ -81,10 +82,46 @@
     <p>
       The term
       <dfn data-dfn-type="dfn" id="dfn-fetch">
-        <a href="https://fetch.spec.whatwg.org/">Fetch API</a>
+        <a href="https://fetch.spec.whatwg.org/#fetch-api">Fetch API</a>
       </dfn> is defined in [
       <cite>
         <a class="bibref" href="#bib-FETCH">FETCH</a>
+      </cite>].
+    </p>
+    <p>
+      The term
+      <dfn data-dfn-type="dfn" id="dfn-request-destination">
+        <a href="https://fetch.spec.whatwg.org/#concept-request-destination">destination</a>
+      </dfn> is defined in [
+      <cite>
+        <a class="bibref" href="#bib-FETCH">FETCH</a>
+      </cite>].
+    </p>
+    <p>
+      The term
+      <dfn data-dfn-type="dfn" id="dfn-enumerated-attribute">
+        <a href="https://html.spec.whatwg.org/multipage/common-microsyntaxes.html#enumerated-attribute">enumerated attribute</a>
+      </dfn> is defined in [
+      <cite>
+        <a class="bibref" href="#bib-HTML">HTML</a>
+      </cite>].
+    </p>
+    <p>
+      The term
+      <dfn data-dfn-type="dfn" id="dfn-invalid-value-default">
+        <a href="https://html.spec.whatwg.org/multipage/common-microsyntaxes.html#invalid-value-default">invalid value default</a>
+      </dfn> is defined in [
+      <cite>
+        <a class="bibref" href="#bib-HTML">HTML</a>
+      </cite>].
+    </p>
+    <p>
+      The term
+      <dfn data-dfn-type="dfn" id="dfn-invalid-value-default">
+        <a href="https://html.spec.whatwg.org/multipage/common-microsyntaxes.html#missing-value-default">missing value default</a>
+      </dfn> is defined in [
+      <cite>
+        <a class="bibref" href="#bib-HTML">HTML</a>
       </cite>].
     </p>
   </section>
@@ -94,18 +131,17 @@
       <em>This section is non-normative.</em>
     </p>
     <p>The browser's resource loading process is a complex one. Browsers discover needed resources and download them according
-      to their heuristic priority. Browsers may also use this heuristic resource priority to delay sending certain requests
+      to their heuristic priority. Browsers might also use this heuristic resource priority to delay sending certain requests
       in order to avoid bandwidth contention of these resources with more critical ones.</p>
 
     <p>Currently web developers have very little control over the heuristic importance of loaded resources, other than speeding
-      up their discovery using
-      <code>&lt;link rel=preload&gt;</code>. Browsers make many assumptions on the importance of resources based on the resource's type (AKA its request destination),
-      and its location in the containing document.</p>
+      up their discovery using <code>&lt;link rel=preload&gt;</code>. Browsers mostly determine a request's priority based on the
+      request's <a>destination</a>, and location in the containing document if applicable.</p>
 
-    <p>This document will detail use cases and a markup sketch that will provide developers with the control to indicate a resource's
-      relative importance to the browser, and enable the browser to act on those indications to modify the time it sends
-      out the request and its HTTP/2 dependency/weight so that important resources are fetched and used earlier, in order
-      to improve the user's experience.</p>
+    <p>This document details use cases and a markup that will provide developers with the control to indicate a resource's
+      relative importance to the browser, enabling the browser to act on those indications to influence the request's overall priority
+      in ways described in the <a href="#effects-of-priority-hints">Effects of Priority Hints</a> section.
+    </p>
 
   </section>
 
@@ -113,12 +149,12 @@
     <h2 id="solution">Solution</h2>
 
     <p>The
-      <code>importance</code> attribute may be used with elements including link, img, script and iframe. This keyword hints to the browser the
-      relative fetch priority a developer intends for a resource to have.</p>
+      <code>importance</code> <a>enumerated attribute</a> may be used with resource-requesting elements including <code>link</code>,
+      <code>img</code>, <code>script</code> and <code>iframe</code>. This keyword hints to the browser the relative fetch priority
+      a developer intends for a resource to have.</p>
 
     <ul>
-      <li>The
-        <code>importance</code> attribute will have three states that will map to current browser priorities:
+      <li>The <code>importance</code> attribute will have three states:
         <ul>
           <li>
             <code>high</code> - The developer considers the resource as being high priority.</li>
@@ -126,33 +162,54 @@
             <code>low</code> - The developer considers the resource as being low priority.
           </li>
           <li>
-            <code>auto</code> - The developer does not indicate a preference. This also serves as the default value if the attribute is not
-            specified.
+            <code>auto</code> - The developer does not indicate a preference. This also serves as the attribute's
+            <a>invalid value default</a> and <a>missing value default</a>.
           </li>
         </ul>
       </li>
-
-      <li>Developers would annotate resource-requesting tags such as
-        <code>script</code> and
-        <code>link</code> using the
-        <code>importance</code> attribute as a hint of the preferred priority with which the resource should be fetched.</li>
-
-      <li>Developers would be able to specify that certain resources are more or less important than others using this attribute.
-        It would act as a hint of the intended priority rather than an instruction to the browser.</li>
     </ul>
 
     <p>With this attribute, the browser should make an effort to respect the developer's preference for the importance of a
       resource when fetching it. Note that this is intentionally weak language, allowing for a browser to apply its own preferences
-      for resource priority or heuristics if deemed important.
+      for resource priority or heuristics if deemed important. See the below section for more information.
     </p>
+
     <p>
       <div class="note">
-        <p>Priority Hints compliment existing browser loading primitives such as preload. Preload is a mandatory and high-priority
-          fetch for a resource that is necessary for the current navigation. Priority Hints can hint that a resource's priority should be lower or higher than its default, and can also be used to provide more granular prioritization to preloads.</p>
+        <p>Priority Hints complement existing browser loading primitives such as preload. Preload is a mandatory fetch for a resource
+          that is necessary for the current navigation. Priority Hints can hint that a resource's priority should be lower or higher than
+          its default, and can also be used to provide more granular prioritization to preloads.</p>
       </div>
     </p>
+
     <p>This is how we conceptually think about different resource types under the hood in browsers today. It may translate well
       to user-space where different types of content share similar properties.</p>
+
+    <h2 id="effects-of-priority-hints">Effects of Priority Hints</h2>
+
+    <p>Since the user agents' resource loading pipeline is largely unspecified, this document doesn't describe a specific mapping
+      between Priority Hints and request prioritization. However, it does describe ways in which implementations are encouraged to
+      influence a request's overall fetch priority given a Priority Hint.</p>
+
+    <strong>HTTP/2 Relative Stream Priority</strong>
+    <p>Implementations are encouraged to use Priority Hints to influence the HTTP/2 stream priority assigned to a given request.
+      It is not the intention of the different <code>importance</code> states to directly map to existing browser priority values,
+      but instead act as a relative influencer among requests of a similar type.</p>
+    <div class="example">
+      <p>
+        If requests for <code>image</code>
+        <a data-lt="destination">destinations</a> in a particular implementation are typically assigned a stream weight of
+        <code>60</code>, a request for an image with <code>importance="low"</code> might be assigned a stream weight less than
+        <code>60</code>. In other words, <code>importance="low"</code> on an image might lead to an entirely different resolved
+        HTTP/2 stream priority than <code>importance="low"</code> on something like a script, or an iframe.
+      </p>
+    </div>
+
+    <strong>Queueing</strong>
+    <p>A user agent might choose to queue up certain low priority requests until higher priority requests are sent out or finished
+      in order to reduce bandwidth contention. Implementations are encouraged to use Priority Hints to determine whether a given
+      request is a candidate for such queueing so that more important resources are fetched and used earlier, in order to improve
+      the user's experience.</p>
 
     <h2 id="examples">Examples</h2>
 
@@ -338,9 +395,9 @@ Link: &lt;/app/script.js&gt;; importance=low</pre>
     <h2 id="outofscope">Out of scope</h2>
 
     <ul>
-      <li>Signal that certain images should not block the load event</li>
+      <li>Signal that certain images should not block the load event.</li>
 
-      <li>Signals relating the script execution order, script execution grouping, execution dependency, etc</li>
+      <li>Signals relating the script execution order, script execution grouping, execution dependency, etc.</li>
     </ul>
   </section>
 
@@ -359,8 +416,7 @@ Link: &lt;/app/script.js&gt;; importance=low</pre>
     <ul>
       <li>When the resource's request is sent to the server.</li>
 
-      <li>What HTTP/2 dependencies and weights are assigned to the resource's request.
-      </li>
+      <li>What HTTP/2 dependencies and weights are assigned to the resource's request.</li>
     </ul>
 
     <p>The browser uses various heuristics in order to do the above, which are based on the type of resource, its location in
@@ -476,11 +532,19 @@ Link: &lt;/app/script.js&gt;; importance=low</pre>
     </dd>
     <dt id="bib-FETCH">[FETCH]</dt>
     <dd>
-      <a href="https://fetch.spec.whatwg.org/#fetch-api">
+      <a href="https://fetch.spec.whatwg.org/">
         <cite>Fetch Standard</cite>
       </a>. Anne van Kesteren. WHATWG. Living Standard. URL:
-      <a href="https://fetch.spec.whatwg.org/#fetch-api">https://fetch.spec.whatwg.org/#fetch-api</a>
+      <a href="https://fetch.spec.whatwg.org/">https://fetch.spec.whatwg.org/</a>
     </dd>
+    <dt id="bib-HTML">[HTML]</dt>
+    <dd>
+      <a href="https://html.spec.whatwg.org/multipage/">
+        <cite>HTML Standard</cite>
+      </a>. Domenic Denicola. WHATWG. Living Standard. URL:
+      <a href="https://html.spec.whatwg.org/multipage/">https://html.spec.whatwg.org/multipage/</a>
+    </dd>
+
   </section>
 </body>
 
