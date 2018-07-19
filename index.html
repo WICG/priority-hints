@@ -136,9 +136,9 @@
 
     <p>Currently web developers have very little control over the heuristic importance of loaded resources, other than speeding
       up their discovery using <code>&lt;link rel=preload&gt;</code>. Browsers mostly determine a request's priority based on the
-      resource's <a>destination</a>, and location in the containing document if applicable.</p>
+      request's <a>destination</a>, and location in the containing document if applicable.</p>
 
-    <p>This document details use cases and a markup sketch that will provide developers with the control to indicate a resource's
+    <p>This document details use cases and a markup that will provide developers with the control to indicate a resource's
       relative importance to the browser, enabling the browser to act on those indications to influence the request's overall priority
       in ways described in the <a href="#effects-of-priority-hints">Effects of Priority Hints</a> section.
     </p>
@@ -176,7 +176,7 @@
 
     <p>
       <div class="note">
-        <p>Priority Hints compliment existing browser loading primitives such as preload. Preload is a mandatory fetch for a resource
+        <p>Priority Hints complement existing browser loading primitives such as preload. Preload is a mandatory fetch for a resource
           that is necessary for the current navigation. Priority Hints can hint that a resource's priority should be lower or higher than
           its default, and can also be used to provide more granular prioritization to preloads.</p>
       </div>
@@ -187,9 +187,9 @@
 
     <h2 id="effects-of-priority-hints">Effects of Priority Hints</h2>
 
-    <p>Exactly what implementations do with Priority Hints is up to them since much of the resource loading pipeline is currently
-      unspecified, however this document describes some ways in which implementations are encouraged to influence a request's overall
-      fetch priority given a Priority Hint.</p>
+    <p>Since the user agents' resource loading pipeline is largely unspecified, this document doesn't describe a specific mapping
+      between Priority Hints and request prioritization. However, it does describe ways in which implementations are encouraged to
+      influence a request's overall fetch priority given a Priority Hint.</p>
 
     <strong>HTTP/2 Relative Stream Priority</strong>
     <p>Implementations are encouraged to use Priority Hints to influence the HTTP/2 stream priority assigned to a given request.
@@ -206,7 +206,7 @@
     </div>
 
     <strong>Queueing</strong>
-    <p>A browser might choose to queue up certain low priority requests until higher priority requests are sent out or finished
+    <p>A user agent might choose to queue up certain low priority requests until higher priority requests are sent out or finished
       in order to reduce bandwidth contention. Implementations are encouraged to use Priority Hints to determine whether a given
       request is a candidate for such queueing so that more important resources are fetched and used earlier, in order to improve
       the user's experience.</p>
