@@ -1,15 +1,14 @@
 ## Usage Examples
 
-* `<script src=foo importance=critical>` - A script is to be loaded with critical importance as it is necessary for the core user experience.
-* `<img src=foo importance=high>` - An image is to be loaded with high importance. It could be important (e.g hero image, brand logo, other in-viewport image) but not critical to the overall experience loading up.
-* `<link rel=preload href=foo as=image importance=medium>` - An image should be preloaded with medium importance, but not load before critical resources were discovered, as it will likely contend on bandwidth with them.
-* `<link rel=preload href=foo as=image importance=critical>` - An image should be preloaded as a critical resource (e.g. potentially because the page has no other critical resources as they are all inlined)
-    * That's already the default behavior of browsers in current
+* `<script src=foo importance=high>` - A script is to be loaded with high importance as it is necessary for the core user experience.
+* `<link rel=preload href=foo as=image importance=high>` - An image should be preloaded with high importance (e.g. potentially because the image is in-viewport, or the page has no other critical resources as they are all inlined)
+    * That's already the default preloading behavior of browsers in current
       implementations, but developers would be able to explicitly state that
       preference.
-* `<link rel=stylesheet href=foo importance=low>` - can be used to indicate
+* `<link rel=stylesheet href=foo importance=low>` - Can be used to indicate
   low importance/non-blocking style which isn't impacting the core experience. 
-* `<iframe src=foo importance=low>` - would downgrade the importance of the iframe and all its subresources.
+* `<iframe src=foo importance=low>` - Would downgrade the importance of the iframe and all its subresources.
+* `<img src=foo importance=auto>` - An image is to be loaded with no preference of importance. The browser may use its own heuristics to decide the relative importance of the image.
 * TBD - what does the fetch API parameter look like?
 * TBD - how does explicit reprioritization look like?
 
