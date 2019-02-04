@@ -521,7 +521,7 @@ Link: &lt;/app/script.js&gt;; importance=low</pre>
     There's a risk that monetizing third-party components, and ad networks in particular, will require publishers to use the feature in order to upgrade the priority of their resource requests.
     While they certainly can do that, and enforce such a requirement by inspecting the HTTP/2 priorities of the resource requests they receive, the risk for that is rather small.
     <ul>
-        <li><p>Such "priority upgrade" is already available in the platform today, e.g. when switching scripts from blocking to deferred or async ones.
+        <li><p>Such "priority upgrade" is already available in the platform today, e.g., when switching scripts from blocking to deferred or async ones.
             There's no existing evidence that advertisers have required such hacks in order to make sure their resources load first.</p></li>
         <li><p>Furthermore, monitoring that publishers complied with that requirement can be difficult for advertisers that run outside of the main frame, as it will require coordination between the their HTTP/2 termination point and the application layer.
             Depending on their architecture, such coordination may not be trivial.</p></li>
