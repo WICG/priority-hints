@@ -515,6 +515,7 @@ Link: &lt;/app/script.js&gt;; importance=low</pre>
     This is not dissimilar to other web platform features, but with one important distinction: 
     this information is exposed at the HTTP layer, allowing the server implementation to discover discrepancies between the User-Agent string the request is sent with and the browser that sent the request. 
     It is not clear that this is a significant issue, but it is something for implementing user agents (and user agents which try to spoof others) to be aware of.
+    It is also possible that the network patterns that result from the use of the feature would be observable to passive network-based observers and will enable them to distinguish supporting and non-supporting browsers.
     </p>
     <h3>Negative ecosystem side-effects</h3>
     <p>
