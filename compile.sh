@@ -12,7 +12,9 @@ bikeshed --print=plain -f spec
 # The out directory should contain everything needed to produce the
 # HTML version of the spec.  Copy things there if the directory exists.
 
+echo "Bikeshed ran"
 if [ -d out ]; then
+    echo "Copying index.html"
     cp index.html out
 fi
 
