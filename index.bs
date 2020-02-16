@@ -1,59 +1,45 @@
-<!doctype html>
-<html lang="en">
+<pre class='metadata'>
+Title: Priority Hints
+Shortname: PriorityHints
+Level: 1
+Status: CG-Draft
+Group: WICG
+URL: https://wicg.github.io/priority-hints
+Editor: Addy Osmani, Google Inc., addyosmani@gmail.com, https://blog.yoav.ws
+Editor: Yoav Weiss 58673, Google Inc., yoav@yoav.ws, https://blog.yoav.ws
+Abstract: Specification of the Priority Hints feature.
+Markup Shorthands: markdown yes
+</pre>
 
-<head>
-  <meta charset="utf-8">
-  <title>Priority Hints</title>
-  <script src="https://www.w3.org/Tools/respec/respec-w3c-common" class="remove"></script>
-  <script class='remove'>
-    "use strict";
-    // See https://github.com/w3c/respec/wiki/ for how to configure ReSpec
-    var respecConfig = {
-      "doRDFa": false,
-      "format": "markdown",
-      "githubAPI": "https://api.github.com/repos/WICG/priority-hints",
-      "issueBase": "https://www.github.com/WICG/priority-hints/issues/",
-      "noLegacyStyle": true,
-      "editors": [{
-        name: "Addy Osmani",
-        url: "https://addyosmani.com",
-        mailto: "addyosmani@gmail.com",
-        company: "Google",
-        companyURL: "https://google.com",
-      },
-      {
-        name: "Yoav Weiss",
-        url: "https://blog.yoav.ws/",
-        mailto: "yoav@yoav.ws",
-        company: "Akamai",
-        companyURL: "https://akamai.com/"
-      }
-        // Add additional editors here.
-        // https://github.com/w3c/respec/wiki/editors
-      ],
-      "shortName": "priority-hints",
-      "specStatus": "CG-DRAFT",
-      "subjectPrefix": "[priority-hints]",
-      "wg": "WICG",
-      "otherLinks": [{
-        "key": "Repository",
-        "data": [{
-          "value": "We are on GitHub.",
-          "href": "https://github.com/WICG/priority-hints"
-        }, {
-          "value": "File a bug.",
-          "href": "https://github.com/WICG/priority-hints/issues"
-        }, {
-          "value": "Commit history.",
-          "href": "https://github.com/WICG/priority-hints/commits/master"
-        },]
-      }],
-    };
-  </script>
-</head>
+<pre class="link-defaults">
+spec:html; type:dfn; for:/; text:enumerated attribute
+spec:html; type:dfn; for:/; text:invalid value default
+spec:html; type:dfn; for:/; text:missing value default
+</pre>
+
+<pre class=biblio>
+{
+    "PRELOAD": {
+        "authors": [
+            "Ilya Grigorik", "Yoav Weiss"
+        ],
+        "href": "https://w3c.github.io/preload/",
+        "publisher": "W3C",
+        "title": "Preload"
+    },
+    "RFC5988": {
+        "authors": [
+            "Mark Nottingham"
+        ],
+        "href": "https://tools.ietf.org/html/rfc5988",
+        "publisher": "IETF",
+        "title": "Web Linking"
+    }
+}
+</pre>
 
 <body>
-  <section id="abstract">
+  <section>
     <p>
       This specification describes a browser API enabling developers to signal the priority of each resource they need to download.
       It introduces the
@@ -67,66 +53,8 @@
     </p>
   </section>
 
-  <section id="dependencies">
-    <h2>Dependencies</h2>
-    <p>The term
-      <code><dfn data-dfn-type="dfn" id="dfn-preload"><a href="https://w3c.github.io/preload/">preload</a></dfn></code> is defined in [
-      <cite>
-        <a class="bibref" href="#bib-PRELOAD">PRELOAD</a>
-      </cite>].</p>
-    <p>The term
-      <code><dfn data-dfn-type="dfn" id="dfn-prefetch"><a href="https://www.w3.org/TR/resource-hints/#dfn-prefetch">prefetch</a></dfn></code> is defined in [
-      <cite>
-        <a class="bibref" href="#bib-RESOURCE-HINTS">RESOURCE-HINTS</a>
-      </cite>].</p>
-    <p>
-      The term
-      <dfn data-dfn-type="dfn" id="dfn-fetch">
-        <a href="https://fetch.spec.whatwg.org/#fetch-api">Fetch API</a>
-      </dfn> is defined in [
-      <cite>
-        <a class="bibref" href="#bib-FETCH">FETCH</a>
-      </cite>].
-    </p>
-    <p>
-      The term
-      <dfn data-dfn-type="dfn" id="dfn-request-destination">
-        <a href="https://fetch.spec.whatwg.org/#concept-request-destination">destination</a>
-      </dfn> is defined in [
-      <cite>
-        <a class="bibref" href="#bib-FETCH">FETCH</a>
-      </cite>].
-    </p>
-    <p>
-      The term
-      <dfn data-dfn-type="dfn" id="dfn-enumerated-attribute">
-        <a href="https://html.spec.whatwg.org/multipage/common-microsyntaxes.html#enumerated-attribute">enumerated attribute</a>
-      </dfn> is defined in [
-      <cite>
-        <a class="bibref" href="#bib-HTML">HTML</a>
-      </cite>].
-    </p>
-    <p>
-      The term
-      <dfn data-dfn-type="dfn" id="dfn-invalid-value-default">
-        <a href="https://html.spec.whatwg.org/multipage/common-microsyntaxes.html#invalid-value-default">invalid value default</a>
-      </dfn> is defined in [
-      <cite>
-        <a class="bibref" href="#bib-HTML">HTML</a>
-      </cite>].
-    </p>
-    <p>
-      The term
-      <dfn data-dfn-type="dfn" id="dfn-invalid-value-default">
-        <a href="https://html.spec.whatwg.org/multipage/common-microsyntaxes.html#missing-value-default">missing value default</a>
-      </dfn> is defined in [
-      <cite>
-        <a class="bibref" href="#bib-HTML">HTML</a>
-      </cite>].
-    </p>
-  </section>
-  <section id="introduction">
-    <h2>Introduction</h2>
+  <section>
+    <h2 id="introduction">Introduction</h2>
     <p>
       <em>This section is non-normative.</em>
     </p>
@@ -135,7 +63,7 @@
       in order to avoid bandwidth contention of these resources with more critical ones.</p>
 
     <p>Currently web developers have very little control over the heuristic importance of loaded resources, other than speeding
-      up their discovery using <code>&lt;link rel=preload&gt;</code>. Browsers mostly determine a request's priority based on the
+      up their discovery using <code>&lt;link rel=preload&gt;</code>([[PRELOAD]]). Browsers mostly determine a request's priority based on the
       request's <a>destination</a>, and location in the containing document if applicable.</p>
 
     <p>This document details use cases and a markup that will provide developers with the control to indicate a resource's
@@ -381,10 +309,8 @@ onload=&quot;this.rel=stylesheet&quot;&gt;
 Link: &lt;/app/script.js&gt;; importance=low</pre>
     </div>
 
-    <p>As above examples illustrate, importance can be specified via declarative markup, Link HTTP header ([
-      <cite>
-        <a class="bibref" href="#bib-RFC5988">RFC5988</a>
-      </cite>]), or scheduled via JavaScript.</p>
+    <p>As above examples illustrate, importance can be specified via declarative markup, Link HTTP header ([[RFC5988]]), 
+      or scheduled via JavaScript.</p>
 
     <h2 id="adoptionpath">Adoption path</h2>
 
@@ -402,7 +328,7 @@ Link: &lt;/app/script.js&gt;; importance=low</pre>
   </section>
 
   <section>
-    <h2>Use Cases</h2>
+    <h2 id="use-cases">Use Cases</h2>
 
     <p>This section outlines the different use-cases Priority Hints sets out to address. It is worth noting that priority in
       these examples should not limit itself to network priority (i.e. request time and HTTP/2 dependencies and weights),
@@ -482,7 +408,7 @@ Link: &lt;/app/script.js&gt;; importance=low</pre>
   </section>
 
   <section data-dfn-for="safety">
-    <h2>Safe usage</h2>
+    <h2 id="safe-usage">Safe usage</h2>
     <div class="note">
       <p>If the
         <code>importance</code> keyword is used as an optimization to initiate earlier fetch then no additional feature detection checks are necessary:
@@ -506,46 +432,6 @@ Link: &lt;/app/script.js&gt;; importance=low</pre>
       <code>defer</code>) but a site could fix any misguesses across the board by being explicit using Priority Hints.</p>
   </section>
 
-  <section data-dfn-for="references">
-    <h2>References</h2>
-    <h3>Normative references</h3>
-    <dt id="bib-PRELOAD">[PRELOAD]</dt>
-    <dd>
-      <a href="https://w3c.github.io/preload/">
-        <cite>Preload</cite>
-      </a>. Ilya Grigorik, Yoav Weiss. W3C. 9 January 2018. W3C Editor's Draft. URL:
-      <a href="https://w3c.github.io/preload/">https://w3c.github.io/preload/</a>
-    </dd>
-    <dt id="bib-RESOURCE-HINTS">[RESOURCE-HINTS]</dt>
-    <dd>
-      <a href="https://www.w3.org/TR/resource-hints/">
-        <cite>Resource Hints</cite>
-      </a>. Ilya Grigorik. W3C. 4 May 2017. W3C Working Draft. URL:
-      <a href="https://www.w3.org/TR/resource-hints/">https://www.w3.org/TR/resource-hints/</a>
-    </dd>
-    <dt id="bib-RFC5988">[RFC5988]</dt>
-    <dd>
-      <a href="https://tools.ietf.org/html/rfc5988">
-        <cite>Web Linking</cite>
-      </a>. M. Nottingham. IETF. October 2010. Proposed Standard. URL:
-      <a href="https://tools.ietf.org/html/rfc5988">https://tools.ietf.org/html/rfc5988</a>
-    </dd>
-    <dt id="bib-FETCH">[FETCH]</dt>
-    <dd>
-      <a href="https://fetch.spec.whatwg.org/">
-        <cite>Fetch Standard</cite>
-      </a>. Anne van Kesteren. WHATWG. Living Standard. URL:
-      <a href="https://fetch.spec.whatwg.org/">https://fetch.spec.whatwg.org/</a>
-    </dd>
-    <dt id="bib-HTML">[HTML]</dt>
-    <dd>
-      <a href="https://html.spec.whatwg.org/multipage/">
-        <cite>HTML Standard</cite>
-      </a>. Domenic Denicola. WHATWG. Living Standard. URL:
-      <a href="https://html.spec.whatwg.org/multipage/">https://html.spec.whatwg.org/multipage/</a>
-    </dd>
-
-  </section>
 </body>
 
 </html>
