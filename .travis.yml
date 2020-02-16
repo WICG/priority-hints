@@ -14,5 +14,5 @@ script:
 
 env:
   global:
-  - ENCRYPTION_LABEL: "label"
+  - ENCRYPTION_LABEL: "de0195b17563"
   - COMMIT_AUTHOR_EMAIL: "yoav@yoav.ws"
