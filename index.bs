@@ -66,7 +66,7 @@ spec:html; type:dfn; for:/; text:missing value default
       up their discovery using <code>&lt;link rel=preload&gt;</code>([[PRELOAD]]). Browsers mostly determine a request's priority based on the
       request's <a>destination</a>, and location in the containing document if applicable.</p>
 
-    <p>This document details use cases and a markup that will provide developers with the control to indicate a resource's
+    <p>This document details use cases and a markup that will provide developers control to indicate a resource's
       relative importance to the browser, enabling the browser to act on those indications to influence the request's overall priority
       in ways described in the <a href="#effects-of-priority-hints">Effects of Priority Hints</a> section.
     </p>
