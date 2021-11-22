@@ -5,8 +5,9 @@ Level: 1
 Status: CG-Draft
 Group: WICG
 URL: https://wicg.github.io/priority-hints
-Editor: Addy Osmani, Google Inc., addyosmani@gmail.com, https://blog.yoav.ws
+Editor: Addy Osmani, Google Inc., addyosmani@gmail.com, https://addyosmani.com/
 Editor: Yoav Weiss 58673, Google Inc., yoav@yoav.ws, https://blog.yoav.ws
+Editor: Patrick Meenan, Google Inc., patmeenan@gmail.com, https://twitter.com/patmeenan
 Abstract: Specification of the Priority Hints feature.
 Markup Shorthands: markdown yes
 </pre>
@@ -15,6 +16,10 @@ Markup Shorthands: markdown yes
 spec:html; type:dfn; for:/; text:enumerated attribute
 spec:html; type:dfn; for:/; text:invalid value default
 spec:html; type:dfn; for:/; text:missing value default
+spec:html; type:element; text:link
+spec:html; type:element; text:script
+spec:fetch; type:dfn; text:destination
+spec:fetch; type:interface; text:request
 </pre>
 
 <pre class=biblio>
@@ -43,8 +48,9 @@ spec:html; type:dfn; for:/; text:missing value default
     <p>
       This specification describes a browser API enabling developers to signal the priority of each resource they need to download.
       It introduces the
-      <a href="#solution">importance</a> <a data-lt="enumerated attribute">attribute</a> that may be used with elements such as
-      <code>img</code>, <code>link</code>, <code>script</code> and <code>iframe</code>.
+      <a href="#solution">importance</a> <a data-lt="enumerated attribute">attribute</a> that may be used with <code>HTML</code> elements such as
+      <{img}>, <{link}>, <{script}> and <{iframe}> and as an <a data-lt="enumerated attribute">attribute</a>
+      on the {{Request|RequestInfo}} of [[fetch#fetch-method|fetch]]. 
     </p>
   </section>
   <section id="sotd">
@@ -66,9 +72,9 @@ spec:html; type:dfn; for:/; text:missing value default
       up their discovery using <code>&lt;link rel=preload&gt;</code>([[PRELOAD]]). Browsers mostly determine a request's priority based on the
       request's <a>destination</a>, and location in the containing document if applicable.</p>
 
-    <p>This document details use cases and a markup that will provide developers control to indicate a resource's
-      relative importance to the browser, enabling the browser to act on those indications to influence the request's overall priority
-      in ways described in the <a href="#effects-of-priority-hints">Effects of Priority Hints</a> section.
+    <p>This document details use cases and modifications to [[fetch#fetch-method|fetch]] and <code>HTML</code> markup that will provide developers
+      control to indicate a resource's relative importance to the browser, enabling the browser to act on those indications to influence
+      the request's overall priority in ways described in the <a href="#effects-of-priority-hints">Effects of Priority Hints</a> section.
     </p>
 
   </section>
@@ -77,8 +83,8 @@ spec:html; type:dfn; for:/; text:missing value default
     <h2 id="solution">Solution</h2>
 
     <p>The
-      <code>importance</code> <a>enumerated attribute</a> may be used with resource-requesting elements including <code>link</code>,
-      <code>img</code>, <code>script</code> and <code>iframe</code>. This keyword hints to the browser the relative fetch priority
+      <code>importance</code> <a>enumerated attribute</a> may be used with resource-requesting elements including <{link}>,
+      <{img}>, <{script}> and <{iframe}>. This keyword hints to the browser the relative fetch priority
       a developer intends for a resource to have.</p>
 
     <ul>
@@ -112,6 +118,68 @@ spec:html; type:dfn; for:/; text:missing value default
 
     <p>This is how we conceptually think about different resource types under the hood in browsers today. It may translate well
       to user-space where different types of content share similar properties.</p>
+
+    <h2 id="proposal">Proposal</h2>
+    <h3 id="fetch">Fetch</h3>
+    <ul>
+      <li>Add an <dfn id="enum-fetch-request-importance" export>Importance enum</dfn> as an <a>enumerated attribute</a> of the {{Request|Request}} class.
+        <pre class=idl>
+        enum Importance { "high", "low", "auto" };
+        </pre>
+      </li>
+
+      <li>Add a readonly <code>importance</code> attribute to the {{Request|Request}} interface of the type {Importance}.</li>
+      <li>Add a readonly <code>importance</code> attribute to the {{Request|RequestInit}} dictionary of the type {Importance}.</li>
+    </ul>
+    <p>The attribute's <i data-x="missing value default">missing value default</i> and <i
+  data-x="invalid value default">invalid value default</i> are both the <code>auto</code> importance.</p>
+    <p>The Request importance can be interpreted by the underlying browser engine to influence the prioritization of the fetch.</p>
+
+    <h3 id="html">HTML</h3>
+    <p>Add a section to the [[html#fetching-resources]] algorithm to define the
+    <dfn id="importance" export>importance</dfn> attribute as an <a>enumerated attribute</a>. The following
+  table lists the keywords and underlying fetch importance for the attribute &mdash; the keywords in the left column map
+  to the fetch importance in the cell in the second column on the same row as the keyword.</p>
+
+  <table>
+   <thead>
+    <tr>
+     <th>Keyword
+     <th>Fetch Importance
+     <th>Description
+   <tbody>
+    <tr>
+     <td><dfn attr-value for="img/importance,link/importance,script/importance,iframe/importance"><code data-x="attr-importance-high">high</code></dfn>
+     <td><dfn data-x="attr-importance-high-state" export>High</dfn>
+     <td>Signal a high priority fetch.
+    <tr>
+     <td><dfn attr-value for="img/importance,link/importance,script/importance,iframe/importance"><code data-x="attr-importance-low">low</code></dfn>
+     <td><dfn data-x="attr-importance-low-state" export>Low</dfn>
+     <td>Signal a low priority fetch.
+    <tr>
+     <td><dfn attr-value for="img/importance,link/importance,script/importance,iframe/importance"><code data-x="attr-importance-auto">auto</code></dfn>
+     <td><dfn data-x="attr-importance-auto-state" export>Auto</dfn>
+     <td>Signal a default priority fetch.
+  </table>
+
+  <p>The attribute's <i data-x="missing value default">missing value default</i> and <i
+  data-x="invalid value default">invalid value default</i> are both the <span
+  data-x="attr-importance-auto">Auto</span> importance.</p>
+
+  <p>The importance attribute value is passed through to the {{Request|RequestInit}} of the underlying fetch
+  if one is generated, for the main resource for the associated <{img}>, <{link}>, <{script}> or <{iframe}></p>
+
+    <h4 id="img">img</h4>
+    <p>Add an <a>importance</a> attribute to [[html#the-img-element]]</p>
+
+    <h4 id="link">link</h4>
+    <p>Add an <a>importance</a> attribute to [[html#the-link-element]]</p>
+
+    <h4 id="script">script</h4>
+    <p>Add an <a>importance</a> attribute to [[html#the-script-element]]</p>
+
+    <h4 id="iframe">iframe</h4>
+    <p>Add an <a>importance</a> attribute to [[html#the-iframe-element]]</p>
 
     <h2 id="effects-of-priority-hints">Effects of Priority Hints</h2>
 
@@ -160,8 +228,16 @@ spec:html; type:dfn; for:/; text:missing value default
 <br/>&lt;/ul&gt;
 </div>
 
-<p>Browser heuristics may cause all four images to be fetched with a high priprity, despite three of them not initially being visible. This may cause these fetches to delay the first image from completing fetching or contend with fetches for other in-viewport resources.</p>
-<p>A developer could use rel=preload to preload the first image in the carousel, however doing so may not provide the outcome one expects: rel=preload will effectively prioritize that image above everything else, and if that image is large, it may block rendering as even stylesheets may end up waiting for that image to complete downloading. Priority Hints may help here.</p>
+<p>Browser heuristics may cause all four images to be initially queued at a low priority
+  and increased to a high priprity once layout determines they are within the viewport,
+  despite three of them not initially being visible. This may cause the initial image
+  fetch to be delayed and the fetches for the hidden images to
+  delay the first image from completing fetching or contend with fetches for other
+  in-viewport resources.</p>
+<p>A developer could use rel=preload to preload the first image in the carousel,
+  however doing so may not provide the outcome one expects: rel=preload may just change
+  when the image is discovered but will not necessarily influence the priority of the image.
+  Priority Hints may help here.</p>
 
 <div class="example" title="Example 1">
 <pre highlight="html">
@@ -175,6 +251,9 @@ spec:html; type:dfn; for:/; text:missing value default
 <br/>&lt;/ul&gt;
 </pre>
     </div>
+
+    <p>When we assign the first image high importance, this can start the image at a high
+    priority as soon as it is discovered without having to wait for layout.</p>
 
     <p>When we assign the off-screen images low importance, this will create less contention between the remaining high priority
       images and other high priority resources.</p>
@@ -324,6 +403,8 @@ Link: &lt;/app/script.js&gt;; importance=low</pre>
       <li>Signal that certain images should not block the load event.</li>
 
       <li>Signals relating the script execution order, script execution grouping, execution dependency, etc.</li>
+
+      <li>Signal the execution priority of <{script}> or <{iframe}> elements beyond the load of the initial resource.</li>
     </ul>
   </section>
 
@@ -396,15 +477,6 @@ Link: &lt;/app/script.js&gt;; importance=low</pre>
         images that are further away from the viewport and therefore less likely to be seen by the user.</li>
     </ul>
 
-    <h3 id="downgradepriorityofaniframeanditssubresources">Downgrade priority of an iframe and its subresources</h3>
-
-    <p>When developers load a third party iframe, they may wish to make sure that it does not contend on bandwidth and/or CPU
-      with the more important first party content of the page. Alternatively, they may wish to signal to the browser that a
-      certain third party iframe is as important as the main page content and should be given CPU and bandwidth resources
-      accordingly.
-    </p>
-
-    <p>When such a signal is applied to an iframe, it should be equally applied to all the subresources that the iframe loads.</p>
   </section>
 
   <section data-dfn-for="safety">
@@ -420,7 +492,7 @@ Link: &lt;/app/script.js&gt;; importance=low</pre>
     </div>
 
     <p>Applying
-      <code>importance</code> to the resources in a page should never degrade performance. This should hold true for both browsers that support
+      <code>importance</code> appropriately to the resources in a page should never degrade performance. This should hold true for both browsers that support
       Priority Hints as well as browsers that do not. UAs are free to apply other heuristics in addition to Priority Hints
       to decide on how they load content.</p>
     <p>With in-viewport images, a browser may automatically detect if the image is important and boost priority if it gets to
