@@ -10,16 +10,21 @@ Editor: Yoav Weiss 58673, Google Inc., yoav@yoav.ws, https://blog.yoav.ws
 Editor: Patrick Meenan, Google Inc., patmeenan@gmail.com, https://twitter.com/patmeenan
 Abstract: Specification of the Priority Hints feature.
 Markup Shorthands: markdown yes
+Default Highlight: js
 </pre>
 
-<pre class="link-defaults">
-spec:html; type:dfn; for:/; text:enumerated attribute
-spec:html; type:dfn; for:/; text:invalid value default
-spec:html; type:dfn; for:/; text:missing value default
-spec:html; type:element; text:link
-spec:html; type:element; text:script
-spec:fetch; type:dfn; text:destination
-spec:fetch; type:interface; text:request
+<pre class=anchors>
+urlPrefix: https://html.spec.whatwg.org/multipage; spec: HTML;
+    type:dfn; for:/; text:enumerated attribute
+    type:dfn; for:/; text:invalid value default
+    type:dfn; for:/; text:missing value default
+    type:element; text:link
+    type:element; text:script
+urlPrefix: https://fetch.spec.whatwg.org; spec: FETCH;
+    type: dfn; url: #concept-request; text: fetch request;
+    type: dfn; url: #concept-request-url; text: request URL;
+    type:dfn; text:destination
+    type:interface; text:request
 </pre>
 
 <pre class=biblio>
@@ -72,7 +77,7 @@ spec:fetch; type:interface; text:request
       up their discovery using <code>&lt;link rel=preload&gt;</code>([[PRELOAD]]). Browsers mostly determine a request's priority based on the
       request's <a>destination</a>, and location in the containing document if applicable.</p>
 
-    <p>This document details use cases and modifications to [[fetch#fetch-method|fetch]] and <code>HTML</code> markup that will provide developers
+    <p>This document details use cases and modifications to [[FETCH]] and [[HTML]] markup that will provide developers
       control to indicate a resource's relative importance to the browser, enabling the browser to act on those indications to influence
       the request's overall priority in ways described in the <a href="#effects-of-priority-hints">Effects of Priority Hints</a> section.
     </p>
@@ -120,66 +125,91 @@ spec:fetch; type:interface; text:request
       to user-space where different types of content share similar properties.</p>
 
     <h2 id="proposal">Proposal</h2>
-    <h3 id="fetch">Fetch</h3>
-    <ul>
-      <li>Add an <dfn id="enum-fetch-request-importance" export>Importance enum</dfn> as an <a>enumerated attribute</a> of the {{Request|Request}} class.
-        <pre class=idl>
-        enum Importance { "high", "low", "auto" };
-        </pre>
-      </li>
+    <h3 id="definitions">Definitions</h3>
+    <dfn id="importance-enum" export>Importance enum</dfn>
+    <pre class=idl>
+    enum Importance { "high", "low", "auto" };
+    </pre>
+    <table>
+      <thead>
+      <tr>
+        <th>Value
+        <th>Description
+      <tbody>
+      <tr>
+        <td><dfn id="importance-enum-high" export>high</dfn>
+        <td>Signal a high priority fetch.
+      <tr>
+        <td><dfn id="importance-enum-low" export>low</dfn>
+        <td>Signal a low priority fetch.
+      <tr>
+        <td><dfn id="importance-enum-auto" export>auto</dfn>
+        <td>Signal a default priority fetch.
+    </table>
 
-      <li>Add a readonly <code>importance</code> attribute to the {{Request|Request}} interface of the type {Importance}.</li>
-      <li>Add a readonly <code>importance</code> attribute to the {{Request|RequestInit}} dictionary of the type {Importance}.</li>
-    </ul>
-    <p>The attribute's <i data-x="missing value default">missing value default</i> and <i
-  data-x="invalid value default">invalid value default</i> are both the <code>auto</code> importance.</p>
-    <p>The Request importance can be interpreted by the underlying browser engine to influence the prioritization of the fetch.</p>
+    <h3 id="fetch-integration">Fetch Integration</h3>
+    <em>This section will be removed once the [[FETCH]] specification has been modified.</em>
 
-    <h3 id="html">HTML</h3>
-    <p>Add a section to the [[html#fetching-resources]] algorithm to define the
-    <dfn id="importance" export>importance</dfn> attribute as an <a>enumerated attribute</a>. The following
-  table lists the keywords and underlying fetch importance for the attribute &mdash; the keywords in the left column map
-  to the fetch importance in the cell in the second column on the same row as the keyword.</p>
+    We extend the {{Request}} interface as follows:
+    <pre class="idl">
+    partial interface Request {
+      readonly attribute Importance importance;
+    };
 
-  <table>
-   <thead>
-    <tr>
-     <th>Keyword
-     <th>Fetch Importance
-     <th>Description
-   <tbody>
-    <tr>
-     <td><dfn attr-value for="img/importance,link/importance,script/importance,iframe/importance"><code data-x="attr-importance-high">high</code></dfn>
-     <td><dfn data-x="attr-importance-high-state" export>High</dfn>
-     <td>Signal a high priority fetch.
-    <tr>
-     <td><dfn attr-value for="img/importance,link/importance,script/importance,iframe/importance"><code data-x="attr-importance-low">low</code></dfn>
-     <td><dfn data-x="attr-importance-low-state" export>Low</dfn>
-     <td>Signal a low priority fetch.
-    <tr>
-     <td><dfn attr-value for="img/importance,link/importance,script/importance,iframe/importance"><code data-x="attr-importance-auto">auto</code></dfn>
-     <td><dfn data-x="attr-importance-auto-state" export>Auto</dfn>
-     <td>Signal a default priority fetch.
-  </table>
+    partial dictionary RequestInit {
+      Importance importance;
+    };
+    </pre>
 
-  <p>The attribute's <i data-x="missing value default">missing value default</i> and <i
-  data-x="invalid value default">invalid value default</i> are both the <span
-  data-x="attr-importance-auto">Auto</span> importance.</p>
+    <h4 id="fetch-processing-model">Fetch Processing Model</h4>
+    TODO
 
-  <p>The importance attribute value is passed through to the {{Request|RequestInit}} of the underlying fetch
-  if one is generated, for the main resource for the associated <{img}>, <{link}>, <{script}> or <{iframe}></p>
+    <h3 id="html-integration">HTML Integration</h3>
+    <em>This section will be removed once the [[HTML]] specification has been modified.</em>
 
     <h4 id="img">img</h4>
-    <p>Add an <a>importance</a> attribute to [[html#the-img-element]]</p>
+    We extend the <{img}> element as follows:
+    <pre class="idl">
+    partial interface HTMLImageElement : HTMLElement {
+        [CEReactions] attribute DOMString importance;
+    };
+    </pre>
+
+    <h5 id="img-processing-model">Image Element Processing Model</h4>
+    TODO
 
     <h4 id="link">link</h4>
-    <p>Add an <a>importance</a> attribute to [[html#the-link-element]]</p>
+    We extend the <{link}> element as follows:
+    <pre class="idl">
+    partial interface HTMLLinkElement : HTMLElement {
+        [CEReactions] attribute DOMString importance;
+    };
+    </pre>
+
+    <h5 id="link-processing-model">Link Element Processing Model</h4>
+    TODO
 
     <h4 id="script">script</h4>
-    <p>Add an <a>importance</a> attribute to [[html#the-script-element]]</p>
+    We extend the <{script}> element as follows:
+    <pre class="idl">
+    partial interface HTMLScriptElement : HTMLElement {
+        [CEReactions] attribute DOMString importance;
+    };
+    </pre>
+
+    <h5 id="script-processing-model">Script Element Processing Model</h4>
+    TODO
 
     <h4 id="iframe">iframe</h4>
-    <p>Add an <a>importance</a> attribute to [[html#the-iframe-element]]</p>
+    We extend the <{iframe}> element as follows:
+    <pre class="idl">
+    partial interface HTMLIFrameElement : HTMLElement {
+        [CEReactions] attribute DOMString importance;
+    };
+    </pre>
+
+    <h5 id="iframe-processing-model">IFrame Element Processing Model</h4>
+    TODO
 
     <h2 id="effects-of-priority-hints">Effects of Priority Hints</h2>
 
