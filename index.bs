@@ -239,10 +239,10 @@ urlPrefix: https://fetch.spec.whatwg.org; spec: FETCH;
 
     <h2 id="examples">Examples</h2>
 
-    <strong>Lower fetch priority when browser defaults are insufficient</strong>
+    <strong>Provide parse-time hints about image priorities</strong>
     <p>Browsers make a best-effort to assign a reasonable fetch priority to images so those in-viewport appear as soon as possible.
       In many cases, this will not cause issues, however, what if some above-the-fold imagery is not as critical as others?
-      Priority Hints can assist here. </p>
+      Making the in-viewport evaluation also relies on waiting for layout and adjusting the priority of in-flight images.</p>
 
     <div class="example" title="Example 1">
       <p>FastCorp Inc. have a carousel of images at the top of a page with the first image visible and the remaining images
@@ -441,10 +441,7 @@ Link: &lt;/app/script.js&gt;; importance=low</pre>
   <section>
     <h2 id="use-cases">Use Cases</h2>
 
-    <p>This section outlines the different use-cases Priority Hints sets out to address. It is worth noting that priority in
-      these examples should not limit itself to network priority (i.e. request time and HTTP/2 dependencies and weights),
-      but also to processing priority, as the browser can use the same signals in order to avoid processing of low priority
-      resource in favor of higher priority ones.</p>
+    <p>This section outlines the different use-cases Priority Hints sets out to address.</p>
 
     <h3 id="communicateresourceimportancetothebrowser">Communicate resource importance to the browser</h3>
 
@@ -453,7 +450,7 @@ Link: &lt;/app/script.js&gt;; importance=low</pre>
     <ul>
       <li>When the resource's request is sent to the server.</li>
 
-      <li>What HTTP/2 dependencies and weights are assigned to the resource's request.</li>
+      <li>What HTTP/2 dependencies and weights or HTTP/3 priorities are assigned to the resource's request.</li>
     </ul>
 
     <p>The browser uses various heuristics in order to do the above, which are based on the type of resource, its location in
@@ -494,18 +491,6 @@ Link: &lt;/app/script.js&gt;; importance=low</pre>
     <p>Developers need a way to provide the above signals for resources that are fetched through JavaScript, e.g., using the
       <code>fetch()</code> API. That would enable them both to upgrade and downgrade those resource's "importance".
     </p>
-
-    <h3 id="providetheabilitytoreprioritizearesourceinflight">Provide the ability to re-prioritize a resource in-flight</h3>
-
-    <ul>
-      <li>"Resource priority" is not always the right way of looking at it. For resources that are parsed on-the-fly (most notably
-        HTML and progressive images), their first buffer is often more important than their last. Developers can use the
-        ability to reprioritize resources to reflect this notion when downloading such resources.</li>
-
-      <li>There are also cases where the priority of a resource changes due to user action or condition changes. One example
-        is the loading of images, where in-viewport images (or soon-to-be in-viewport images) are of higher priority than
-        images that are further away from the viewport and therefore less likely to be seen by the user.</li>
-    </ul>
 
   </section>
 
