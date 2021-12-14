@@ -1,18 +1,30 @@
 language: python
-sudo: false
-python:
-  - "3.7"
+python: 3.7
 
 install:
-  # Setup bikeshed. See https://tabatkins.github.io/bikeshed/#install-linux
-  - git clone https://github.com/tabatkins/bikeshed.git
-  - pip install --editable $PWD/bikeshed
-  - bikeshed update
+- pip install bikeshed
+- bikeshed update
  
 script:
-  - bash ./deploy.sh
+- mkdir -p out
+- bikeshed --die-on=warning spec index.bs out/index.html
 
-env:
-  global:
-  - ENCRYPTION_LABEL: "de0195b17563"
-  - COMMIT_AUTHOR_EMAIL: "yoav@yoav.ws"
+branches:
+  only:
+  - main
+
+before_deploy:
+- openssl aes-256-cbc -K $encrypted_de0195b17563_key -iv $encrypted_de0195b17563_iv -in deploy_key.enc -out deploy_key -d
+
+deploy:
+  provider: pages
+  local_dir: out
+  deploy_key: deploy_key
+  on:
+    branch: main
+  edge: true
+
+notifications:
+  email:
+    on_success: never
+    on_failure: always
