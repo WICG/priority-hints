@@ -11,4 +11,4 @@ Please see the **[Explainer & FAQ](EXPLAINER.md)** for long form feature explana
 
 # Use Cases / Examples
 
-See [the EXAMPLES.md file](/EXAMPLES.md) to see use cases of priority hints.
+See [Examples section of the Explainer](EXPLAINER.md#example-use-cases) to see use cases of priority hints.
