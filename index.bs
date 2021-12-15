@@ -170,7 +170,7 @@ urlPrefix: https://fetch.spec.whatwg.org; spec: FETCH;
     <h4 id="img">img</h4>
     We extend the <{img}> element as follows:
     <pre class="idl">
-    partial interface HTMLImageElement : HTMLElement {
+    partial interface HTMLImageElement {
         [CEReactions] attribute DOMString importance;
     };
     </pre>
@@ -181,7 +181,7 @@ urlPrefix: https://fetch.spec.whatwg.org; spec: FETCH;
     <h4 id="link">link</h4>
     We extend the <{link}> element as follows:
     <pre class="idl">
-    partial interface HTMLLinkElement : HTMLElement {
+    partial interface HTMLLinkElement {
         [CEReactions] attribute DOMString importance;
     };
     </pre>
@@ -192,7 +192,7 @@ urlPrefix: https://fetch.spec.whatwg.org; spec: FETCH;
     <h4 id="script">script</h4>
     We extend the <{script}> element as follows:
     <pre class="idl">
-    partial interface HTMLScriptElement : HTMLElement {
+    partial interface HTMLScriptElement {
         [CEReactions] attribute DOMString importance;
     };
     </pre>
@@ -203,7 +203,7 @@ urlPrefix: https://fetch.spec.whatwg.org; spec: FETCH;
     <h4 id="iframe">iframe</h4>
     We extend the <{iframe}> element as follows:
     <pre class="idl">
-    partial interface HTMLIFrameElement : HTMLElement {
+    partial interface HTMLIFrameElement {
         [CEReactions] attribute DOMString importance;
     };
     </pre>
