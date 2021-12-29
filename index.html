@@ -6,7 +6,7 @@
   <link href="https://www.w3.org/StyleSheets/TR/2021/cg-draft" rel="stylesheet">
   <meta content="Bikeshed version cace53f8c, updated Tue Dec 7 12:12:54 2021 -0800" name="generator">
   <link href="https://wicg.github.io/priority-hints" rel="canonical">
-  <meta content="8813e6ff49ffe28080b04a10fad97731b5e4cff0" name="document-revision">
+  <meta content="a6f06e99c3cecbdfb93d203d230a5c65a3ba4a8f" name="document-revision">
 <style>/* style-autolinks */
 
 .css.css, .property.property, .descriptor.descriptor {
@@ -577,7 +577,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
   <div class="head">
    <p data-fill-with="logo"><a class="logo" href="https://www.w3.org/"> <img alt="W3C" height="48" src="https://www.w3.org/StyleSheets/TR/2021/logos/W3C" width="72"> </a> </p>
    <h1 class="p-name no-ref" id="title">Priority Hints</h1>
-   <p id="w3c-state"><a href="https://www.w3.org/standards/types#CG-DRAFT">Draft Community Group Report</a>, <time class="dt-updated" datetime="2021-12-15">15 December 2021</time></p>
+   <p id="w3c-state"><a href="https://www.w3.org/standards/types#CG-DRAFT">Draft Community Group Report</a>, <time class="dt-updated" datetime="2021-12-29">29 December 2021</time></p>
    <div data-fill-with="spec-metadata">
     <dl>
      <dt>This version:
@@ -809,14 +809,26 @@ A human-readable <a href="http://www.w3.org/community/about/agreements/cla-deed/
     <p>Since the user agents' resource loading pipeline is largely unspecified, this document doesn’t describe a specific mapping
       between Priority Hints and request prioritization. However, it does describe ways in which implementations are encouraged to
       influence a request’s overall fetch priority given a Priority Hint.</p>
-    <p><strong>HTTP/2 Relative Stream Priority</strong></p>
-    <p>Implementations are encouraged to use Priority Hints to influence the HTTP/2 stream priority assigned to a given request.
+    <p><strong>HTTP Stream Priority</strong></p>
+    <p></p>
+    <p>Implementations are encouraged to use Priority Hints to influence the <a href="https://httpwg.org/http-extensions/draft-ietf-httpbis-priority.html#name-urgency">stream urgency</a> assigned to
+      a given request when <a href="https://httpwg.org/http-extensions/draft-ietf-httpbis-priority.html">HTTP extensible prioritization</a> is
+      being used at the transport layer (for example, with HTTP/3).
       It is not the intention of the different <code class="highlight">importance</code> states to directly map to existing browser priority values,
       but instead act as a relative influencer among requests of a similar type.</p>
-    <div class="example" id="example-6e40dcfa">
-     <a class="self-link" href="#example-6e40dcfa"></a> 
-     <p> If requests for <code class="highlight">image</code> <a data-link-type="dfn" href="https://fetch.spec.whatwg.org#destination" id="ref-for-destination①">destinations</a> in a particular implementation are typically assigned a stream weight of <code class="highlight"><c- mf>60</c-></code>, a request for an image with <code class="highlight">importance<c- o>=</c-><c- u>"low"</c-></code> might be assigned a stream weight less than <code class="highlight"><c- mf>60</c-></code>. In other words, <code class="highlight">importance<c- o>=</c-><c- u>"low"</c-></code> on an image might lead to an entirely different resolved
-        HTTP/2 stream priority than <code class="highlight">importance<c- o>=</c-><c- u>"low"</c-></code> on something like a script, or an iframe. </p>
+    <p></p>
+    <div class="example" id="example-0c319f11">
+     <a class="self-link" href="#example-0c319f11"></a> 
+     <p> If requests for <code class="highlight">image</code> <a data-link-type="dfn" href="https://fetch.spec.whatwg.org#destination" id="ref-for-destination①">destinations</a> in a particular implementation are typically assigned a stream urgency of <code class="highlight"><c- mf>3</c-></code>, a request for an image with <code class="highlight">importance<c- o>=</c-><c- u>"high"</c-></code> might be assigned a stream urgency less than <code class="highlight"><c- mf>3</c-></code> (where lower values are higher priority).</p>
+    </div>
+    <p><strong>HTTP/2 Relative Stream Priority</strong></p>
+    <p>Implementations are encouraged to use Priority Hints to influence the HTTP/2 stream priority assigned to a given request
+      when <a href="https://httpwg.org/http2-spec/draft-ietf-httpbis-http2bis.html#name-prioritization">HTTP/2 prioritization</a> is being used at the transport layer.
+      It is not the intention of the different <code class="highlight">importance</code> states to directly map to existing browser priority values,
+      but instead act as a relative influencer among requests of a similar type.</p>
+    <div class="example" id="example-13969b9b">
+     <a class="self-link" href="#example-13969b9b"></a> 
+     <p> If requests for <code class="highlight">image</code> <a data-link-type="dfn" href="https://fetch.spec.whatwg.org#destination" id="ref-for-destination②">destinations</a> in a particular implementation are typically assigned a stream weight of <code class="highlight"><c- mf>60</c-></code>, a request for an image with <code class="highlight">importance<c- o>=</c-><c- u>"high"</c-></code> might be assigned a stream weight higher than <code class="highlight"><c- mf>60</c-></code>. </p>
     </div>
     <p><strong>Queueing</strong></p>
     <p>A user agent might choose to queue up certain low priority requests until higher priority requests are sent out or finished
@@ -1143,7 +1155,7 @@ A human-readable <a href="http://www.w3.org/community/about/agreements/cla-deed/
    <a href="https://fetch.spec.whatwg.org#destination">https://fetch.spec.whatwg.org#destination</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-destination">1. Introduction</a>
-    <li><a href="#ref-for-destination①">4. Effects of Priority Hints</a>
+    <li><a href="#ref-for-destination①">4. Effects of Priority Hints</a> <a href="#ref-for-destination②">(2)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-cereactions">
