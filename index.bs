@@ -96,13 +96,17 @@ urlPrefix: https://fetch.spec.whatwg.org; spec: FETCH;
       <li>The <code>importance</code> attribute will have three states:
         <ul>
           <li>
-            <code>high</code> - The developer considers the resource as being high priority.</li>
-          <li>
-            <code>low</code> - The developer considers the resource as being low priority.
+            <code>high</code> - The developer considers the resource as being important relative to other resources of the
+            same type.
           </li>
           <li>
-            <code>auto</code> - The developer does not indicate a preference. This also serves as the attribute's
-            <a>invalid value default</a> and <a>missing value default</a>.
+            <code>low</code> - The developer considers the resource as being less important relative to other resources of
+            the same type.
+          </li>
+          <li>
+            <code>auto</code> - The developer does not indicate a preference and defers to
+            the browser's default heuristics. This also serves as the attribute's <a>invalid value default</a>
+            and <a>missing value default</a>.
           </li>
         </ul>
       </li>
@@ -138,13 +142,13 @@ urlPrefix: https://fetch.spec.whatwg.org; spec: FETCH;
       <tbody>
       <tr>
         <td><dfn id="importance-enum-high" export>high</dfn>
-        <td>Signal a high priority fetch.
+        <td>Signal a high priority fetch relative to other resources of the same type.
       <tr>
         <td><dfn id="importance-enum-low" export>low</dfn>
-        <td>Signal a low priority fetch.
+        <td>Signal a low priority fetch relative to other resources of the same type.
       <tr>
         <td><dfn id="importance-enum-auto" export>auto</dfn>
-        <td>Signal a default priority fetch.
+        <td>Signal automatic determination of fetch priority relative to other resources of the same type.
     </table>
 
     <h3 id="fetch-integration">Fetch Integration</h3>
@@ -217,36 +221,17 @@ urlPrefix: https://fetch.spec.whatwg.org; spec: FETCH;
       between Priority Hints and request prioritization. However, it does describe ways in which implementations are encouraged to
       influence a request's overall fetch priority given a Priority Hint.</p>
 
-    <strong>HTTP Stream Priority</strong>
-    <p>
-    <p>Implementations are encouraged to use Priority Hints to influence the
-      <a href="https://httpwg.org/http-extensions/draft-ietf-httpbis-priority.html#name-urgency">stream urgency</a> assigned to
-      a given request when
-      <a href="https://httpwg.org/http-extensions/draft-ietf-httpbis-priority.html">HTTP extensible prioritization</a> is
-      being used at the transport layer (for example, with HTTP/3).
-      It is not the intention of the different <code>importance</code> states to directly map to existing browser priority values,
-      but instead act as a relative influencer among requests of a similar type.</p>
-    </p>
-    <div class="example">
-      <p>
-        If requests for <code>image</code>
-        <a data-lt="destination">destinations</a> in a particular implementation are typically assigned a stream urgency of
-        <code>3</code>, a request for an image with <code>importance="high"</code> might be assigned a stream urgency less than
-        <code>3</code> (where lower values are higher priority).</p>
-    </div>
-
     <strong>HTTP/2 Relative Stream Priority</strong>
-    <p>Implementations are encouraged to use Priority Hints to influence the HTTP/2 stream priority assigned to a given request
-      when <a href="https://httpwg.org/http2-spec/draft-ietf-httpbis-http2bis.html#name-prioritization">HTTP/2 prioritization</a>
-      is being used at the transport layer.
+    <p>Implementations are encouraged to use Priority Hints to influence the HTTP/2 stream priority assigned to a given request.
       It is not the intention of the different <code>importance</code> states to directly map to existing browser priority values,
       but instead act as a relative influencer among requests of a similar type.</p>
     <div class="example">
       <p>
         If requests for <code>image</code>
         <a data-lt="destination">destinations</a> in a particular implementation are typically assigned a stream weight of
-        <code>60</code>, a request for an image with <code>importance="high"</code> might be assigned a stream weight higher than
-        <code>60</code>.
+        <code>60</code>, a request for an image with <code>importance="low"</code> might be assigned a stream weight less than
+        <code>60</code>. In other words, <code>importance="low"</code> on an image might lead to an entirely different resolved
+        HTTP/2 stream priority than <code>importance="low"</code> on something like a script, or an iframe.
       </p>
     </div>
 
