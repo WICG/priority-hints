@@ -6,7 +6,7 @@
   <link href="https://www.w3.org/StyleSheets/TR/2021/cg-draft" rel="stylesheet">
   <meta content="Bikeshed version cace53f8c, updated Tue Dec 7 12:12:54 2021 -0800" name="generator">
   <link href="https://wicg.github.io/priority-hints" rel="canonical">
-  <meta content="a6f06e99c3cecbdfb93d203d230a5c65a3ba4a8f" name="document-revision">
+  <meta content="0b75ff17cefc4c4e94f6aeed4fecd51b12afa634" name="document-revision">
 <style>/* style-autolinks */
 
 .css.css, .property.property, .descriptor.descriptor {
@@ -577,7 +577,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
   <div class="head">
    <p data-fill-with="logo"><a class="logo" href="https://www.w3.org/"> <img alt="W3C" height="48" src="https://www.w3.org/StyleSheets/TR/2021/logos/W3C" width="72"> </a> </p>
    <h1 class="p-name no-ref" id="title">Priority Hints</h1>
-   <p id="w3c-state"><a href="https://www.w3.org/standards/types#CG-DRAFT">Draft Community Group Report</a>, <time class="dt-updated" datetime="2021-12-29">29 December 2021</time></p>
+   <p id="w3c-state"><a href="https://www.w3.org/standards/types#CG-DRAFT">Draft Community Group Report</a>, <time class="dt-updated" datetime="2022-01-01">1 January 2022</time></p>
    <div data-fill-with="spec-metadata">
     <dl>
      <dt>This version:
@@ -591,7 +591,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
     </dl>
    </div>
    <div data-fill-with="warning"></div>
-   <p class="copyright" data-fill-with="copyright"><a href="http://www.w3.org/Consortium/Legal/ipr-notice#Copyright">Copyright</a> © 2021 the Contributors to the Priority Hints Specification, published by the <a href="https://www.w3.org/community/wicg/">Web Platform Incubator Community Group</a> under the <a href="https://www.w3.org/community/about/agreements/cla/">W3C Community Contributor License Agreement (CLA)</a>.
+   <p class="copyright" data-fill-with="copyright"><a href="http://www.w3.org/Consortium/Legal/ipr-notice#Copyright">Copyright</a> © 2022 the Contributors to the Priority Hints Specification, published by the <a href="https://www.w3.org/community/wicg/">Web Platform Incubator Community Group</a> under the <a href="https://www.w3.org/community/about/agreements/cla/">W3C Community Contributor License Agreement (CLA)</a>.
 A human-readable <a href="http://www.w3.org/community/about/agreements/cla-deed/">summary</a> is available. </p>
    <hr title="Separator for header">
   </div>
@@ -720,9 +720,12 @@ A human-readable <a href="http://www.w3.org/community/about/agreements/cla-deed/
      <li>
       The <code class="highlight">importance</code> attribute will have three states: 
       <ul>
-       <li> <code class="highlight">high</code> - The developer considers the resource as being high priority.
-       <li> <code class="highlight">low</code> - The developer considers the resource as being low priority. 
-       <li> <code class="highlight">auto</code> - The developer does not indicate a preference. This also serves as the attribute’s <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage#invalid-value-default" id="ref-for-invalid-value-default">invalid value default</a> and <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage#missing-value-default" id="ref-for-missing-value-default">missing value default</a>. 
+       <li> <code class="highlight">high</code> - The developer considers the resource as being important relative to other resources of the
+            same type. 
+       <li> <code class="highlight">low</code> - The developer considers the resource as being less important relative to other resources of
+            the same type. 
+       <li> <code class="highlight">auto</code> - The developer does not indicate a preference and defers to
+            the browser’s default heuristics. This also serves as the attribute’s <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage#invalid-value-default" id="ref-for-invalid-value-default">invalid value default</a> and <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage#missing-value-default" id="ref-for-missing-value-default">missing value default</a>. 
       </ul>
     </ul>
     <p>With this attribute, the browser should make an effort to respect the developer’s preference for the importance of a
@@ -750,13 +753,13 @@ A human-readable <a href="http://www.w3.org/community/about/agreements/cla-deed/
      <tbody>
       <tr>
        <td><dfn data-dfn-type="dfn" data-export id="importance-enum-high">high<a class="self-link" href="#importance-enum-high"></a></dfn> 
-       <td>Signal a high priority fetch. 
+       <td>Signal a high priority fetch relative to other resources of the same type. 
       <tr>
        <td><dfn data-dfn-type="dfn" data-export id="importance-enum-low">low<a class="self-link" href="#importance-enum-low"></a></dfn> 
-       <td>Signal a low priority fetch. 
+       <td>Signal a low priority fetch relative to other resources of the same type. 
       <tr>
        <td><dfn data-dfn-type="dfn" data-export id="importance-enum-auto">auto<a class="self-link" href="#importance-enum-auto"></a></dfn> 
-       <td>Signal a default priority fetch. 
+       <td>Signal automatic determination of fetch priority relative to other resources of the same type. 
     </table>
     <h3 class="heading settled" data-level="3.2" id="fetch-integration"><span class="secno">3.2. </span><span class="content">Fetch Integration</span><a class="self-link" href="#fetch-integration"></a></h3>
      <em>This section will be removed once the <a data-link-type="biblio" href="#biblio-fetch">[FETCH]</a> specification has been modified.</em> 
