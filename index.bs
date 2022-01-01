@@ -96,13 +96,17 @@ urlPrefix: https://fetch.spec.whatwg.org; spec: FETCH;
       <li>The <code>importance</code> attribute will have three states:
         <ul>
           <li>
-            <code>high</code> - The developer considers the resource as being high priority.</li>
-          <li>
-            <code>low</code> - The developer considers the resource as being low priority.
+            <code>high</code> - The developer considers the resource as being important relative to other resources of the
+            same type.
           </li>
           <li>
-            <code>auto</code> - The developer does not indicate a preference. This also serves as the attribute's
-            <a>invalid value default</a> and <a>missing value default</a>.
+            <code>low</code> - The developer considers the resource as being less important relative to other resources of
+            the same type.
+          </li>
+          <li>
+            <code>auto</code> - The developer does not indicate a preference and defers to
+            the browser's default heuristics. This also serves as the attribute's <a>invalid value default</a>
+            and <a>missing value default</a>.
           </li>
         </ul>
       </li>
@@ -138,13 +142,13 @@ urlPrefix: https://fetch.spec.whatwg.org; spec: FETCH;
       <tbody>
       <tr>
         <td><dfn id="importance-enum-high" export>high</dfn>
-        <td>Signal a high priority fetch.
+        <td>Signal a high priority fetch relative to other resources of the same type.
       <tr>
         <td><dfn id="importance-enum-low" export>low</dfn>
-        <td>Signal a low priority fetch.
+        <td>Signal a low priority fetch relative to other resources of the same type.
       <tr>
         <td><dfn id="importance-enum-auto" export>auto</dfn>
-        <td>Signal a default priority fetch.
+        <td>Signal automatic determination of fetch priority relative to other resources of the same type.
     </table>
 
     <h3 id="fetch-integration">Fetch Integration</h3>

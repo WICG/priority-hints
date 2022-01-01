@@ -42,9 +42,9 @@ We propose to address the above use-cases using the following concepts:
 
 * The importance attribute will have three states that will map to current browser priorities:
 
-  * `high` - The developer considers the resource as being high priority.
-  * `low` - The developer considers the resource as being low priority.
-  * `auto` - The developer does not indicate a preference. This also serves as the default value if the attribute is not specified.
+  * `high` - The developer considers the resource as being important relative to other resources of the same type.
+  * `low` - The developer considers the resource as being less important relative to other resources of the same type.
+  * `auto` - The developer does not indicate a preference and defers to the browser's default heuristics. This also serves as the default value if the attribute is not specified.
 
 * Developers would annotate resource-requesting tags such as img, script and link using the importance attribute as a hint of the preferred priority with which the resource should be fetched.
 
