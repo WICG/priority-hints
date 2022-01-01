@@ -18,6 +18,12 @@ provide developers with the control to indicate a resource's
 relative importance to the browser for the browser to use when making
 loading prioritization decisions.
 
+It is important to note that changing the importance of one resource usually
+comes at the cost of another resource so hints should be applied sparingly.
+Marking everything in the document as important will likely make for a worse
+user experience but correctly tagging a few resources that the browser would
+otherwise not load optimally can have a huge benefit.
+
 ### Adoption path
 Markup based signal should be added in a way such that non-supporting
 browsers will simply ignore them and load all resources, potentially not

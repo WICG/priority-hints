@@ -82,6 +82,11 @@ urlPrefix: https://fetch.spec.whatwg.org; spec: FETCH;
       the request's overall priority in ways described in the <a href="#effects-of-priority-hints">Effects of Priority Hints</a> section.
     </p>
 
+    <p>It is important to note that changing the importance of one resource usually comes at the cost of another resource so
+    hints should be applied sparingly. Marking everything in the document as important will likely make for a worse user experience
+    but correctly tagging a few resources that the browser would otherwise not load optimally can have a huge benefit.
+    </p>
+
   </section>
 
   <section>
