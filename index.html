@@ -6,7 +6,7 @@
   <link href="https://www.w3.org/StyleSheets/TR/2021/cg-draft" rel="stylesheet">
   <meta content="Bikeshed version cace53f8c, updated Tue Dec 7 12:12:54 2021 -0800" name="generator">
   <link href="https://wicg.github.io/priority-hints" rel="canonical">
-  <meta content="0b75ff17cefc4c4e94f6aeed4fecd51b12afa634" name="document-revision">
+  <meta content="bb4f1636e6474dc25af4ca30e7c0eded2b8d964c" name="document-revision">
 <style>/* style-autolinks */
 
 .css.css, .property.property, .descriptor.descriptor {
@@ -711,6 +711,9 @@ A human-readable <a href="http://www.w3.org/community/about/agreements/cla-deed/
     <p>This document details use cases and modifications to <a data-link-type="biblio" href="#biblio-fetch">[FETCH]</a> and <a data-link-type="biblio" href="#biblio-html">[HTML]</a> markup that will provide developers
       control to indicate a resource’s relative importance to the browser, enabling the browser to act on those indications to influence
       the request’s overall priority in ways described in the <a href="#effects-of-priority-hints">Effects of Priority Hints</a> section. </p>
+    <p>It is important to note that changing the importance of one resource usually comes at the cost of another resource so
+    hints should be applied sparingly. Marking everything in the document as important will likely make for a worse user experience
+    but correctly tagging a few resources that the browser would otherwise not load optimally can have a huge benefit. </p>
    </section>
    <section>
     <h2 class="heading settled" data-level="2" id="solution"><span class="secno">2. </span><span class="content">Solution</span><a class="self-link" href="#solution"></a></h2>
