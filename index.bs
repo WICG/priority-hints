@@ -171,7 +171,9 @@ urlPrefix: https://fetch.spec.whatwg.org; spec: FETCH;
     </pre>
 
     <h4 id="fetch-processing-model">Fetch Processing Model</h4>
-    TODO
+    <p>TODO: Document formal process model</p>
+    <p>The fetch processing model will document the steps to take the importance enum attribute
+    and pass it to the underlying browser engine for browser-specific processing</p>
 
     <h3 id="html-integration">HTML Integration</h3>
     <em>This section will be removed once the [[HTML]] specification has been modified.</em>
@@ -185,7 +187,9 @@ urlPrefix: https://fetch.spec.whatwg.org; spec: FETCH;
     </pre>
 
     <h5 id="img-processing-model">Image Element Processing Model</h4>
-    TODO
+    <p>TODO: Document formal process model</p>
+    <p>The processing model will document the steps to take the DOMString importance attribute
+    and pass it to the underlying fetch for the image resource.</p>
 
     <h4 id="link">link</h4>
     We extend the <{link}> element as follows:
@@ -196,7 +200,9 @@ urlPrefix: https://fetch.spec.whatwg.org; spec: FETCH;
     </pre>
 
     <h5 id="link-processing-model">Link Element Processing Model</h4>
-    TODO
+    <p>TODO: Document formal process model</p>
+    <p>The processing model will document the steps to take the DOMString importance attribute
+    and pass it to the underlying fetch for the linked resource.</p>
 
     <h4 id="script">script</h4>
     We extend the <{script}> element as follows:
@@ -207,7 +213,9 @@ urlPrefix: https://fetch.spec.whatwg.org; spec: FETCH;
     </pre>
 
     <h5 id="script-processing-model">Script Element Processing Model</h4>
-    TODO
+    <p>TODO: Document formal process model</p>
+    <p>The processing model will document the steps to take the DOMString importance attribute
+    and pass it to the underlying fetch for the script resource.</p>
 
     <h4 id="iframe">iframe</h4>
     We extend the <{iframe}> element as follows:
@@ -218,7 +226,9 @@ urlPrefix: https://fetch.spec.whatwg.org; spec: FETCH;
     </pre>
 
     <h5 id="iframe-processing-model">IFrame Element Processing Model</h4>
-    TODO
+    <p>TODO: Document formal process model</p>
+    <p>The processing model will document the steps to take the DOMString importance attribute
+    and pass it to the underlying fetch for the iframe src (if one exists).</p>
 
     <h2 id="effects-of-priority-hints">Effects of Priority Hints</h2>
 
@@ -272,178 +282,131 @@ urlPrefix: https://fetch.spec.whatwg.org; spec: FETCH;
       In many cases, this will not cause issues, however, what if some above-the-fold imagery is not as critical as others?
       Making the in-viewport evaluation also relies on waiting for layout and adjusting the priority of in-flight images.</p>
 
-    <div class="example" title="Example 1">
+    <div class="example" title="Images Example Before">
       <p>FastCorp Inc. have a carousel of images at the top of a page with the first image visible and the remaining images
         images off screen. The markup of this carousel may look as follows:</p>
-      <pre highlight="html">
-&lt;ul class=&quot;carousel&quot;&gt;
-<br/> &lt;!-- The first image is visible --&gt;
-<br/> &lt;img src=&quot;img/carousel-1.jpg&quot;&gt;
-<br/> &lt;!-- The other carousel images are not --&gt;
-<br/> &lt;img src=&quot;img/carousel-2.jpg&quot;&gt;
-<br/> &lt;img src=&quot;img/carousel-3.jpg&quot;&gt;
-<br/> &lt;img src=&quot;img/carousel-4.jpg&quot;&gt;
-<br/>&lt;/ul&gt;
-</div>
+      <xmp highlight="html">
+        <ul class="carousel">
+          <!-- The first image is visible -->
+          <img src="img/carousel-1.jpg">
+          <!-- The other carousel images are not -->
+          <img src="img/carousel-2.jpg">
+          <img src="img/carousel-3.jpg">
+          <img src="img/carousel-4.jpg">
+        </ul>
+      </xmp>
+    </div>
 
-<p>Browser heuristics may cause all four images to be initially queued at a low priority
-  and increased to a high priprity once layout determines they are within the viewport,
-  despite three of them not initially being visible. This may cause the initial image
-  fetch to be delayed and the fetches for the hidden images to
-  delay the first image from completing fetching or contend with fetches for other
-  in-viewport resources.</p>
-<p>A developer could use rel=preload to preload the first image in the carousel,
-  however doing so may not provide the outcome one expects: rel=preload may just change
-  when the image is discovered but will not necessarily influence the priority of the image.
-  Priority Hints may help here.</p>
 
-<div class="example" title="Example 1">
-<pre highlight="html">
-&lt;ul class=&quot;carousel&quot;&gt;
-<br/> &lt;!-- The first image is visible --&gt;
-<br/> &lt;img src=&quot;img/carousel-1.jpg&quot; importance=&quot;high&quot;&gt;
-<br/> &lt;!-- The other carousel images are not --&gt;
-<br/> &lt;img src=&quot;img/carousel-2.jpg&quot; importance=&quot;low&quot;&gt;
-<br/> &lt;img src=&quot;img/carousel-3.jpg&quot; importance=&quot;low&quot;&gt;
-<br/> &lt;img src=&quot;img/carousel-4.jpg&quot; importance=&quot;low&quot;&gt;
-<br/>&lt;/ul&gt;
-</pre>
+    <p>Browser heuristics may cause all four images to be initially queued at a low priority
+      and increased to a high priprity once layout determines they are within the viewport,
+      despite three of them not initially being visible. This may cause the initial image
+      fetch to be delayed and the fetches for the hidden images to
+      delay the first image from completing fetching or contend with fetches for other
+      in-viewport resources.</p>
+    <p>A developer could use rel=preload to preload the first image in the carousel,
+      however doing so may not provide the outcome one expects: rel=preload may just change
+      when the image is discovered but will not necessarily influence the priority of the image.
+      Priority Hints may help here.</p>
+
+    <div class="example" title="Images Example with Priority Hints">
+      <xmp highlight="html">
+        <ul class="carousel">
+          <!-- The first image is visible -->
+          <img src="img/carousel-1.jpg" importance="high">
+          <!-- The other carousel images are not -->
+          <img src="img/carousel-2.jpg" importance="low">
+          <img src="img/carousel-3.jpg" importance="low">
+          <img src="img/carousel-4.jpg" importance="low">
+        </ul>
+      </xmp>
     </div>
 
     <p>When we assign the first image high importance, this can start the image at a high
     priority as soon as it is discovered without having to wait for layout.</p>
 
-    <p>When we assign the off-screen images low importance, this will create less contention between the remaining high priority
-      images and other high priority resources.</p>
+    <p>When we assign the off-screen images low importance, this will create less contention
+      between the remaining high priority images and other high priority resources.</p>
 
-    <strong>Speed up resource loads without incurring the cost of rel=preload</strong>
-    <p>Some UAs fetch scripts with medium priority. Using `importance=high` on them has the benefit of speeding this up without
-    incurring the cost of `rel=preload` contending with higher-up-the-page render blocking resources:</p>
-    <div class="example" title="Example 1">
-      <p>FastCorp Inc. have a web app with a mix of resources that are critical and non-critical to the initial experience.
-        They want to signify the importance of their primary script without using rel=preload, which would contend with their render blocking stylesheet:
+    <strong>Signal Priority of Asynchronous Scripts</strong>
+    <p>A browser may treat parser-blocking scripts, async scripts and preloaded scripts
+    differently based on heuristics that work well in a general case but may not behave exactly
+    as a developer desires.</p>
+    <div class="example" title="Async Script Example Before">
+      <p>if a browser treats preloaded scripts as high-priority and async scripts as low priority
+      by default, it could be difficult to preload a dependency of an async script and still have
+      them load in the desired order. For example, if we have a script <code>a.js</code> that
+      imports <code>b.js</code>, it could be useful to preload <code>b.js</code> so the fetch can
+      start in parallel with the loading of <code>a.js</code>. A trivial implementation of
+      preloading the dependency after the main script:
       </p>
-      <pre highlight="html">
-&lt;link rel=&quot;stylesheet&quot; href=&quot;https://foo.com/main.css&quot;&gt;
-&lt;script src=&quot;main.js&quot; importance=&quot;high&quot;&gt;&lt;/script&gt;
-  </pre>
+      <xmp highlight="html">
+        <script src=a.js async></script>
+        <link rel=preload href=b.js as=script>
+      </xmp>
+      <p>may result in <code>b.js</code> being loaded before <code>a.js</code> in a browser where
+      preloaded scripts are given a higher priority than async scripts.
     </div>
 
-<p>In the below example, using rel=preload, async styles may normally be loaded at the highest priority. Priority Hints can
-  help us here to ensure the loading of the stylesheet doesn't contend with any render-blocking or more critical resources.</p>
-<div class="example" title="Preload">
-  <pre highlight="html">
-&lt;link rel=&quot;preload&quot; as=&quot;script&quot; href=&quot;critical-script.js&quot;&gt;
-<br/>&lt;link rel=&quot;preload&quot; as=&quot;style&quot; href=&quot;theme.css&quot; importance=&quot;low&quot; 
-onload=&quot;this.rel=stylesheet&quot;&gt;
-</pre>
-</div>
-
-    <strong>Reduce network contention from third-party resources</strong>
-
-    <p>Third party resources (e.g scripts from ads) are often loaded with medium/high priority, but developers may wish to load
-      them all at low priority. Similarly, developers may wish to load all first-party resources that are critical with a
-      high priority.
-    </p>
-    <div class="example" title="Example 2">
-      <p>FastCorp Inc. have a page that includes a number of
-        <b>third party</b> resources which are not-critical to first paint. They would like to signify to the browser that the
-        importance of these resources is low so that requests for them don't contend with network requests for more important
-        resources. They can accomplish this by annotating these requests with an `importance` of `low`:
-      </p>
-      <pre highlight="html">
-&lt;script src=&quot;https://foo.com/non-critical.js&quot; importance=&quot;low&quot;&gt;&lt;/script&gt;
-
-&lt;script src=&quot;https://foo.com/ads.js&quot; importance=&quot;low&quot;&gt;&lt;/script&gt;
-
-&lt;link rel=&quot;stylesheet&quot; href=&quot;https://foo.com/footer.css&quot; importance=&quot;low&quot;&gt;
-      </pre>
+    <p>By using priority hints and assigning the same priority to both scripts, they can be loaded
+    in the preferred order and at a priority that makes sense depending on the context of what the
+    script is being used for (say, high priority for user-facing UI or functionality or
+    low-priority for scripts responsible for background work).</p>
+    <div class="example" title="Async Script Example with Priority Hints">
+      <xmp highlight="html">
+        <script src=a.js async importance=high></script>
+        <link rel=preload href=b.js as=script importance=high>
+      </xmp>
     </div>
-
-    <p>Markup images are typically loaded with low priority, but may be critical to the user experience, so for certain images,
-      the developer may want to indicate that their importance only falls short of the page's render blocking resources.
-      A prominent example of that is the page's image in an image sharing site, where the image is the main content users
-      are looking for. Another example is a single-page-app where route fetches must run at highest priority.</p>
-    <div class="example" title="Example 3">
-      <p>FastCorp Inc. have an image sharing section of their site where individual images have their own dedicated pages. Although
-        there are several resources loaded for each of these pages, the image is the main content users are interested in.
-        Related images are the next most important. They want to indicate this importance to the browser:
-      </p>
-      <pre highlight="html">
-&lt;main&gt;
-  &lt;img src=&quot;family.jpg&quot; importance=&quot;high&quot;&gt;
-&lt;/main&gt;
-
-&lt;section id=&quot;related&quot;&gt;
-  &lt;img src=&quot;graduation.jpg&quot; importance=&quot;high&quot;&gt;
-  &lt;img src=&quot;wedding.jpg&quot; importance=&quot;high&quot;&gt;
-&lt;/section&gt;
-&lt;script src=&quot;social-buttons.js&quot; importance=&quot;low&quot;&gt;&lt;/script&gt;
-
-&lt;script src=&quot;analytics.js&quot; importance=&quot;low&quot;&gt;&lt;/script&gt;
-      </pre>
-    </div>
-
-    <ul>
-
-
-      <li>Blocking scripts are often of high priority (depends on their location in the page and other heuristics), yet sometimes
-        developers want to avoid them interfering with e.g., loading of viewport images.</li>
-
-      <li>When developers download a group of resources as a result of user interaction, those resources' download priorities
-        don't take into account the eventual usage and importance of those resources. Developers may wish to load these resources
-        with priorities and dependencies which better represent their usage and the user's needs.</li>
-
-      <li>Single-page applications can kick off multiple API requests to bootstrap the user experience. Developers may wish to
-        load critical API requests at a high priority and have better control over scheduling priority for the rest.</li>
-    </ul>
 
     <strong>Reduce network contention from non-critical Fetch API requests</strong>
-    <p>Priority Hints can be used to lower the priority of non-critical Fetch API requests to avoid them contending with more
-      important ones.
+    <p>Priority Hints can be used to lower the priority of non-critical Fetch API requests to avoid
+    them contending with more important ones.
     </p>
 
-    <p>A news site making a critical Fetch API request for article content might end up contending with requests for less important
-      resources like related content.</p>
+    <p>A news site making a critical Fetch API request for article content might end up contending
+    with requests for less important resources like related content.
+    </p>
 
-    <div class="example" title="Example 4">
-      <pre highlight="html">
-&lt;script&gt;
-<br/> // Critical Fetch request for article content
-<br/> fetch('/api/articles.json').then(/*...*/)
-<br/>
-<br/> // Request for related content contending with the above request
-<br/> fetch('/api/related.json').then(/*...*/)
-<br/>&lt;/script&gt;
-</pre>
+    <div class="example" title="Fetch Example Before">
+      <xmp highlight="javascript">
+        // Critical Fetch request for article content
+        fetch('/api/articles.json').then(/*...*/)
+
+        // Request for related content contending with the above request
+        fetch('/api/related.json').then(/*...*/)
+      </xmp>
     </div>
 
-    <p>By using the
-      <code>importance</code> attribute on the second Fetch request, we can hint that the priority of that request is
-      <code>low</code>, reducing the chances of it contending with the Fetch request for article content. We can also explicitly state the
-      priority of the first request is
-      <code>high</code> so that browsers where Fetch requests do not already have a high priority know that it is important to the page.</p>
+    <p>By using the <code>importance</code> attribute on the second Fetch request, we can hint that
+    the priority of that request is <code>low</code>, reducing the chances of it contending with the
+    Fetch request for article content. We can also explicitly state the priority of the first
+    request is <code>high</code> so that browsers where Fetch requests do not already have a high
+    priority know that it is important to the page.</p>
 
-    <div class="example" title="Example 5">
-      <pre highlight="html">
-&lt;script&gt;
-<br/> // Critical Fetch request for article content
-<br/> fetch('/api/articles.json', { importance: 'high' }).then(/*...*/)
-<br/>
-<br/> // Request for related content now reduced in priority
-<br/> // reducing the opportunity for contention
-<br/> fetch('/api/related.json', { importance: 'low' }).then(/*...*/)
-<br/>&lt;/script&gt;
-</pre>
+    <div class="example" title="Fetch Example with Priority Hints">
+      <xmp highlight="javascript">
+        // Critical Fetch request for article content
+        fetch('/api/articles.json', { importance: 'high' }).then(/*...*/)
+
+        // Request for related content now reduced in priority
+        // reducing the opportunity for contention
+        fetch('/api/related.json', { importance: 'low' }).then(/*...*/)
+      </xmp>
     </div>
 
-    <p>This might be more pronounced on HTTP 1.1 with the impact being more visible with HTTP/2 multiplexing if a large number
-      of Fetch requests are being made and are contending with one another. </p>
-    <p>The importance hint may be specified in the document markup, MAY be provided via JavaScript, MAY be provided via the
-      HTTP header, and MAY be dynamically added to the document.</p>
-    <div class="example" title="Example 5">
-      <pre highlight="html">Link: &lt;/app/style.css&gt;; importance=high<br/>
-Link: &lt;/app/script.js&gt;; importance=low</pre>
+    <p>This might be more pronounced on HTTP 1.1 with the impact being more visible with HTTP/2
+    multiplexing if a large number of Fetch requests are being made and are contending with one
+    another.</p>
+
+    <strong>Providing Priority Hints through HTTP Headers</strong>
+    <p>The importance hint may be specified in the document markup, MAY be provided via JavaScript,
+    MAY be provided via the HTTP header, and MAY be dynamically added to the document.</p>
+    <div class="example" title="HTTP Header Example">
+      <xmp>
+        Link: </app/style.css>; importance=high
+        Link: </app/script.js>; importance=low
+      </xmp>
     </div>
 
     <p>As above examples illustrate, importance can be specified via declarative markup, Link HTTP header ([[RFC5988]]), 
