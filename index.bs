@@ -158,22 +158,49 @@ urlPrefix: https://fetch.spec.whatwg.org; spec: FETCH;
 
     <h3 id="fetch-integration">Fetch Integration</h3>
     <em>This section will be removed once the [[FETCH]] specification has been modified.</em>
+    <ol>
+      <li>
+        <p>We extend the [[fetch#requests|request]] definition:</p>
+        <p>
+        A [[fetch#requests|request]] has an associated
+        <dfn export id=concept-request-importance>importance</dfn>, which is
+        "<code>high</code>",
+        "<code>low</code>" or
+        "<code>auto</code>".
+        Unless stated otherwise it is "<code>auto</code>".
+        </p>
 
-    We extend the {{Request}} interface as follows:
-    <pre class="idl">
-    partial interface Request {
-      readonly attribute Importance importance;
-    };
+      <li>We extend the {{Request}} interface as follows:
+        <pre class="idl">
+        partial interface Request {
+          readonly attribute Importance importance;
+        };
 
-    partial dictionary RequestInit {
-      Importance importance;
-    };
-    </pre>
+        partial dictionary RequestInit {
+          Importance importance;
+        };
+        </pre>
 
-    <h4 id="fetch-processing-model">Fetch Processing Model</h4>
-    <p>TODO: Document formal process model</p>
-    <p>The fetch processing model will document the steps to take the importance enum attribute
-    and pass it to the underlying browser engine for browser-specific processing</p>
+      <li><p>We add the following to the "For web developers (non-normative)"" note in the
+        [[fetch#request-class|Request class]] constructor:</p>
+        <dl>
+        <dt>{{RequestInit/importance}}
+        <dd>A string to set request's {{Request/importance}}.
+        </dl>
+
+      <li><p>We add to step 12 of the <a constructor spec=fetch lt="Request()">new Request
+        constructor steps</a>:</p>
+        <dl>
+        <dt><a>importance</a>
+        <dd><var>request</var>'s <a>importance</a>.
+        </dl>
+
+      <li><p>We modify step 13 in the process of [[fetch#fetching]] to read:</p>
+        <p>If <var>request</var>'s <a spec=fetch for=request>priority</a> is null, then use
+        <var>request</var>'s <a>importance</a>, <a spec=fetch for=request>initiator</a> and
+        <a spec=fetch for=request>destination</a> appropriately in setting <var>request</var>'s
+        <a for=request>priority</a> to a user-agent-defined object.</p>
+    </ol>
 
     <h3 id="html-integration">HTML Integration</h3>
     <em>This section will be removed once the [[HTML]] specification has been modified.</em>
