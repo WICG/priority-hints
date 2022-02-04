@@ -4,9 +4,9 @@
   <title>Priority Hints</title>
   <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport">
   <link href="https://www.w3.org/StyleSheets/TR/2021/cg-draft" rel="stylesheet">
-  <meta content="Bikeshed version cace53f8c, updated Tue Dec 7 12:12:54 2021 -0800" name="generator">
+  <meta content="Bikeshed version 2e3c4c68b, updated Fri Jan 14 14:49:00 2022 -0800" name="generator">
   <link href="https://wicg.github.io/priority-hints" rel="canonical">
-  <meta content="aa5908ecd3ba00b06a345ea0796406078c013598" name="document-revision">
+  <meta content="03855bf2c4f00fd06704590351e2f594f8d53441" name="document-revision">
 <style>/* style-autolinks */
 
 .css.css, .property.property, .descriptor.descriptor {
@@ -577,7 +577,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
   <div class="head">
    <p data-fill-with="logo"><a class="logo" href="https://www.w3.org/"> <img alt="W3C" height="48" src="https://www.w3.org/StyleSheets/TR/2021/logos/W3C" width="72"> </a> </p>
    <h1 class="p-name no-ref" id="title">Priority Hints</h1>
-   <p id="w3c-state"><a href="https://www.w3.org/standards/types#CG-DRAFT">Draft Community Group Report</a>, <time class="dt-updated" datetime="2022-01-12">12 January 2022</time></p>
+   <p id="w3c-state"><a href="https://www.w3.org/standards/types#CG-DRAFT">Draft Community Group Report</a>, <time class="dt-updated" datetime="2022-02-04">4 February 2022</time></p>
    <div data-fill-with="spec-metadata">
     <dl>
      <dt>This version:
@@ -620,11 +620,7 @@ A human-readable <a href="http://www.w3.org/community/about/agreements/cla-deed/
      <a href="#proposal"><span class="secno">3</span> <span class="content">Proposal</span></a>
      <ol class="toc">
       <li><a href="#definitions"><span class="secno">3.1</span> <span class="content">Definitions</span></a>
-      <li>
-       <a href="#fetch-integration"><span class="secno">3.2</span> <span class="content">Fetch Integration</span></a>
-       <ol class="toc">
-        <li><a href="#fetch-processing-model"><span class="secno">3.2.1</span> <span class="content">Fetch Processing Model</span></a>
-       </ol>
+      <li><a href="#fetch-integration"><span class="secno">3.2</span> <span class="content">Fetch Integration</span></a>
       <li>
        <a href="#html-integration"><span class="secno">3.3</span> <span class="content">HTML Integration</span></a>
        <ol class="toc">
@@ -766,19 +762,41 @@ A human-readable <a href="http://www.w3.org/community/about/agreements/cla-deed/
     </table>
     <h3 class="heading settled" data-level="3.2" id="fetch-integration"><span class="secno">3.2. </span><span class="content">Fetch Integration</span><a class="self-link" href="#fetch-integration"></a></h3>
      <em>This section will be removed once the <a data-link-type="biblio" href="#biblio-fetch">[FETCH]</a> specification has been modified.</em> 
-    <p>We extend the <code class="idl"><a data-link-type="idl" href="https://fetch.spec.whatwg.org/#request" id="ref-for-request①">Request</a></code> interface as follows:</p>
+    <ol>
+     <li>
+      <p>We extend the <a data-link-type="dfn" href="https://fetch.spec.whatwg.org#concept-request" id="ref-for-concept-request">request</a> definition:</p>
+      <p> A <a data-link-type="dfn" href="https://fetch.spec.whatwg.org#concept-request" id="ref-for-concept-request①">request</a> has an associated <dfn class="dfn-paneled" data-dfn-type="dfn" data-export id="concept-request-importance">importance</dfn>, which is
+        "<code class="highlight">high</code>",
+        "<code class="highlight">low</code>" or
+        "<code class="highlight">auto</code>".
+        Unless stated otherwise it is "<code class="highlight">auto</code>". </p>
+     <li>
+      We extend the <code class="idl"><a data-link-type="idl" href="https://fetch.spec.whatwg.org/#request" id="ref-for-request①">Request</a></code> interface as follows: 
 <pre class="idl highlight def"><c- b>partial</c-> <c- b>interface</c-> <a class="idl-code" data-link-type="interface" href="https://fetch.spec.whatwg.org/#request" id="ref-for-request②"><c- g>Request</c-></a> {
-  <c- b>readonly</c-> <c- b>attribute</c-> <a data-link-type="idl-name" href="#enumdef-importance" id="ref-for-enumdef-importance"><c- n>Importance</c-></a> <dfn class="idl-code" data-dfn-for="Request" data-dfn-type="attribute" data-export data-readonly data-type="Importance" id="dom-request-importance"><code class="highlight"><c- g>importance</c-></code><a class="self-link" href="#dom-request-importance"></a></dfn>;
+  <c- b>readonly</c-> <c- b>attribute</c-> <a data-link-type="idl-name" href="#enumdef-importance" id="ref-for-enumdef-importance"><c- n>Importance</c-></a> <dfn class="dfn-paneled idl-code" data-dfn-for="Request" data-dfn-type="attribute" data-export data-readonly data-type="Importance" id="dom-request-importance"><code class="highlight"><c- g>importance</c-></code></dfn>;
 };
 
 <c- b>partial</c-> <c- b>dictionary</c-> <a class="idl-code" data-link-type="dictionary" href="https://fetch.spec.whatwg.org/#requestinit" id="ref-for-requestinit"><c- g>RequestInit</c-></a> {
-  <a data-link-type="idl-name" href="#enumdef-importance" id="ref-for-enumdef-importance①"><c- n>Importance</c-></a> <dfn class="idl-code" data-dfn-for="RequestInit" data-dfn-type="dict-member" data-export data-type="Importance " id="dom-requestinit-importance"><code class="highlight"><c- g>importance</c-></code><a class="self-link" href="#dom-requestinit-importance"></a></dfn>;
+  <a data-link-type="idl-name" href="#enumdef-importance" id="ref-for-enumdef-importance①"><c- n>Importance</c-></a> <dfn class="dfn-paneled idl-code" data-dfn-for="RequestInit" data-dfn-type="dict-member" data-export data-type="Importance " id="dom-requestinit-importance"><code class="highlight"><c- g>importance</c-></code></dfn>;
 };
 </pre>
-    <h4 class="heading settled" data-level="3.2.1" id="fetch-processing-model"><span class="secno">3.2.1. </span><span class="content">Fetch Processing Model</span><a class="self-link" href="#fetch-processing-model"></a></h4>
-    <p>TODO: Document formal process model</p>
-    <p>The fetch processing model will document the steps to take the importance enum attribute
-    and pass it to the underlying browser engine for browser-specific processing</p>
+     <li>
+      <p>We add the following to the "For web developers (non-normative)"" note in the <a href="https://fetch.spec.whatwg.org/#request-class">Request class</a> constructor:</p>
+      <dl>
+       <dt><code class="idl"><a data-link-type="idl" href="#dom-requestinit-importance" id="ref-for-dom-requestinit-importance">importance</a></code> 
+       <dd>A string to set request’s <code class="idl"><a data-link-type="idl" href="#dom-request-importance" id="ref-for-dom-request-importance">importance</a></code>. 
+      </dl>
+     <li>
+      <p>We add to step 12 of the <a class="idl-code" data-link-type="constructor" href="https://fetch.spec.whatwg.org/#dom-request" id="ref-for-dom-request">new Request
+        constructor steps</a>:</p>
+      <dl>
+       <dt><a data-link-type="dfn" href="#concept-request-importance" id="ref-for-concept-request-importance">importance</a> 
+       <dd><var>request</var>’s <a data-link-type="dfn" href="#concept-request-importance" id="ref-for-concept-request-importance①">importance</a>. 
+      </dl>
+     <li>
+      <p>We modify step 13 in the process of <a data-link-type="dfn" href="https://fetch.spec.whatwg.org#concept-fetch" id="ref-for-concept-fetch">fetch</a> to read:</p>
+      <p>If <var>request</var>’s <a data-link-type="dfn" href="https://fetch.spec.whatwg.org/#concept-request-priority" id="ref-for-concept-request-priority">priority</a> is null, then use <var>request</var>’s <a data-link-type="dfn" href="#concept-request-importance" id="ref-for-concept-request-importance②">importance</a>, <a data-link-type="dfn" href="https://fetch.spec.whatwg.org/#concept-request-initiator" id="ref-for-concept-request-initiator">initiator</a> and <a data-link-type="dfn" href="https://fetch.spec.whatwg.org/#concept-request-destination" id="ref-for-concept-request-destination">destination</a> appropriately in setting <var>request</var>’s <a data-link-type="dfn" href="https://fetch.spec.whatwg.org/#concept-request-priority" id="ref-for-concept-request-priority①">priority</a> to a user-agent-defined object.</p>
+    </ol>
     <h3 class="heading settled" data-level="3.3" id="html-integration"><span class="secno">3.3. </span><span class="content">HTML Integration</span><a class="self-link" href="#html-integration"></a></h3>
      <em>This section will be removed once the <a data-link-type="biblio" href="#biblio-html">[HTML]</a> specification has been modified.</em> 
     <h4 class="heading settled" data-level="3.3.1" id="img"><span class="secno">3.3.1. </span><span class="content">img</span><a class="self-link" href="#img"></a></h4>
@@ -1108,6 +1126,7 @@ Link<c- o>:</c-> <c- o>&lt;</c->/app/script.js>; importance=low
      <li><a href="#dom-htmllinkelement-importance">attribute for HTMLLinkElement</a><span>, in § 3.3.2</span>
      <li><a href="#dom-htmlscriptelement-importance">attribute for HTMLScriptElement</a><span>, in § 3.3.3</span>
      <li><a href="#dom-request-importance">attribute for Request</a><span>, in § 3.2</span>
+     <li><a href="#concept-request-importance">definition of</a><span>, in § 3.2</span>
      <li><a href="#dom-requestinit-importance">dict-member for RequestInit</a><span>, in § 3.2</span>
     </ul>
    <li><a href="#importance-enum">Importance enum</a><span>, in § 3.1</span>
@@ -1121,17 +1140,46 @@ Link<c- o>:</c-> <c- o>&lt;</c->/app/script.js>; importance=low
     <li><a href="#ref-for-request①">3.2. Fetch Integration</a> <a href="#ref-for-request②">(2)</a>
    </ul>
   </aside>
+  <aside class="dfn-panel" data-for="term-for-dom-request">
+   <a href="https://fetch.spec.whatwg.org/#dom-request">https://fetch.spec.whatwg.org/#dom-request</a><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-dom-request">3.2. Fetch Integration</a>
+   </ul>
+  </aside>
   <aside class="dfn-panel" data-for="term-for-requestinit">
    <a href="https://fetch.spec.whatwg.org/#requestinit">https://fetch.spec.whatwg.org/#requestinit</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-requestinit">3.2. Fetch Integration</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="term-for-destination">
-   <a href="https://fetch.spec.whatwg.org#destination">https://fetch.spec.whatwg.org#destination</a><b>Referenced in:</b>
+  <aside class="dfn-panel" data-for="term-for-concept-request-destination">
+   <a href="https://fetch.spec.whatwg.org/#concept-request-destination">https://fetch.spec.whatwg.org/#concept-request-destination</a><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-destination">1. Introduction</a>
-    <li><a href="#ref-for-destination①">4. Effects of Priority Hints</a> <a href="#ref-for-destination②">(2)</a>
+    <li><a href="#ref-for-concept-request-destination">3.2. Fetch Integration</a>
+   </ul>
+  </aside>
+  <aside class="dfn-panel" data-for="term-for-concept-fetch">
+   <a href="https://fetch.spec.whatwg.org#concept-fetch">https://fetch.spec.whatwg.org#concept-fetch</a><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-concept-fetch">3.2. Fetch Integration</a>
+   </ul>
+  </aside>
+  <aside class="dfn-panel" data-for="term-for-concept-request-initiator">
+   <a href="https://fetch.spec.whatwg.org/#concept-request-initiator">https://fetch.spec.whatwg.org/#concept-request-initiator</a><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-concept-request-initiator">3.2. Fetch Integration</a>
+   </ul>
+  </aside>
+  <aside class="dfn-panel" data-for="term-for-concept-request-priority">
+   <a href="https://fetch.spec.whatwg.org/#concept-request-priority">https://fetch.spec.whatwg.org/#concept-request-priority</a><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-concept-request-priority">3.2. Fetch Integration</a> <a href="#ref-for-concept-request-priority①">(2)</a>
+   </ul>
+  </aside>
+  <aside class="dfn-panel" data-for="term-for-concept-request">
+   <a href="https://fetch.spec.whatwg.org#concept-request">https://fetch.spec.whatwg.org#concept-request</a><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-concept-request">3.2. Fetch Integration</a> <a href="#ref-for-concept-request①">(2)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-cereactions">
@@ -1235,8 +1283,13 @@ Link<c- o>:</c-> <c- o>&lt;</c->/app/script.js>; importance=low
     <a data-link-type="biblio">[FETCH]</a> defines the following terms:
     <ul>
      <li><span class="dfn-paneled" id="term-for-request">Request</span>
+     <li><span class="dfn-paneled" id="term-for-dom-request">Request(input)</span>
      <li><span class="dfn-paneled" id="term-for-requestinit">RequestInit</span>
-     <li><span class="dfn-paneled" id="term-for-destination">destination</span>
+     <li><span class="dfn-paneled" id="term-for-concept-request-destination">destination <small>(for request)</small></span>
+     <li><span class="dfn-paneled" id="term-for-concept-fetch">fetch</span>
+     <li><span class="dfn-paneled" id="term-for-concept-request-initiator">initiator</span>
+     <li><span class="dfn-paneled" id="term-for-concept-request-priority">priority</span>
+     <li><span class="dfn-paneled" id="term-for-concept-request">request</span>
     </ul>
    <li>
     <a data-link-type="biblio">[HTML]</a> defines the following terms:
@@ -1311,6 +1364,24 @@ Link<c- o>:</c-> <c- o>&lt;</c->/app/script.js>; importance=low
    <b><a href="#enumdef-importance">#enumdef-importance</a></b><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-enumdef-importance">3.2. Fetch Integration</a> <a href="#ref-for-enumdef-importance①">(2)</a>
+   </ul>
+  </aside>
+  <aside class="dfn-panel" data-for="concept-request-importance">
+   <b><a href="#concept-request-importance">#concept-request-importance</a></b><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-concept-request-importance">3.2. Fetch Integration</a> <a href="#ref-for-concept-request-importance①">(2)</a> <a href="#ref-for-concept-request-importance②">(3)</a>
+   </ul>
+  </aside>
+  <aside class="dfn-panel" data-for="dom-request-importance">
+   <b><a href="#dom-request-importance">#dom-request-importance</a></b><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-dom-request-importance">3.2. Fetch Integration</a>
+   </ul>
+  </aside>
+  <aside class="dfn-panel" data-for="dom-requestinit-importance">
+   <b><a href="#dom-requestinit-importance">#dom-requestinit-importance</a></b><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-dom-requestinit-importance">3.2. Fetch Integration</a>
    </ul>
   </aside>
 <script>/* script-dfn-panel */
