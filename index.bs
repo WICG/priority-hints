@@ -22,9 +22,11 @@ urlPrefix: https://html.spec.whatwg.org/multipage; spec: HTML;
     type:element; text:script
 urlPrefix: https://fetch.spec.whatwg.org; spec: FETCH;
     type: dfn; url: #concept-request; text: fetch request;
+    type: dfn; url: #concept-request; text: request;
     type: dfn; url: #concept-request-url; text: request URL;
     type:dfn; text:destination
     type:interface; text:request
+    type: dfn; url: #concept-fetch; text: fetch;
 </pre>
 
 <pre class=biblio>
@@ -160,9 +162,9 @@ urlPrefix: https://fetch.spec.whatwg.org; spec: FETCH;
     <em>This section will be removed once the [[FETCH]] specification has been modified.</em>
     <ol>
       <li>
-        <p>We extend the [[fetch#requests|request]] definition:</p>
+        <p>We extend the [=request=] definition:</p>
         <p>
-        A [[fetch#requests|request]] has an associated
+        A [=request=] has an associated
         <dfn export id=concept-request-importance>importance</dfn>, which is
         "<code>high</code>",
         "<code>low</code>" or
@@ -195,7 +197,7 @@ urlPrefix: https://fetch.spec.whatwg.org; spec: FETCH;
         <dd><var>request</var>'s <a>importance</a>.
         </dl>
 
-      <li><p>We modify step 13 in the process of [[fetch#fetching]] to read:</p>
+      <li><p>We modify step 13 in the process of [=fetch=] to read:</p>
         <p>If <var>request</var>'s <a spec=fetch for=request>priority</a> is null, then use
         <var>request</var>'s <a>importance</a>, <a spec=fetch for=request>initiator</a> and
         <a spec=fetch for=request>destination</a> appropriately in setting <var>request</var>'s
