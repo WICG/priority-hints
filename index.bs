@@ -21,6 +21,11 @@ urlPrefix: https://html.spec.whatwg.org/multipage; spec: HTML;
     type:element; text:link
     type:element; text:script
     type: dfn; url: #the-link-element; text: link element;
+    type: dfn; url: #fetching-resources; text: Fetching resources;
+    type: dfn; url: #fetch-and-process-the-linked-resource; text: fetching and processing the linked resource;
+    type: dfn; url: #external-resource-link; text: external resource links;
+    type: dfn; url: #create-a-link-element-request; text: create a link element request;
+    type: dfn; url: #fetching-and-processing-a-resource-from-a-link-element; text: Fetching and processing a resource from a link element;
 urlPrefix: https://fetch.spec.whatwg.org; spec: FETCH;
     type: dfn; url: #concept-request; text: fetch request;
     type: dfn; url: #concept-request; text: request;
@@ -77,10 +82,10 @@ urlPrefix: https://fetch.spec.whatwg.org; spec: FETCH;
       in order to avoid bandwidth contention of these resources with more critical ones.</p>
 
     <p>Currently web developers have very little control over the heuristic importance of loaded resources, other than speeding
-      up their discovery using <code>&lt;link rel=preload&gt;</code>([[PRELOAD]]). Browsers mostly determine a request's priority based on the
+      up their discovery using <code>&lt;link rel=preload&gt;</code>([[PRELOAD|Preload]]). Browsers mostly determine a request's priority based on the
       request's <a>destination</a>, and location in the containing document if applicable.</p>
 
-    <p>This document details use cases and modifications to [[FETCH]] and [[HTML]] markup that will provide developers
+    <p>This document details use cases and modifications to [[FETCH|Fetch]] and [[HTML|HTML]] markup that will provide developers
       control to indicate a resource's relative importance to the browser, enabling the browser to act on those indications to influence
       the request's overall priority in ways described in the <a href="#effects-of-priority-hints">Effects of Priority Hints</a> section.
     </p>
@@ -160,7 +165,7 @@ urlPrefix: https://fetch.spec.whatwg.org; spec: FETCH;
     </table>
 
     <h3 id="fetch-integration">Fetch Integration</h3>
-    <em>This section will be removed once the [[FETCH]] specification has been modified.</em>
+    <em>This section will be removed once the [[FETCH|Fetch]] specification has been modified.</em>
     <ol>
       <li>
         <p>We extend the [=request=] definition:</p>
@@ -206,7 +211,7 @@ urlPrefix: https://fetch.spec.whatwg.org; spec: FETCH;
     </ol>
 
     <h3 id="html-integration">HTML Integration</h3>
-    <em>This section will be removed once the [[HTML]] specification has been modified.</em>
+    <em>This section will be removed once the [[HTML|HTML]] specification has been modified.</em>
     <p>For the supported elements (<{img}>, <{link}>, <{script}> and <{iframe}>) the integration
     with HTML is to add an <code data-x="">importance</code> attribute to the relevant element
     specification and pass the value through to the underlying fetch for the resource referenced
@@ -215,6 +220,19 @@ urlPrefix: https://fetch.spec.whatwg.org; spec: FETCH;
     no downstream impact on later behaviors of the given element (i.e. later fetches initiated by
     a frame or script are not impacted nor is the scheduling of execution or prioritization of
     tasks affected).</p>
+
+    <ol>
+    <li><p>We extend the [=Fetching resources=] process with an additional section:</p>
+      <p>Importance attributes</p>
+      <p>An <dfn export>importance attribute</dfn> is an <span>enumerated attribute</span>.  Each
+        [=importance enum|Fetch importance enum=] is a keyword for this attribute, mapping
+        to a state of the same name.</p>
+      <p>The attribute's <i data-x="missing value default">missing value default</i> and <i
+        data-x="invalid value default">invalid value default</i> are both the [=auto=] state.</p>
+      <p>The impact of these states on the processing model of various [=fetch|fetches=] is defined
+      in more detail throughout this specification, in [[FETCH|Fetch]], and in
+      [[PRIORITY-HINTS|Priority Hints]].</p>
+    </ol>
 
     <h4 id="img">img</h4>
     <ol>
@@ -237,17 +255,24 @@ urlPrefix: https://fetch.spec.whatwg.org; spec: FETCH;
     <h4 id="link">link</h4>
     <ol>
       <li><p>We add to the [=link element=] content attributes:</p>
-        <p><code data-x="">importance</code> - Importance for
-          <span data-x="concept-fetch">fetches</span> initiated by the element
+        <p><code data-x="">importance</code> - Importance for [=fetch|fetches=] initiated by the
+          element.
         </p>
+      <li><p>We add to the [=link element=] content attribute descriptions:</p>
+        <p>The <dfn element-attr for="link"><code data-x="attr-link-importance">importance</code>
+          </dfn> attribute is an [=importance attribute=]. It is intended for use with
+          [=external resource links=], where it helps set the [=importance=] used when
+          [=fetching and processing the linked resource=].</p>
       <li>We extend the <{link}> element as follows:
         <pre class="idl">
         partial interface HTMLLinkElement {
             [CEReactions] attribute DOMString importance;
         };
         </pre>
-      <li>TODO: Complete documenting the various points in the link processing model to pass the
-        importance through to the fetch for the referenced link resource.
+      <li><p>We extend [=create a link element request=] of [=Fetching and processing a resource
+        from a link element=] by adding a step before returning the request:</p>
+        <p>Set <var>request</var>'s {{Request/importance}} to the current state of <var ignore=''>
+        el</var>'s <code data-x="attr-link-importance">importance</code> content attribute.</p>
     </ol>
 
     <h4 id="script">script</h4>
@@ -453,7 +478,7 @@ urlPrefix: https://fetch.spec.whatwg.org; spec: FETCH;
       </xmp>
     </div>
 
-    <p>As above examples illustrate, importance can be specified via declarative markup, Link HTTP header ([[RFC5988]]), 
+    <p>As above examples illustrate, importance can be specified via declarative markup, Link HTTP header ([[RFC5988|RFC5988]]), 
       or scheduled via JavaScript.</p>
 
     <h2 id="adoptionpath">Adoption path</h2>
