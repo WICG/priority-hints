@@ -20,12 +20,30 @@ urlPrefix: https://html.spec.whatwg.org/multipage; spec: HTML;
     type:dfn; for:/; text:missing value default
     type:element; text:link
     type:element; text:script
+    type:element; text:img
+    type:element; text:iframe
+    type: dfn; url: #elements-3; text: List of elements;
     type: dfn; url: #the-link-element; text: link element;
+    type: dfn; url: #the-img-element; text: img element;
+    type: dfn; url: #the-script-element; text: script element;
+    type: dfn; url: #the-iframe-element; text: iframe element;
+    type: dfn; url: #link-type-modulepreload; text: modulepreload;
     type: dfn; url: #fetching-resources; text: Fetching resources;
+    type: dfn; url: #reacting-to-dom-mutations; text: Reacting to DOM mutations;
+    type: dfn; url: #update-the-image-data; text: update the image data;
+    type: dfn; url: #reacting-to-environment-changes; text: Reacting to environment changes;
     type: dfn; url: #fetch-and-process-the-linked-resource; text: fetching and processing the linked resource;
+    type: dfn; url: #fetch-and-process-the-linked-resource; text: fetch and process the linked resource;
     type: dfn; url: #external-resource-link; text: external resource links;
     type: dfn; url: #create-a-link-element-request; text: create a link element request;
     type: dfn; url: #fetching-and-processing-a-resource-from-a-link-element; text: Fetching and processing a resource from a link element;
+    type: dfn; url: #shared-attribute-processing-steps-for-iframe-and-frame-elements; text: shared attribute processing steps for iframe and frame elements;
+    type: dfn; url: #process-the-iframe-attributes; text: processing the iframe attributes;
+    type: dfn; url: #data-block; text: data blocks;
+    type: dfn; url: #script-fetch-options; text: Script fetch options;
+    type: dfn; url: #default-classic-script-fetch-options; text: default classic script fetch options;
+    type: dfn; url: #set-up-the-classic-script-request; text: set up the classic script request;
+    type: dfn; url: #set-up-the-module-script-request; text: set up the module script request;
 urlPrefix: https://fetch.spec.whatwg.org; spec: FETCH;
     type: dfn; url: #concept-request; text: fetch request;
     type: dfn; url: #concept-request; text: request;
@@ -236,14 +254,37 @@ urlPrefix: https://fetch.spec.whatwg.org; spec: FETCH;
 
     <h4 id="img">img</h4>
     <ol>
-    <li>We extend the <{img}> element as follows:
-      <pre class="idl">
-      partial interface HTMLImageElement {
-          [CEReactions] attribute DOMString importance;
-      };
-      </pre>
-    <li>TODO: Complete documenting the various points in the image processing model to pass the
-      importance through to the fetch for the given image.
+      <li><p>We add to the <{img}> element content attributes:</p>
+        <p><code data-x="">importance</code> - Importance for [=fetch|fetches=] initiated by the
+          element.
+        </p>
+      <li>We extend the <{img}> element DOM interface as follows:
+        <pre class="idl">
+        partial interface HTMLImageElement {
+            [CEReactions] attribute DOMString <span data-x="dom-img-importance">importance</span>;
+        };
+        </pre>
+      <li><p>We add to the <{img}> element content attribute descriptions:</p>
+        <p>The <dfn element-attr for="img"><code data-x="attr-img-importance">importance</code>
+          </dfn> attribute is an [=importance attribute=]. Its purpose is to set the [=importance=]
+          used when [=fetching=] the image.</p>
+        <p>The <dfn attribute for="HTMLImageElement"><code
+          data-x="dom-img-importance">importance</code></dfn> IDL attribute must
+          <span>reflect</span> the <code data-x="attr-img-importance">importance</code>
+          content attribute, <span>limited to only known values</span>.</p>
+      <li><p>We add to [=Reacting to DOM mutations=]:</p>
+        <p>The element's <code data-x="attr-img-importance">importance</code> attribute's state is
+          changed.</p>
+      <li><p>We add a step to [=update the image data|Updating the image data=] before fetching the
+          image:</p>
+        <p>Set <var>request</var>'s {{Request/importance}} to the current state of the element's
+          <code data-x="attr-img-importance">importance</code> attribute.</p>
+      <li><p>We add a step to [=Reacting to environment changes=] when setting the image request's
+          image data, before the request is fetched:</p>
+        <p>Set <var>request</var>'s {{Request/importance}} to the current state of the element's
+          <code data-x="attr-img-importance">importance</code> attribute.</p>
+      <li>We modify the [=List of elements=] to include the 
+        <span data-x="attr-img-importance">importance</span> attribute on the <{img}> element.
     </ol>
 
     <h4 id="picture">picture</h4>
@@ -273,30 +314,84 @@ urlPrefix: https://fetch.spec.whatwg.org; spec: FETCH;
         from a link element=] by adding a step before returning the request:</p>
         <p>Set <var>request</var>'s {{Request/importance}} to the current state of <var ignore=''>
         el</var>'s <code data-x="attr-link-importance">importance</code> content attribute.</p>
+      <li><p>We extend the [=fetch and process the linked resource=] algorithm of [=modulepreload=]
+        links by adding a step before setting the render-blocking state:</p>
+        <p>Let {{Request/importance}} be the current state of the element's
+        <code data-x="attr-link-importance">importance</code> attribute.</p>
+      <li>We modify the [=List of elements=] to include the 
+        <span data-x="attr-link-importance">importance</span> attribute on the <{link}> element.
     </ol>
 
     <h4 id="script">script</h4>
     <ol>
-      <li>We extend the <{script}> element as follows:
+      <li><p>We add to the <{script}> element content attributes:</p>
+        <p><code data-x="">importance</code> - Importance for [=fetch|fetches=] initiated by the
+          element.
+        </p>
+      <li>We extend the <{script}> element DOM interface as follows:
         <pre class="idl">
         partial interface HTMLScriptElement {
-            [CEReactions] attribute DOMString importance;
+            [CEReactions] attribute DOMString <span data-x="dom-script-importance">importance</script>;
         };
         </pre>
-      <li>TODO: Complete documenting the various points in the script processing model to pass the
-        importance through to the fetch for the referenced script resource.
+      <li><p>We add to the <{img}> element content attribute descriptions:</p>
+        <ol>
+          <li>The <dfn element-attr for="script"><code data-x="attr-script-importance">importance
+            </code></dfn> attribute is an [=importance attribute=]. Its purpose is to set the
+            [=importance=] used when [=fetching=] the script.
+          <li>The <dfn attribute for="HTMLScriptElement"><code
+            data-x="dom-script-importance">importance</code></dfn> IDL attribute must
+            <span>reflect</span> the <code data-x="attr-script-importance">importance</code>
+            content attribute, <span>limited to only known values</span>.
+          <li>We add <code data-x="attr-script-importance">importance</code> to the list of
+            attributes that have no direct effect when changed dynamically.
+        </ol>
+      <li>We modify the list of attributes not to be specified when used in [=data blocks=] to
+        include the <code data-x="attr-script-importance">importance</code> attribute.
+      <li><p>We extend the [=Script fetch options=] struct:<p>
+        <p><span data-x="concept-script-fetch-options-importance">importance</span> - The
+          {{Request/importance}} for the initial [=fetch=].</p>
+      <li>We extend [=default classic script fetch options=] to include "<code>auto</code>"
+        as the default value for <code data-x="concept-script-fetch-options-importance">
+        importance</code>.
+      <li>We extend [=set up the classic script request=] to set <var>request</var>'s
+        {{Request/importance}} to <var>option</var>'s
+        <code data-x="concept-script-fetch-options-importance">importance</code>
+      <li>We extend [=set up the module script request=] to set <var>request</var>'s
+        {{Request/importance}} to <var>option</var>'s
+        <code data-x="concept-script-fetch-options-importance">importance</code>
+      <li>We modify the [=List of elements=] to include the 
+        <span data-x="attr-script-importance">importance</span> attribute on the <{script}>
+        element.
     </ol>
 
     <h4 id="iframe">iframe</h4>
     <ol>
-      <li>We extend the <{iframe}> element as follows:
+      <li><p>We add to the <{iframe}> element content attributes:</p>
+        <p><code data-x="">importance</code> - Importance for [=fetch|fetches=] initiated by the
+          element.
+        </p>
+      <li>We extend the <{iframe}> element DOM interface as follows:
         <pre class="idl">
         partial interface HTMLIFrameElement {
-            [CEReactions] attribute DOMString importance;
+            [CEReactions] attribute DOMString <span data-x="dom-iframe-importance">importance</span>;
         };
         </pre>
-      <li>TODO: Complete documenting the various points in the iframe processing model to pass the
-        importance through to the fetch for the referenced iframe resource.
+      <li><p>We add to the <{iframe}> content attribute descriptions:</p>
+        <p>The <dfn element-attr for="iframe"><code data-x="attr-iframe-importance">importance
+          </code></dfn> attribute is an [=importance attribute=]. Its purpose is to set the
+          [=importance=] used when [=processing the iframe attributes=].</p>
+        <p>The <dfn attribute for="HTMLIFrameElement"><code
+          data-x="dom-iframe-importance">importance</code></dfn> IDL attribute must
+          <span>reflect</span> the <code data-x="attr-iframe-importance">importance</code>
+          content attribute, <span>limited to only known values</span>.</p>
+      <li><p>We modify the resource creation step of
+          [=shared attribute processing steps for iframe and frame elements=] to include:</p>
+        <p>...and whose {{Request/importance}} is the current state of element's
+          <code data-x="attr-iframe-importance">importance</code> content attribute</p>
+      <li>We modify the [=List of elements=] to include the 
+        <span data-x="attr-iframe-importance">importance</span> attribute on the <{iframe}>
+        element.
     </ol>
 
     <h2 id="effects-of-priority-hints">Effects of Priority Hints</h2>
