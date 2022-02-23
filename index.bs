@@ -44,6 +44,7 @@ urlPrefix: https://html.spec.whatwg.org/multipage; spec: HTML;
     type: dfn; url: #default-classic-script-fetch-options; text: default classic script fetch options;
     type: dfn; url: #set-up-the-classic-script-request; text: set up the classic script request;
     type: dfn; url: #set-up-the-module-script-request; text: set up the module script request;
+    type: dfn; url: #prepare-a-script; text: prepare a script;
 urlPrefix: https://fetch.spec.whatwg.org; spec: FETCH;
     type: dfn; url: #concept-request; text: fetch request;
     type: dfn; url: #concept-request; text: request;
@@ -272,9 +273,6 @@ urlPrefix: https://fetch.spec.whatwg.org; spec: FETCH;
           data-x="dom-img-importance">importance</code></dfn> IDL attribute must
           <span>reflect</span> the <code data-x="attr-img-importance">importance</code>
           content attribute, <span>limited to only known values</span>.</p>
-      <li><p>We add to [=Reacting to DOM mutations=]:</p>
-        <p>The element's <code data-x="attr-img-importance">importance</code> attribute's state is
-          changed.</p>
       <li><p>We add a step to [=update the image data|Updating the image data=] before fetching the
           image:</p>
         <p>Set <var>request</var>'s {{Request/importance}} to the current state of the element's
@@ -334,7 +332,7 @@ urlPrefix: https://fetch.spec.whatwg.org; spec: FETCH;
             [CEReactions] attribute DOMString <span data-x="dom-script-importance">importance</script>;
         };
         </pre>
-      <li><p>We add to the <{img}> element content attribute descriptions:</p>
+      <li><p>We add to the <{script}> element content attribute descriptions:</p>
         <ol>
           <li>The <dfn element-attr for="script"><code data-x="attr-script-importance">importance
             </code></dfn> attribute is an [=importance attribute=]. Its purpose is to set the
@@ -357,6 +355,12 @@ urlPrefix: https://fetch.spec.whatwg.org; spec: FETCH;
       <li>We extend [=set up the classic script request=] to set <var>request</var>'s
         {{Request/importance}} to <var>option</var>'s
         <code data-x="concept-script-fetch-options-importance">importance</code>
+      <li><p>We insert a step before step 24 of [=prepare a script=]:</p>
+        <p>Let <var>importance</var> be the current state of the element's <code
+          data-x="attr-script-importance">importance</code> attribute.</p>
+      <li><p>We modify step 24 of [=prepare a script=] to include:</p>
+        <p><code data-x="concept-script-fetch-options-importance">importance</code> is
+        <var>importance</var>.</p>
       <li>We extend [=set up the module script request=] to set <var>request</var>'s
         {{Request/importance}} to <var>option</var>'s
         <code data-x="concept-script-fetch-options-importance">importance</code>
@@ -385,7 +389,7 @@ urlPrefix: https://fetch.spec.whatwg.org; spec: FETCH;
           data-x="dom-iframe-importance">importance</code></dfn> IDL attribute must
           <span>reflect</span> the <code data-x="attr-iframe-importance">importance</code>
           content attribute, <span>limited to only known values</span>.</p>
-      <li><p>We modify the resource creation step of
+      <li><p>We modify step 5 (the resource creation step) of
           [=shared attribute processing steps for iframe and frame elements=] to include:</p>
         <p>...and whose {{Request/importance}} is the current state of element's
           <code data-x="attr-iframe-importance">importance</code> content attribute</p>
