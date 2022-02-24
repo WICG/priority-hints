@@ -14,7 +14,7 @@ Default Highlight: js
 </pre>
 
 <pre class=anchors>
-urlPrefix: https://html.spec.whatwg.org/multipage; spec: HTML;
+urlPrefix: https://html.spec.whatwg.org; spec: HTML;
     type:dfn; for:/; text:enumerated attribute
     type:dfn; for:/; text:invalid value default
     type:dfn; for:/; text:missing value default
@@ -39,12 +39,13 @@ urlPrefix: https://html.spec.whatwg.org/multipage; spec: HTML;
     type: dfn; url: #fetching-and-processing-a-resource-from-a-link-element; text: Fetching and processing a resource from a link element;
     type: dfn; url: #shared-attribute-processing-steps-for-iframe-and-frame-elements; text: shared attribute processing steps for iframe and frame elements;
     type: dfn; url: #process-the-iframe-attributes; text: processing the iframe attributes;
-    type: dfn; url: #data-block; text: data blocks;
+    type: dfn; url: #the-script-element:data-block-2; text: data blocks;
     type: dfn; url: #script-fetch-options; text: Script fetch options;
     type: dfn; url: #default-classic-script-fetch-options; text: default classic script fetch options;
     type: dfn; url: #set-up-the-classic-script-request; text: set up the classic script request;
     type: dfn; url: #set-up-the-module-script-request; text: set up the module script request;
     type: dfn; url: #prepare-a-script; text: prepare a script;
+    type: dfn; url: #:~:text=dynamically%20has%20no%20direct%20effect; text: direct effect when changed dynamically;
 urlPrefix: https://fetch.spec.whatwg.org; spec: FETCH;
     type: dfn; url: #concept-request; text: fetch request;
     type: dfn; url: #concept-request; text: request;
@@ -342,7 +343,8 @@ urlPrefix: https://fetch.spec.whatwg.org; spec: FETCH;
             <span>reflect</span> the <code data-x="attr-script-importance">importance</code>
             content attribute, <span>limited to only known values</span>.
           <li>We add <code data-x="attr-script-importance">importance</code> to the list of
-            attributes that have no direct effect when changed dynamically.
+            attributes that have no [=direct effect when changed dynamically=] (For browsers that
+            don't support text linking, search for "dynamically has no direct effect").
         </ol>
       <li>We modify the list of attributes not to be specified when used in [=data blocks=] to
         include the <code data-x="attr-script-importance">importance</code> attribute.
