@@ -14,38 +14,46 @@ Default Highlight: js
 </pre>
 
 <pre class=anchors>
-urlPrefix: https://html.spec.whatwg.org; spec: HTML;
-    type:dfn; for:/; text:enumerated attribute
-    type:dfn; for:/; text:invalid value default
-    type:dfn; for:/; text:missing value default
-    type:element; text:link
-    type:element; text:script
-    type:element; text:img
-    type:element; text:iframe
-    type: dfn; url: #elements-3; text: List of elements;
-    type: dfn; url: #the-link-element; text: link element;
-    type: dfn; url: #the-img-element; text: img element;
-    type: dfn; url: #the-script-element; text: script element;
-    type: dfn; url: #the-iframe-element; text: iframe element;
-    type: dfn; url: #link-type-modulepreload; text: modulepreload;
+urlPrefix: https://html.spec.whatwg.org/multipage; spec: HTML;
+    type:dfn; for:/; text: enumerated attribute
+    type:dfn; for:/; text: invalid value default
+    type:dfn; for:/; text: missing value default
+urlPrefix: https://html.spec.whatwg.org/multipage/urls-and-fetching.html; spec: HTML;
     type: dfn; url: #fetching-resources; text: Fetching resources;
-    type: dfn; url: #reacting-to-dom-mutations; text: Reacting to DOM mutations;
+urlPrefix: https://html.spec.whatwg.org/multipage/images.html; spec: HTML;
     type: dfn; url: #update-the-image-data; text: update the image data;
     type: dfn; url: #reacting-to-environment-changes; text: Reacting to environment changes;
+urlPrefix: https://html.spec.whatwg.org/multipage/embedded-content.html; spec: HTML;
+    type: element; url: #the-img-element; text: img
+    type: dfn; url: #the-img-element; text: img element;
+urlPrefix: https://html.spec.whatwg.org/multipage/links.html; spec: HTML;
+    type: dfn; url: #external-resource-link; text: external resource links;
+    type: dfn; url: #link-type-modulepreload; text: modulepreload;
+urlPrefix: https://html.spec.whatwg.org/multipage/semantics.html; spec: HTML;
+    type: element; url: #the-link-element; text:link
+    type: dfn; url: #the-link-element; text: link element;
+    type: dfn; url: #create-a-link-element-request; text: create a link element request;
     type: dfn; url: #fetch-and-process-the-linked-resource; text: fetching and processing the linked resource;
     type: dfn; url: #fetch-and-process-the-linked-resource; text: fetch and process the linked resource;
-    type: dfn; url: #external-resource-link; text: external resource links;
-    type: dfn; url: #create-a-link-element-request; text: create a link element request;
     type: dfn; url: #fetching-and-processing-a-resource-from-a-link-element; text: Fetching and processing a resource from a link element;
-    type: dfn; url: #shared-attribute-processing-steps-for-iframe-and-frame-elements; text: shared attribute processing steps for iframe and frame elements;
-    type: dfn; url: #process-the-iframe-attributes; text: processing the iframe attributes;
+urlPrefix: https://html.spec.whatwg.org/multipage/scripting.html; spec: HTML;
+    type: element; text:script
+    type: dfn; url: #the-script-element; text: script element;
     type: dfn; url: #the-script-element:data-block-2; text: data blocks;
+    type: dfn; url: #:~:text=dynamically%20has%20no%20direct%20effect; text: direct effect when changed dynamically;
+    type: dfn; url: #prepare-a-script; text: prepare a script;
+urlPrefix: https://html.spec.whatwg.org/multipage/webappapis.html; spec: HTML;
     type: dfn; url: #script-fetch-options; text: Script fetch options;
+    type: dfn; url: #set-up-the-module-script-request; text: set up the module script request;
     type: dfn; url: #default-classic-script-fetch-options; text: default classic script fetch options;
     type: dfn; url: #set-up-the-classic-script-request; text: set up the classic script request;
-    type: dfn; url: #set-up-the-module-script-request; text: set up the module script request;
-    type: dfn; url: #prepare-a-script; text: prepare a script;
-    type: dfn; url: #:~:text=dynamically%20has%20no%20direct%20effect; text: direct effect when changed dynamically;
+urlPrefix: https://html.spec.whatwg.org/multipage/iframe-embed-object.html; spec: HTML;
+    type: element; url: #the-iframe-element; text:iframe
+    type: dfn; url: #the-iframe-element; text: iframe element;
+    type: dfn; url: #process-the-iframe-attributes; text: processing the iframe attributes;
+    type: dfn; url: #shared-attribute-processing-steps-for-iframe-and-frame-elements; text: shared attribute processing steps for iframe and frame elements;
+urlPrefix: https://html.spec.whatwg.org/multipage/indices.html; spec: HTML;
+    type: dfn; url: #elements-3; text: List of elements;
 urlPrefix: https://fetch.spec.whatwg.org; spec: FETCH;
     type: dfn; url: #concept-request; text: fetch request;
     type: dfn; url: #concept-request; text: request;
