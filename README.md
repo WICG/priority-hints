@@ -3,7 +3,7 @@
 ## tl;dr
 
 Priority Hints provide developers with the control to indicate a resource's
-relative importance to the browser.
+relative fetch priority to the browser.
 
 # Explainer
 

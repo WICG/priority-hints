@@ -89,8 +89,8 @@ urlPrefix: https://fetch.spec.whatwg.org; spec: FETCH;
     <p>
       This specification describes a browser API enabling developers to signal the priority of each resource they need to download.
       It introduces the
-      <a href="#solution">importance</a> <a data-lt="enumerated attribute">attribute</a> that may be used with <code>HTML</code> elements such as
-      <{img}>, <{link}>, <{script}> and <{iframe}> and as an <a data-lt="enumerated attribute">attribute</a>
+      <a href="#solution">fetchpriority</a> <a data-lt="enumerated attribute">attribute</a> that may be used with <code>HTML</code> elements such as
+      <{img}>, <{link}>, <{script}> and <{iframe}> and the <a href="#solution">priority</a> <a data-lt="enumerated attribute">attribute</a>
       on the {{Request|RequestInfo}} of [[fetch#fetch-method|fetch]]. 
     </p>
   </section>
@@ -109,17 +109,17 @@ urlPrefix: https://fetch.spec.whatwg.org; spec: FETCH;
       to their heuristic priority. Browsers might also use this heuristic resource priority to delay sending certain requests
       in order to avoid bandwidth contention of these resources with more critical ones.</p>
 
-    <p>Currently web developers have very little control over the heuristic importance of loaded resources, other than speeding
+    <p>Currently web developers have very little control over the heuristic priority of loaded resources, other than speeding
       up their discovery using <code>&lt;link rel=preload&gt;</code>([[PRELOAD|Preload]]). Browsers mostly determine a request's priority based on the
       request's <a>destination</a>, and location in the containing document if applicable.</p>
 
     <p>This document details use cases and modifications to [[FETCH|Fetch]] and [[HTML|HTML]] markup that will provide developers
-      control to indicate a resource's relative importance to the browser, enabling the browser to act on those indications to influence
+      control to indicate a resource's relative priority to the browser, enabling the browser to act on those indications to influence
       the request's overall priority in ways described in the <a href="#effects-of-priority-hints">Effects of Priority Hints</a> section.
     </p>
 
-    <p>It is important to note that changing the importance of one resource usually comes at the cost of another resource so
-    hints should be applied sparingly. Marking everything in the document as important will likely make for a worse user experience
+    <p>It is important to note that changing the priority of one resource usually comes at the cost of another resource so
+    hints should be applied sparingly. Marking everything in the document as high-priority will likely make for a worse user experience
     but correctly tagging a few resources that the browser would otherwise not load optimally can have a huge benefit.
     </p>
 
@@ -129,12 +129,12 @@ urlPrefix: https://fetch.spec.whatwg.org; spec: FETCH;
     <h2 id="solution">Solution</h2>
 
     <p>The
-      <code>importance</code> <a>enumerated attribute</a> may be used with resource-requesting elements including <{link}>,
+      <code>fetchpriority</code> <a>enumerated attribute</a> may be used with resource-requesting elements including <{link}>,
       <{img}>, <{script}> and <{iframe}>. This keyword hints to the browser the relative fetch priority
       a developer intends for a resource to have.</p>
 
     <ul>
-      <li>The <code>importance</code> attribute will have three states:
+      <li>The <code>fetchpriority</code> attribute will have three states:
         <ul>
           <li>
             <code>high</code> - The developer considers the resource as being important relative to other resources of the
@@ -153,7 +153,7 @@ urlPrefix: https://fetch.spec.whatwg.org; spec: FETCH;
       </li>
     </ul>
 
-    <p>With this attribute, the browser should make an effort to respect the developer's preference for the importance of a
+    <p>With this attribute, the browser should make an effort to respect the developer's preference for the priority of a
       resource when fetching it. Note that this is intentionally weak language, allowing for a browser to apply its own preferences
       for resource priority or heuristics if deemed important. See the below section for more information.
     </p>
@@ -171,9 +171,9 @@ urlPrefix: https://fetch.spec.whatwg.org; spec: FETCH;
 
     <h2 id="proposal">Proposal</h2>
     <h3 id="definitions">Definitions</h3>
-    <dfn id="importance-enum" export>Importance enum</dfn>
+    <dfn id="fetchpriority-enum" export>FetchPriority enum</dfn>
     <pre class=idl>
-    enum Importance { "high", "low", "auto" };
+    enum FetchPriority { "high", "low", "auto" };
     </pre>
     <table>
       <thead>
@@ -182,13 +182,13 @@ urlPrefix: https://fetch.spec.whatwg.org; spec: FETCH;
         <th>Description
       <tbody>
       <tr>
-        <td><dfn id="importance-enum-high" export>high</dfn>
-        <td>Signal a high priority fetch relative to other resources of the same type.
+        <td><dfn id="fetchpriority-enum-high" export>high</dfn>
+        <td>Signal a high-priority fetch relative to other resources of the same type.
       <tr>
-        <td><dfn id="importance-enum-low" export>low</dfn>
-        <td>Signal a low priority fetch relative to other resources of the same type.
+        <td><dfn id="fetchpriority-enum-low" export>low</dfn>
+        <td>Signal a low-priority fetch relative to other resources of the same type.
       <tr>
-        <td><dfn id="importance-enum-auto" export>auto</dfn>
+        <td><dfn id="fetchpriority-enum-auto" export>auto</dfn>
         <td>Signal automatic determination of fetch priority relative to other resources of the same type.
     </table>
 
@@ -199,7 +199,7 @@ urlPrefix: https://fetch.spec.whatwg.org; spec: FETCH;
         <p>We extend the [=request=] definition:</p>
         <p>
         A [=request=] has an associated
-        <dfn export id=concept-request-importance>importance</dfn>, which is
+        <dfn export id=concept-request-priority>priority</dfn>, which is
         "<code>high</code>",
         "<code>low</code>" or
         "<code>auto</code>".
@@ -209,51 +209,62 @@ urlPrefix: https://fetch.spec.whatwg.org; spec: FETCH;
       <li>We extend the {{Request}} interface as follows:
         <pre class="idl">
         partial interface Request {
-          readonly attribute Importance importance;
+          readonly attribute FetchPriority priority;
         };
 
         partial dictionary RequestInit {
-          Importance importance;
+          FetchPriority priority;
         };
         </pre>
 
       <li><p>We add the following to the "For web developers (non-normative)"" note in the
         [[fetch#request-class|Request class]] constructor:</p>
         <dl>
-        <dt>{{RequestInit/importance}}
-        <dd>A string to set request's {{Request/importance}}.
+        <dt>{{RequestInit/priority}}
+        <dd>A string to set request's {{Request/priority}}.
         </dl>
 
       <li><p>We add to step 12 of the <a constructor spec=fetch lt="Request()">new Request
         constructor steps</a>:</p>
         <dl>
-        <dt><a>importance</a>
-        <dd><var>request</var>'s <a>importance</a>.
+        <dt><a>priority</a>
+        <dd><var>request</var>'s <a>priority</a>.
         </dl>
 
-      <li><p>We modify step 13 in the process of [=fetch=] to read:</p>
-        <p>If <var>request</var>'s <a spec=fetch for=request>priority</a> is null, then use
-        <var>request</var>'s <a>importance</a>, <a spec=fetch for=request>initiator</a> and
+      <li><p>We rename references to {{Request}}'s opaque <a spec=fetch for=request>priority</a> to
+        <dfn id="internalpriority" export>internalpriority</dfn>:</p>
+        <ol>
+        <li>A <var>request</var> has an associated <a>internalpriority</a> (null or a user-agent-defined object). Unless otherwise stated it is null.
+        <li><p>We replace step 12 of <a constructor spec=fetch lt="Request()">new Request constructor steps</a> with :</p>
+        <dl>
+        <dt><a>internalpriority</a>
+        <dd><var>request</var>'s <a>internalpriority</a>.
+        </dl>
+        </ol>
+
+      <li><p>We modify step 14 in the process of [=fetch=] to read:</p>
+        <p>If <var>request</var>'s <a>internalpriority</a> is null, then use
+        <var>request</var>'s <a>priority</a>, <a spec=fetch for=request>initiator</a> and
         <a spec=fetch for=request>destination</a> appropriately in setting <var>request</var>'s
-        <a for=request>priority</a> to a user-agent-defined object.</p>
+        <a>internalpriority</a> to a user-agent-defined object.</p>
     </ol>
 
     <h3 id="html-integration">HTML Integration</h3>
     <em>This section will be removed once the [[HTML|HTML]] specification has been modified.</em>
     <p>For the supported elements (<{img}>, <{link}>, <{script}> and <{iframe}>) the integration
-    with HTML is to add an <code data-x="">importance</code> attribute to the relevant element
-    specification and pass the value through to the underlying fetch for the resource referenced
-    by the given element.</p>
-    <p>The importance value is plumbed through to the fetch for the referenced resource with
+    with HTML is to add an <code data-x="">fetchpriority</code> attribute to the relevant element
+    specification and pass the value through to the underlying fetch priority for the resource
+    referenced by the given element.</p>
+    <p>The fetchpriority value is plumbed through to the fetch for the referenced resource with
     no downstream impact on later behaviors of the given element (i.e. later fetches initiated by
     a frame or script are not impacted nor is the scheduling of execution or prioritization of
     tasks affected).</p>
 
     <ol>
     <li><p>We extend the [=Fetching resources=] process with an additional section:</p>
-      <p>Importance attributes</p>
-      <p>An <dfn export>importance attribute</dfn> is an <span>enumerated attribute</span>.  Each
-        [=importance enum|Fetch importance enum=] is a keyword for this attribute, mapping
+      <p>FetchPriority attributes</p>
+      <p>A <dfn export>fetchpriority attribute</dfn> is an <span>enumerated attribute</span>.  Each
+        [=fetchpriority enum|FetchPriority enum=] is a keyword for this attribute, mapping
         to a state of the same name.</p>
       <p>The attribute's <i data-x="missing value default">missing value default</i> and <i
         data-x="invalid value default">invalid value default</i> are both the [=auto=] state.</p>
@@ -265,37 +276,37 @@ urlPrefix: https://fetch.spec.whatwg.org; spec: FETCH;
     <h4 id="img">img</h4>
     <ol>
       <li><p>We add to the <{img}> element content attributes:</p>
-        <p><code data-x="">importance</code> - Importance for [=fetch|fetches=] initiated by the
-          element.
+        <p><code data-x="">fetchpriority</code> - FetchPriority for [=fetch|fetches=] initiated by
+          the element.
         </p>
       <li>We extend the <{img}> element DOM interface as follows:
         <pre class="idl">
         partial interface HTMLImageElement {
-            [CEReactions] attribute DOMString <span data-x="dom-img-importance">importance</span>;
+            [CEReactions] attribute DOMString <span data-x="dom-img-fetchpriority">fetchpriority</span>;
         };
         </pre>
       <li><p>We add to the <{img}> element content attribute descriptions:</p>
-        <p>The <dfn element-attr for="img"><code data-x="attr-img-importance">importance</code>
-          </dfn> attribute is an [=importance attribute=]. Its purpose is to set the [=importance=]
+        <p>The <dfn element-attr for="img"><code data-x="attr-img-fetchpriority">fetchpriority</code>
+          </dfn> attribute is a [=fetchpriority attribute=]. Its purpose is to set the [=priority=]
           used when [=fetching=] the image.</p>
         <p>The <dfn attribute for="HTMLImageElement"><code
-          data-x="dom-img-importance">importance</code></dfn> IDL attribute must
-          <span>reflect</span> the <code data-x="attr-img-importance">importance</code>
+          data-x="dom-img-fetchpriority">fetchpriority</code></dfn> IDL attribute must
+          <span>reflect</span> the <code data-x="attr-img-fetchpriority">fetchpriority</code>
           content attribute, <span>limited to only known values</span>.</p>
       <li><p>We add a step to [=update the image data|Updating the image data=] before fetching the
           image:</p>
-        <p>Set <var>request</var>'s {{Request/importance}} to the current state of the element's
-          <code data-x="attr-img-importance">importance</code> attribute.</p>
+        <p>Set <var>request</var>'s {{Request/priority}} to the current state of the element's
+          <code data-x="attr-img-fetchpriority">fetchpriority</code> attribute.</p>
       <li><p>We add a step to [=Reacting to environment changes=] when setting the image request's
           image data, before the request is fetched:</p>
-        <p>Set <var>request</var>'s {{Request/importance}} to the current state of the element's
-          <code data-x="attr-img-importance">importance</code> attribute.</p>
+        <p>Set <var>request</var>'s {{Request/priority}} to the current state of the element's
+          <code data-x="attr-img-fetchpriority">fetchpriority</code> attribute.</p>
       <li>We modify the [=List of elements=] to include the 
-        <span data-x="attr-img-importance">importance</span> attribute on the <{img}> element.
+        <span data-x="attr-img-fetchpriority">fetchpriority</span> attribute on the <{img}> element.
     </ol>
 
     <h4 id="picture">picture</h4>
-    <p>In the case of the <{picture}> element, no changes are necessary. The importance is applied
+    <p>In the case of the <{picture}> element, no changes are necessary. The fetchpriority is applied
     to the <{img}> element within the <{picture}> and applied to whatever <{source}> ends up being
     used.
     </p>
@@ -303,108 +314,108 @@ urlPrefix: https://fetch.spec.whatwg.org; spec: FETCH;
     <h4 id="link">link</h4>
     <ol>
       <li><p>We add to the [=link element=] content attributes:</p>
-        <p><code data-x="">importance</code> - Importance for [=fetch|fetches=] initiated by the
+        <p><code data-x="">fetchpriority</code> - FetchPriority for [=fetch|fetches=] initiated by the
           element.
         </p>
       <li><p>We add to the [=link element=] content attribute descriptions:</p>
-        <p>The <dfn element-attr for="link"><code data-x="attr-link-importance">importance</code>
-          </dfn> attribute is an [=importance attribute=]. It is intended for use with
-          [=external resource links=], where it helps set the [=importance=] used when
+        <p>The <dfn element-attr for="link"><code data-x="attr-link-fetchpriority">fetchpriority</code>
+          </dfn> attribute is a [=fetchpriority attribute=]. It is intended for use with
+          [=external resource links=], where it helps set the [=priority=] used when
           [=fetching and processing the linked resource=].</p>
       <li>We extend the <{link}> element as follows:
         <pre class="idl">
         partial interface HTMLLinkElement {
-            [CEReactions] attribute DOMString importance;
+            [CEReactions] attribute DOMString fetchpriority;
         };
         </pre>
       <li><p>We extend [=create a link element request=] of [=Fetching and processing a resource
         from a link element=] by adding a step before returning the request:</p>
-        <p>Set <var>request</var>'s {{Request/importance}} to the current state of <var ignore=''>
-        el</var>'s <code data-x="attr-link-importance">importance</code> content attribute.</p>
+        <p>Set <var>request</var>'s {{Request/priority}} to the current state of <var ignore=''>
+        el</var>'s <code data-x="attr-link-fetchpriority">fetchpriority</code> content attribute.</p>
       <li><p>We extend the [=fetch and process the linked resource=] algorithm of [=modulepreload=]
         links by adding a step before setting the render-blocking state:</p>
-        <p>Let {{Request/importance}} be the current state of the element's
-        <code data-x="attr-link-importance">importance</code> attribute.</p>
+        <p>Let {{Request/priority}} be the current state of the element's
+        <code data-x="attr-link-fetchpriority">fetchpriority</code> attribute.</p>
       <li>We modify the [=List of elements=] to include the 
-        <span data-x="attr-link-importance">importance</span> attribute on the <{link}> element.
+        <span data-x="attr-link-fetchpriority">fetchpriority</span> attribute on the <{link}> element.
     </ol>
 
     <h4 id="script">script</h4>
     <ol>
       <li><p>We add to the <{script}> element content attributes:</p>
-        <p><code data-x="">importance</code> - Importance for [=fetch|fetches=] initiated by the
+        <p><code data-x="">fetchpriority</code> - FetchPriority for [=fetch|fetches=] initiated by the
           element.
         </p>
       <li>We extend the <{script}> element DOM interface as follows:
         <pre class="idl">
         partial interface HTMLScriptElement {
-            [CEReactions] attribute DOMString <span data-x="dom-script-importance">importance</script>;
+            [CEReactions] attribute DOMString <span data-x="dom-script-fetchpriority">fetchpriority</script>;
         };
         </pre>
       <li><p>We add to the <{script}> element content attribute descriptions:</p>
         <ol>
-          <li>The <dfn element-attr for="script"><code data-x="attr-script-importance">importance
-            </code></dfn> attribute is an [=importance attribute=]. Its purpose is to set the
-            [=importance=] used when [=fetching=] the script.
+          <li>The <dfn element-attr for="script"><code data-x="attr-script-fetchpriority">fetchpriority
+            </code></dfn> attribute is a [=fetchpriority attribute=]. Its purpose is to set the
+            [=priority=] used when [=fetching=] the script.
           <li>The <dfn attribute for="HTMLScriptElement"><code
-            data-x="dom-script-importance">importance</code></dfn> IDL attribute must
-            <span>reflect</span> the <code data-x="attr-script-importance">importance</code>
+            data-x="dom-script-fetchpriority">fetchpriority</code></dfn> IDL attribute must
+            <span>reflect</span> the <code data-x="attr-script-fetchpriority">fetchpriority</code>
             content attribute, <span>limited to only known values</span>.
-          <li>We add <code data-x="attr-script-importance">importance</code> to the list of
+          <li>We add <code data-x="attr-script-fetchpriority">fetchpriority</code> to the list of
             attributes that have no [=direct effect when changed dynamically=] (For browsers that
             don't support text linking, search for "dynamically has no direct effect").
         </ol>
       <li>We modify the list of attributes not to be specified when used in [=data blocks=] to
-        include the <code data-x="attr-script-importance">importance</code> attribute.
+        include the <code data-x="attr-script-fetchpriority">fetchpriority</code> attribute.
       <li><p>We extend the [=Script fetch options=] struct:<p>
-        <p><span data-x="concept-script-fetch-options-importance">importance</span> - The
-          {{Request/importance}} for the initial [=fetch=].</p>
+        <p><span data-x="concept-script-fetch-options-fetchpriority">fetchpriority</span> - The
+          {{Request/priority}} for the initial [=fetch=].</p>
       <li>We extend [=default classic script fetch options=] to include "<code>auto</code>"
-        as the default value for <code data-x="concept-script-fetch-options-importance">
-        importance</code>.
+        as the default value for <code data-x="concept-script-fetch-options-fetchpriority">
+        fetchpriority</code>.
       <li>We extend [=set up the classic script request=] to set <var>request</var>'s
-        {{Request/importance}} to <var>option</var>'s
-        <code data-x="concept-script-fetch-options-importance">importance</code>
+        {{Request/priority}} to <var>option</var>'s
+        <code data-x="concept-script-fetch-options-fetchpriority">fetchpriority</code>
       <li><p>We insert a step before step 24 of [=prepare a script=]:</p>
-        <p>Let <var>importance</var> be the current state of the element's <code
-          data-x="attr-script-importance">importance</code> attribute.</p>
+        <p>Let <var>fetchpriority</var> be the current state of the element's <code
+          data-x="attr-script-fetchpriority">fetchpriority</code> attribute.</p>
       <li><p>We modify step 24 of [=prepare a script=] to include:</p>
-        <p><code data-x="concept-script-fetch-options-importance">importance</code> is
-        <var>importance</var>.</p>
+        <p><code data-x="concept-script-fetch-options-fetchpriority">fetchpriority</code> is
+        <var>fetchpriority</var>.</p>
       <li>We extend [=set up the module script request=] to set <var>request</var>'s
-        {{Request/importance}} to <var>option</var>'s
-        <code data-x="concept-script-fetch-options-importance">importance</code>
+        {{Request/priority}} to <var>option</var>'s
+        <code data-x="concept-script-fetch-options-fetchpriority">fetchpriority</code>
       <li>We modify the [=List of elements=] to include the 
-        <span data-x="attr-script-importance">importance</span> attribute on the <{script}>
+        <span data-x="attr-script-fetchpriority">fetchpriority</span> attribute on the <{script}>
         element.
     </ol>
 
     <h4 id="iframe">iframe</h4>
     <ol>
       <li><p>We add to the <{iframe}> element content attributes:</p>
-        <p><code data-x="">importance</code> - Importance for [=fetch|fetches=] initiated by the
+        <p><code data-x="">fetchpriority</code> - FetchPriority for [=fetch|fetches=] initiated by the
           element.
         </p>
       <li>We extend the <{iframe}> element DOM interface as follows:
         <pre class="idl">
         partial interface HTMLIFrameElement {
-            [CEReactions] attribute DOMString <span data-x="dom-iframe-importance">importance</span>;
+            [CEReactions] attribute DOMString <span data-x="dom-iframe-fetchpriority">fetchpriority</span>;
         };
         </pre>
       <li><p>We add to the <{iframe}> content attribute descriptions:</p>
-        <p>The <dfn element-attr for="iframe"><code data-x="attr-iframe-importance">importance
-          </code></dfn> attribute is an [=importance attribute=]. Its purpose is to set the
-          [=importance=] used when [=processing the iframe attributes=].</p>
+        <p>The <dfn element-attr for="iframe"><code data-x="attr-iframe-fetchpriority">fetchpriority
+          </code></dfn> attribute is a [=fetchpriority attribute=]. Its purpose is to set the
+          [=priority=] used when [=processing the iframe attributes=].</p>
         <p>The <dfn attribute for="HTMLIFrameElement"><code
-          data-x="dom-iframe-importance">importance</code></dfn> IDL attribute must
-          <span>reflect</span> the <code data-x="attr-iframe-importance">importance</code>
+          data-x="dom-iframe-fetchpriority">fetchpriority</code></dfn> IDL attribute must
+          <span>reflect</span> the <code data-x="attr-iframe-fetchpriority">fetchpriority</code>
           content attribute, <span>limited to only known values</span>.</p>
       <li><p>We modify step 5 (the resource creation step) of
           [=shared attribute processing steps for iframe and frame elements=] to include:</p>
-        <p>...and whose {{Request/importance}} is the current state of element's
-          <code data-x="attr-iframe-importance">importance</code> content attribute</p>
+        <p>...and whose {{Request/priority}} is the current state of element's
+          <code data-x="attr-iframe-fetchpriority">fetchpriority</code> content attribute</p>
       <li>We modify the [=List of elements=] to include the 
-        <span data-x="attr-iframe-importance">importance</span> attribute on the <{iframe}>
+        <span data-x="attr-iframe-fetchpriority">fetchpriority</span> attribute on the <{iframe}>
         element.
     </ol>
 
@@ -421,14 +432,14 @@ urlPrefix: https://fetch.spec.whatwg.org; spec: FETCH;
       a given request when
       <a href="https://httpwg.org/http-extensions/draft-ietf-httpbis-priority.html">HTTP extensible prioritization</a> is
       being used at the transport layer (for example, with HTTP/3).
-      It is not the intention of the different <code>importance</code> states to directly map to existing browser priority values,
+      It is not the intention of the different <code>priority</code> states to directly map to existing browser priority values,
       but instead act as a relative influencer among requests of a similar type.</p>
     </p>
     <div class="example">
       <p>
         If requests for <code>image</code>
         <a data-lt="destination">destinations</a> in a particular implementation are typically assigned a stream urgency of
-        <code>3</code>, a request for an image with <code>importance="high"</code> might be assigned a stream urgency less than
+        <code>3</code>, a request for an image with <code>fetchpriority="high"</code> might be assigned a stream urgency less than
         <code>3</code> (where lower values are higher priority).</p>
     </div>
 
@@ -436,19 +447,19 @@ urlPrefix: https://fetch.spec.whatwg.org; spec: FETCH;
     <p>Implementations are encouraged to use Priority Hints to influence the HTTP/2 stream priority assigned to a given request
       when <a href="https://httpwg.org/http2-spec/draft-ietf-httpbis-http2bis.html#name-prioritization">HTTP/2 prioritization</a>
       is being used at the transport layer.
-      It is not the intention of the different <code>importance</code> states to directly map to existing browser priority values,
+      It is not the intention of the different <code>priority</code> states to directly map to existing browser priority values,
       but instead act as a relative influencer among requests of a similar type.</p>
     <div class="example">
       <p>
         If requests for <code>image</code>
         <a data-lt="destination">destinations</a> in a particular implementation are typically assigned a stream weight of
-        <code>60</code>, a request for an image with <code>importance="high"</code> might be assigned a stream weight higher than
+        <code>60</code>, a request for an image with <code>fetchpriority="high"</code> might be assigned a stream weight higher than
         <code>60</code>.
       </p>
     </div>
 
     <strong>Queueing</strong>
-    <p>A user agent might choose to queue up certain low priority requests until higher priority requests are sent out or finished
+    <p>A user agent might choose to queue up certain low-priority requests until higher-priority requests are sent out or finished
       in order to reduce bandwidth contention. Implementations are encouraged to use Priority Hints to determine whether a given
       request is a candidate for such queueing so that more important resources are fetched and used earlier, in order to improve
       the user's experience.</p>
@@ -491,27 +502,27 @@ urlPrefix: https://fetch.spec.whatwg.org; spec: FETCH;
       <xmp highlight="html">
         <ul class="carousel">
           <!-- The first image is visible -->
-          <img src="img/carousel-1.jpg" importance="high">
+          <img src="img/carousel-1.jpg" fetchpriority="high">
           <!-- The other carousel images are not -->
-          <img src="img/carousel-2.jpg" importance="low">
-          <img src="img/carousel-3.jpg" importance="low">
-          <img src="img/carousel-4.jpg" importance="low">
+          <img src="img/carousel-2.jpg" fetchpriority="low">
+          <img src="img/carousel-3.jpg" fetchpriority="low">
+          <img src="img/carousel-4.jpg" fetchpriority="low">
         </ul>
       </xmp>
     </div>
 
-    <p>When we assign the first image high importance, this can start the image at a high
+    <p>When we assign the first image high fetchpriority, this can start the image at a high
     priority as soon as it is discovered without having to wait for layout.</p>
 
-    <p>When we assign the off-screen images low importance, this will create less contention
-      between the remaining high priority images and other high priority resources.</p>
+    <p>When we assign the off-screen images low fetchpriority, this will create less contention
+      between the remaining high-priority images and other high-priority resources.</p>
 
     <strong>Signal Priority of Asynchronous Scripts</strong>
     <p>A browser may treat parser-blocking scripts, async scripts and preloaded scripts
     differently based on heuristics that work well in a general case but may not behave exactly
     as a developer desires.</p>
     <div class="example" title="Async Script Example Before">
-      <p>if a browser treats preloaded scripts as high-priority and async scripts as low priority
+      <p>if a browser treats preloaded scripts as high-priority and async scripts as low-priority
       by default, it could be difficult to preload a dependency of an async script and still have
       them load in the desired order. For example, if we have a script <code>a.js</code> that
       imports <code>b.js</code>, it could be useful to preload <code>b.js</code> so the fetch can
@@ -528,12 +539,12 @@ urlPrefix: https://fetch.spec.whatwg.org; spec: FETCH;
 
     <p>By using priority hints and assigning the same priority to both scripts, they can be loaded
     in the preferred order and at a priority that makes sense depending on the context of what the
-    script is being used for (say, high priority for user-facing UI or functionality or
+    script is being used for (say, high-priority for user-facing UI or functionality or
     low-priority for scripts responsible for background work).</p>
     <div class="example" title="Async Script Example with Priority Hints">
       <xmp highlight="html">
-        <script src=a.js async importance=high></script>
-        <link rel=preload href=b.js as=script importance=high>
+        <script src=a.js async fetchpriority=high></script>
+        <link rel=preload href=b.js as=script fetchpriority=high>
       </xmp>
     </div>
 
@@ -556,7 +567,7 @@ urlPrefix: https://fetch.spec.whatwg.org; spec: FETCH;
       </xmp>
     </div>
 
-    <p>By using the <code>importance</code> attribute on the second Fetch request, we can hint that
+    <p>By using the <code>priority</code> property on the second Fetch request, we can hint that
     the priority of that request is <code>low</code>, reducing the chances of it contending with the
     Fetch request for article content. We can also explicitly state the priority of the first
     request is <code>high</code> so that browsers where Fetch requests do not already have a high
@@ -565,11 +576,11 @@ urlPrefix: https://fetch.spec.whatwg.org; spec: FETCH;
     <div class="example" title="Fetch Example with Priority Hints">
       <xmp highlight="javascript">
         // Critical Fetch request for article content
-        fetch('/api/articles.json', { importance: 'high' }).then(/*...*/)
+        fetch('/api/articles.json', { priority: 'high' }).then(/*...*/)
 
         // Request for related content now reduced in priority
         // reducing the opportunity for contention
-        fetch('/api/related.json', { importance: 'low' }).then(/*...*/)
+        fetch('/api/related.json', { priority: 'low' }).then(/*...*/)
       </xmp>
     </div>
 
@@ -578,16 +589,16 @@ urlPrefix: https://fetch.spec.whatwg.org; spec: FETCH;
     another.</p>
 
     <strong>Providing Priority Hints through HTTP Headers</strong>
-    <p>The importance hint may be specified in the document markup, MAY be provided via JavaScript,
+    <p>The fetchpriority hint MAY be specified in the document markup, MAY be provided via JavaScript,
     MAY be provided via the HTTP header, and MAY be dynamically added to the document.</p>
     <div class="example" title="HTTP Header Example">
       <xmp>
-        Link: </app/style.css>; importance=high
-        Link: </app/script.js>; importance=low
+        Link: </app/style.css>; fetchpriority=high
+        Link: </app/script.js>; fetchpriority=low
       </xmp>
     </div>
 
-    <p>As above examples illustrate, importance can be specified via declarative markup, Link HTTP header ([[RFC5988|RFC5988]]), 
+    <p>As above examples illustrate, fetchpriority can be specified via declarative markup, Link HTTP header ([[RFC5988|RFC5988]]), 
       or scheduled via JavaScript.</p>
 
     <h2 id="adoptionpath">Adoption path</h2>
@@ -612,7 +623,7 @@ urlPrefix: https://fetch.spec.whatwg.org; spec: FETCH;
 
     <p>This section outlines the different use-cases Priority Hints sets out to address.</p>
 
-    <h3 id="communicateresourceimportancetothebrowser">Communicate resource importance to the browser</h3>
+    <h3 id="communicateresourcefetchprioritytothebrowser">Communicate resource fetch priority to the browser</h3>
 
     <p>The browser assigns priorities and certain dependencies to downloaded resources and uses them to determine:</p>
 
@@ -625,7 +636,7 @@ urlPrefix: https://fetch.spec.whatwg.org; spec: FETCH;
     <p>The browser uses various heuristics in order to do the above, which are based on the type of resource, its location in
       the document, and more.</p>
 
-    <p>Occasionally, web developers are in a better position to know which resources are more impactful than others on their
+    <p>Web developers can often be in a better position to know which resources are more impactful than others on their
       users' loading experience, and need a way to communicate that to the browser.</p>
 
 
@@ -639,14 +650,14 @@ urlPrefix: https://fetch.spec.whatwg.org; spec: FETCH;
     <p>While better transport protocols (e.g. QUIC) may address that at a lower layer for the single origin case, developers
       should be able to signal to the browser that a certain resource is not critical, and therefore should be queued until
       such resources are discovered. Such marking as "non-critical" should be orthogonal to the signaling of the resource's
-      "importance" (e.g. this could be applied to high priority resources that shouldn't contend with rendering-critical
+      "fetch priority" (e.g. this could be applied to high priority resources that shouldn't contend with rendering-critical
       resources as well as low priority ones).</p>
 
     <h3 id="avoidbandwidthcontentioninmultipleoriginscenarios">Avoid bandwidth contention in multiple origin scenarios</h3>
 
     <p>When loading resources from multiple origins, setting HTTP/2 dependencies and weights do very little to avoid bandwidth
       contention between the origins, as each origin tries to send down its most critical resource without knowing of more
-      critical resources in other origins. Signaling resource importance to the browser can enable it to defer sending of
+      critical resources in other origins. Signaling resource priority to the browser can enable it to defer sending of
       non-critical third party requests while critical resources are still being downloaded.</p>
 
     <h3 id="provideprioritysignalsformarkupbasedresources">Provide priority signals for markup-based resources</h3>
@@ -658,7 +669,7 @@ urlPrefix: https://fetch.spec.whatwg.org; spec: FETCH;
     <h3 id="provideprioritysignalsfordynamicallyloadedresources">Provide priority signals for dynamically loaded resources</h3>
 
     <p>Developers need a way to provide the above signals for resources that are fetched through JavaScript, e.g., using the
-      <code>fetch()</code> API. That would enable them both to upgrade and downgrade those resource's "importance".
+      <code>fetch()</code> API. That would enable them both to upgrade and downgrade those resource's "priority".
     </p>
 
   </section>
@@ -667,16 +678,16 @@ urlPrefix: https://fetch.spec.whatwg.org; spec: FETCH;
     <h2 id="safe-usage">Safe usage</h2>
     <div class="note">
       <p>If the
-        <code>importance</code> keyword is used as an optimization to initiate earlier fetch then no additional feature detection checks are necessary:
+        <code>fetchpriority</code> keyword is used as an optimization to initiate earlier fetch then no additional feature detection checks are necessary:
         browsers that support
-        <code>importance</code> may initiate earlier fetch, and those that do not will ignore it and fetch the resource as previously. Otherwise,
+        <code>fetchpriority</code> may initiate earlier fetch, and those that do not will ignore it and fetch the resource as previously. Otherwise,
         if the application intends to rely on
-        <code>importance</code> to fetch the resource, then it can execute a feature detection check to verify that it is supported.
+        <code>fetchpriority</code> to fetch the resource, then it can execute a feature detection check to verify that it is supported.
       </p>
     </div>
 
     <p>Applying
-      <code>importance</code> appropriately to the resources in a page should never degrade performance. This should hold true for both browsers that support
+      <code>fetchpriority</code> appropriately to the resources in a page should never degrade performance. This should hold true for both browsers that support
       Priority Hints as well as browsers that do not. UAs are free to apply other heuristics in addition to Priority Hints
       to decide on how they load content.</p>
     <p>With in-viewport images, a browser may automatically detect if the image is important and boost priority if it gets to
