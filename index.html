@@ -6,7 +6,7 @@
   <link href="https://www.w3.org/StyleSheets/TR/2021/cg-draft" rel="stylesheet">
   <meta content="Bikeshed version 2e3c4c68b, updated Fri Jan 14 14:49:00 2022 -0800" name="generator">
   <link href="https://wicg.github.io/priority-hints" rel="canonical">
-  <meta content="9901f05750dc14480ad9c4f7e3b159d0b859412d" name="document-revision">
+  <meta content="c445b2c5e08b52df49c66616a126b7ae11b066cb" name="document-revision">
 <style>/* style-autolinks */
 
 .css.css, .property.property, .descriptor.descriptor {
@@ -577,7 +577,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
   <div class="head">
    <p data-fill-with="logo"><a class="logo" href="https://www.w3.org/"> <img alt="W3C" height="48" src="https://www.w3.org/StyleSheets/TR/2021/logos/W3C" width="72"> </a> </p>
    <h1 class="p-name no-ref" id="title">Priority Hints</h1>
-   <p id="w3c-state"><a href="https://www.w3.org/standards/types#CG-DRAFT">Draft Community Group Report</a>, <time class="dt-updated" datetime="2022-02-24">24 February 2022</time></p>
+   <p id="w3c-state"><a href="https://www.w3.org/standards/types#CG-DRAFT">Draft Community Group Report</a>, <time class="dt-updated" datetime="2022-02-28">28 February 2022</time></p>
    <div data-fill-with="spec-metadata">
     <dl>
      <dt>This version:
@@ -638,7 +638,7 @@ A human-readable <a href="http://www.w3.org/community/about/agreements/cla-deed/
     <li>
      <a href="#use-cases"><span class="secno">8</span> <span class="content">Use Cases</span></a>
      <ol class="toc">
-      <li><a href="#communicateresourceimportancetothebrowser"><span class="secno">8.1</span> <span class="content">Communicate resource importance to the browser</span></a>
+      <li><a href="#communicateresourcefetchprioritytothebrowser"><span class="secno">8.1</span> <span class="content">Communicate resource fetch priority to the browser</span></a>
       <li><a href="#signalaresourceasnoncritical"><span class="secno">8.2</span> <span class="content">Signal a resource as non-critical</span></a>
       <li><a href="#avoidbandwidthcontentioninmultipleoriginscenarios"><span class="secno">8.3</span> <span class="content">Avoid bandwidth contention in multiple origin scenarios</span></a>
       <li><a href="#provideprioritysignalsformarkupbasedresources"><span class="secno">8.4</span> <span class="content">Provide priority signals for markup-based resources</span></a>
@@ -675,7 +675,7 @@ A human-readable <a href="http://www.w3.org/community/about/agreements/cla-deed/
   <main>
    <section>
     <p> This specification describes a browser API enabling developers to signal the priority of each resource they need to download.
-      It introduces the <a href="#solution">importance</a> <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage#enumerated-attribute" id="ref-for-enumerated-attribute">attribute</a> that may be used with <code class="highlight">HTML</code> elements such as <code class="highlight"><a data-link-type="element" href="https://html.spec.whatwg.org/multipage/embedded-content.html#the-img-element" id="ref-for-the-img-element">img</a></code>, <code class="highlight"><a data-link-type="element" href="https://html.spec.whatwg.org/multipage/semantics.html#the-link-element" id="ref-for-the-link-element">link</a></code>, <code class="highlight"><a data-link-type="element" href="https://html.spec.whatwg.org/multipage/scripting.html#script" id="ref-for-script">script</a></code> and <code class="highlight"><a data-link-type="element" href="https://html.spec.whatwg.org/multipage/iframe-embed-object.html#the-iframe-element" id="ref-for-the-iframe-element">iframe</a></code> and as an <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage#enumerated-attribute" id="ref-for-enumerated-attribute①">attribute</a> on the <code class="idl"><a data-link-type="idl" href="https://fetch.spec.whatwg.org/#request" id="ref-for-request">RequestInfo</a></code> of <a href="https://fetch.spec.whatwg.org/#fetch-method">fetch</a>. </p>
+      It introduces the <a href="#solution">fetchpriority</a> <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage#enumerated-attribute" id="ref-for-enumerated-attribute">attribute</a> that may be used with <code class="highlight">HTML</code> elements such as <code class="highlight"><a data-link-type="element" href="https://html.spec.whatwg.org/multipage/embedded-content.html#the-img-element" id="ref-for-the-img-element">img</a></code>, <code class="highlight"><a data-link-type="element" href="https://html.spec.whatwg.org/multipage/semantics.html#the-link-element" id="ref-for-the-link-element">link</a></code>, <code class="highlight"><a data-link-type="element" href="https://html.spec.whatwg.org/multipage/scripting.html#script" id="ref-for-script">script</a></code> and <code class="highlight"><a data-link-type="element" href="https://html.spec.whatwg.org/multipage/iframe-embed-object.html#the-iframe-element" id="ref-for-the-iframe-element">iframe</a></code> and the <a href="#solution">priority</a> <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage#enumerated-attribute" id="ref-for-enumerated-attribute①">attribute</a> on the <code class="idl"><a data-link-type="idl" href="https://fetch.spec.whatwg.org/#request" id="ref-for-request">RequestInfo</a></code> of <a href="https://fetch.spec.whatwg.org/#fetch-method">fetch</a>. </p>
    </section>
    <section id="sotd">
     <p> This is an unofficial proposal. </p>
@@ -686,23 +686,23 @@ A human-readable <a href="http://www.w3.org/community/about/agreements/cla-deed/
     <p>The browser’s resource loading process is a complex one. Browsers discover needed resources and download them according
       to their heuristic priority. Browsers might also use this heuristic resource priority to delay sending certain requests
       in order to avoid bandwidth contention of these resources with more critical ones.</p>
-    <p>Currently web developers have very little control over the heuristic importance of loaded resources, other than speeding
+    <p>Currently web developers have very little control over the heuristic priority of loaded resources, other than speeding
       up their discovery using <code class="highlight"><c- o>&lt;</c->link rel<c- o>=</c->preload<c- o>></c-></code>(<a data-link-type="biblio" href="#biblio-preload">Preload</a>). Browsers mostly determine a request’s priority based on the
       request’s <a data-link-type="dfn" href="https://fetch.spec.whatwg.org#destination" id="ref-for-destination">destination</a>, and location in the containing document if applicable.</p>
     <p>This document details use cases and modifications to <a data-link-type="biblio" href="#biblio-fetch">Fetch</a> and <a data-link-type="biblio" href="#biblio-html">HTML</a> markup that will provide developers
-      control to indicate a resource’s relative importance to the browser, enabling the browser to act on those indications to influence
+      control to indicate a resource’s relative priority to the browser, enabling the browser to act on those indications to influence
       the request’s overall priority in ways described in the <a href="#effects-of-priority-hints">Effects of Priority Hints</a> section. </p>
-    <p>It is important to note that changing the importance of one resource usually comes at the cost of another resource so
-    hints should be applied sparingly. Marking everything in the document as important will likely make for a worse user experience
+    <p>It is important to note that changing the priority of one resource usually comes at the cost of another resource so
+    hints should be applied sparingly. Marking everything in the document as high-priority will likely make for a worse user experience
     but correctly tagging a few resources that the browser would otherwise not load optimally can have a huge benefit. </p>
    </section>
    <section>
     <h2 class="heading settled" data-level="2" id="solution"><span class="secno">2. </span><span class="content">Solution</span><a class="self-link" href="#solution"></a></h2>
-    <p>The <code class="highlight">importance</code> <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage#enumerated-attribute" id="ref-for-enumerated-attribute②">enumerated attribute</a> may be used with resource-requesting elements including <code class="highlight"><a data-link-type="element" href="https://html.spec.whatwg.org/multipage/semantics.html#the-link-element" id="ref-for-the-link-element①">link</a></code>, <code class="highlight"><a data-link-type="element" href="https://html.spec.whatwg.org/multipage/embedded-content.html#the-img-element" id="ref-for-the-img-element①">img</a></code>, <code class="highlight"><a data-link-type="element" href="https://html.spec.whatwg.org/multipage/scripting.html#script" id="ref-for-script①">script</a></code> and <code class="highlight"><a data-link-type="element" href="https://html.spec.whatwg.org/multipage/iframe-embed-object.html#the-iframe-element" id="ref-for-the-iframe-element①">iframe</a></code>. This keyword hints to the browser the relative fetch priority
+    <p>The <code class="highlight">fetchpriority</code> <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage#enumerated-attribute" id="ref-for-enumerated-attribute②">enumerated attribute</a> may be used with resource-requesting elements including <code class="highlight"><a data-link-type="element" href="https://html.spec.whatwg.org/multipage/semantics.html#the-link-element" id="ref-for-the-link-element①">link</a></code>, <code class="highlight"><a data-link-type="element" href="https://html.spec.whatwg.org/multipage/embedded-content.html#the-img-element" id="ref-for-the-img-element①">img</a></code>, <code class="highlight"><a data-link-type="element" href="https://html.spec.whatwg.org/multipage/scripting.html#script" id="ref-for-script①">script</a></code> and <code class="highlight"><a data-link-type="element" href="https://html.spec.whatwg.org/multipage/iframe-embed-object.html#the-iframe-element" id="ref-for-the-iframe-element①">iframe</a></code>. This keyword hints to the browser the relative fetch priority
       a developer intends for a resource to have.</p>
     <ul>
      <li>
-      The <code class="highlight">importance</code> attribute will have three states: 
+      The <code class="highlight">fetchpriority</code> attribute will have three states: 
       <ul>
        <li> <code class="highlight">high</code> - The developer considers the resource as being important relative to other resources of the
             same type. 
@@ -712,7 +712,7 @@ A human-readable <a href="http://www.w3.org/community/about/agreements/cla-deed/
             the browser’s default heuristics. This also serves as the attribute’s <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage#invalid-value-default" id="ref-for-invalid-value-default">invalid value default</a> and <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage#missing-value-default" id="ref-for-missing-value-default">missing value default</a>. 
       </ul>
     </ul>
-    <p>With this attribute, the browser should make an effort to respect the developer’s preference for the importance of a
+    <p>With this attribute, the browser should make an effort to respect the developer’s preference for the priority of a
       resource when fetching it. Note that this is intentionally weak language, allowing for a browser to apply its own preferences
       for resource priority or heuristics if deemed important. See the below section for more information. </p>
     <p></p>
@@ -726,8 +726,8 @@ A human-readable <a href="http://www.w3.org/community/about/agreements/cla-deed/
       to user-space where different types of content share similar properties.</p>
     <h2 class="heading settled" data-level="3" id="proposal"><span class="secno">3. </span><span class="content">Proposal</span><a class="self-link" href="#proposal"></a></h2>
     <h3 class="heading settled" data-level="3.1" id="definitions"><span class="secno">3.1. </span><span class="content">Definitions</span><a class="self-link" href="#definitions"></a></h3>
-     <dfn class="dfn-paneled" data-dfn-type="dfn" data-export id="importance-enum">Importance enum</dfn> 
-<pre class="idl highlight def"><c- b>enum</c-> <dfn class="dfn-paneled idl-code" data-dfn-type="enum" data-export id="enumdef-importance"><code class="highlight"><c- g>Importance</c-></code></dfn> { <dfn class="idl-code" data-dfn-for="Importance" data-dfn-type="enum-value" data-export id="dom-importance-high"><code class="highlight"><c- s><c- u>"high"</c-></c-></code><a class="self-link" href="#dom-importance-high"></a></dfn>, <dfn class="idl-code" data-dfn-for="Importance" data-dfn-type="enum-value" data-export id="dom-importance-low"><code class="highlight"><c- s><c- u>"low"</c-></c-></code><a class="self-link" href="#dom-importance-low"></a></dfn>, <dfn class="idl-code" data-dfn-for="Importance" data-dfn-type="enum-value" data-export id="dom-importance-auto"><code class="highlight"><c- s><c- u>"auto"</c-></c-></code><a class="self-link" href="#dom-importance-auto"></a></dfn> };
+     <dfn class="dfn-paneled" data-dfn-type="dfn" data-export id="fetchpriority-enum">FetchPriority enum</dfn> 
+<pre class="idl highlight def"><c- b>enum</c-> <dfn class="dfn-paneled idl-code" data-dfn-type="enum" data-export id="enumdef-fetchpriority"><code class="highlight"><c- g>FetchPriority</c-></code></dfn> { <dfn class="idl-code" data-dfn-for="FetchPriority" data-dfn-type="enum-value" data-export id="dom-fetchpriority-high"><code class="highlight"><c- s><c- u>"high"</c-></c-></code><a class="self-link" href="#dom-fetchpriority-high"></a></dfn>, <dfn class="idl-code" data-dfn-for="FetchPriority" data-dfn-type="enum-value" data-export id="dom-fetchpriority-low"><code class="highlight"><c- s><c- u>"low"</c-></c-></code><a class="self-link" href="#dom-fetchpriority-low"></a></dfn>, <dfn class="idl-code" data-dfn-for="FetchPriority" data-dfn-type="enum-value" data-export id="dom-fetchpriority-auto"><code class="highlight"><c- s><c- u>"auto"</c-></c-></code><a class="self-link" href="#dom-fetchpriority-auto"></a></dfn> };
 </pre>
     <table>
      <thead>
@@ -736,13 +736,13 @@ A human-readable <a href="http://www.w3.org/community/about/agreements/cla-deed/
        <th>Description 
      <tbody>
       <tr>
-       <td><dfn data-dfn-type="dfn" data-export id="importance-enum-high">high<a class="self-link" href="#importance-enum-high"></a></dfn> 
-       <td>Signal a high priority fetch relative to other resources of the same type. 
+       <td><dfn data-dfn-type="dfn" data-export id="fetchpriority-enum-high">high<a class="self-link" href="#fetchpriority-enum-high"></a></dfn> 
+       <td>Signal a high-priority fetch relative to other resources of the same type. 
       <tr>
-       <td><dfn data-dfn-type="dfn" data-export id="importance-enum-low">low<a class="self-link" href="#importance-enum-low"></a></dfn> 
-       <td>Signal a low priority fetch relative to other resources of the same type. 
+       <td><dfn data-dfn-type="dfn" data-export id="fetchpriority-enum-low">low<a class="self-link" href="#fetchpriority-enum-low"></a></dfn> 
+       <td>Signal a low-priority fetch relative to other resources of the same type. 
       <tr>
-       <td><dfn class="dfn-paneled" data-dfn-type="dfn" data-export id="importance-enum-auto">auto</dfn> 
+       <td><dfn class="dfn-paneled" data-dfn-type="dfn" data-export id="fetchpriority-enum-auto">auto</dfn> 
        <td>Signal automatic determination of fetch priority relative to other resources of the same type. 
     </table>
     <h3 class="heading settled" data-level="3.2" id="fetch-integration"><span class="secno">3.2. </span><span class="content">Fetch Integration</span><a class="self-link" href="#fetch-integration"></a></h3>
@@ -750,7 +750,7 @@ A human-readable <a href="http://www.w3.org/community/about/agreements/cla-deed/
     <ol>
      <li>
       <p>We extend the <a data-link-type="dfn" href="https://fetch.spec.whatwg.org#concept-request" id="ref-for-concept-request">request</a> definition:</p>
-      <p> A <a data-link-type="dfn" href="https://fetch.spec.whatwg.org#concept-request" id="ref-for-concept-request①">request</a> has an associated <dfn class="dfn-paneled" data-dfn-type="dfn" data-export id="concept-request-importance">importance</dfn>, which is
+      <p> A <a data-link-type="dfn" href="https://fetch.spec.whatwg.org#concept-request" id="ref-for-concept-request①">request</a> has an associated <dfn class="dfn-paneled" data-dfn-type="dfn" data-export id="concept-request-priority">priority</dfn>, which is
         "<code class="highlight">high</code>",
         "<code class="highlight">low</code>" or
         "<code class="highlight">auto</code>".
@@ -758,47 +758,58 @@ A human-readable <a href="http://www.w3.org/community/about/agreements/cla-deed/
      <li>
       We extend the <code class="idl"><a data-link-type="idl" href="https://fetch.spec.whatwg.org/#request" id="ref-for-request①">Request</a></code> interface as follows: 
 <pre class="idl highlight def"><c- b>partial</c-> <c- b>interface</c-> <a class="idl-code" data-link-type="interface" href="https://fetch.spec.whatwg.org/#request" id="ref-for-request②"><c- g>Request</c-></a> {
-  <c- b>readonly</c-> <c- b>attribute</c-> <a data-link-type="idl-name" href="#enumdef-importance" id="ref-for-enumdef-importance"><c- n>Importance</c-></a> <dfn class="dfn-paneled idl-code" data-dfn-for="Request" data-dfn-type="attribute" data-export data-readonly data-type="Importance" id="dom-request-importance"><code class="highlight"><c- g>importance</c-></code></dfn>;
+  <c- b>readonly</c-> <c- b>attribute</c-> <a data-link-type="idl-name" href="#enumdef-fetchpriority" id="ref-for-enumdef-fetchpriority"><c- n>FetchPriority</c-></a> <dfn class="dfn-paneled idl-code" data-dfn-for="Request" data-dfn-type="attribute" data-export data-readonly data-type="FetchPriority" id="dom-request-priority"><code class="highlight"><c- g>priority</c-></code></dfn>;
 };
 
 <c- b>partial</c-> <c- b>dictionary</c-> <a class="idl-code" data-link-type="dictionary" href="https://fetch.spec.whatwg.org/#requestinit" id="ref-for-requestinit"><c- g>RequestInit</c-></a> {
-  <a data-link-type="idl-name" href="#enumdef-importance" id="ref-for-enumdef-importance①"><c- n>Importance</c-></a> <dfn class="dfn-paneled idl-code" data-dfn-for="RequestInit" data-dfn-type="dict-member" data-export data-type="Importance " id="dom-requestinit-importance"><code class="highlight"><c- g>importance</c-></code></dfn>;
+  <a data-link-type="idl-name" href="#enumdef-fetchpriority" id="ref-for-enumdef-fetchpriority①"><c- n>FetchPriority</c-></a> <dfn class="dfn-paneled idl-code" data-dfn-for="RequestInit" data-dfn-type="dict-member" data-export data-type="FetchPriority " id="dom-requestinit-priority"><code class="highlight"><c- g>priority</c-></code></dfn>;
 };
 </pre>
      <li>
       <p>We add the following to the "For web developers (non-normative)"" note in the <a href="https://fetch.spec.whatwg.org/#request-class">Request class</a> constructor:</p>
       <dl>
-       <dt><code class="idl"><a data-link-type="idl" href="#dom-requestinit-importance" id="ref-for-dom-requestinit-importance">importance</a></code> 
-       <dd>A string to set request’s <code class="idl"><a data-link-type="idl" href="#dom-request-importance" id="ref-for-dom-request-importance">importance</a></code>. 
+       <dt><code class="idl"><a data-link-type="idl" href="#dom-requestinit-priority" id="ref-for-dom-requestinit-priority">priority</a></code> 
+       <dd>A string to set request’s <code class="idl"><a data-link-type="idl" href="#dom-request-priority" id="ref-for-dom-request-priority">priority</a></code>. 
       </dl>
      <li>
       <p>We add to step 12 of the <a class="idl-code" data-link-type="constructor" href="https://fetch.spec.whatwg.org/#dom-request" id="ref-for-dom-request">new Request
         constructor steps</a>:</p>
       <dl>
-       <dt><a data-link-type="dfn" href="#concept-request-importance" id="ref-for-concept-request-importance">importance</a> 
-       <dd><var>request</var>’s <a data-link-type="dfn" href="#concept-request-importance" id="ref-for-concept-request-importance①">importance</a>. 
+       <dt><a data-link-type="dfn" href="#concept-request-priority" id="ref-for-concept-request-priority">priority</a> 
+       <dd><var>request</var>’s <a data-link-type="dfn" href="#concept-request-priority" id="ref-for-concept-request-priority①">priority</a>. 
       </dl>
      <li>
-      <p>We modify step 13 in the process of <a data-link-type="dfn" href="https://fetch.spec.whatwg.org#concept-fetch" id="ref-for-concept-fetch">fetch</a> to read:</p>
-      <p>If <var>request</var>’s <a data-link-type="dfn" href="https://fetch.spec.whatwg.org/#concept-request-priority" id="ref-for-concept-request-priority">priority</a> is null, then use <var>request</var>’s <a data-link-type="dfn" href="#concept-request-importance" id="ref-for-concept-request-importance②">importance</a>, <a data-link-type="dfn" href="https://fetch.spec.whatwg.org/#concept-request-initiator" id="ref-for-concept-request-initiator">initiator</a> and <a data-link-type="dfn" href="https://fetch.spec.whatwg.org/#concept-request-destination" id="ref-for-concept-request-destination">destination</a> appropriately in setting <var>request</var>’s <a data-link-type="dfn" href="https://fetch.spec.whatwg.org/#concept-request-priority" id="ref-for-concept-request-priority①">priority</a> to a user-agent-defined object.</p>
+      <p>We rename references to <code class="idl"><a data-link-type="idl" href="https://fetch.spec.whatwg.org/#request" id="ref-for-request③">Request</a></code>'s opaque <a data-link-type="dfn" href="https://fetch.spec.whatwg.org/#concept-request-priority" id="ref-for-concept-request-priority②">priority</a> to <dfn class="dfn-paneled" data-dfn-type="dfn" data-export id="internalpriority">internalpriority</dfn>:</p>
+      <ol>
+       <li>A <var>request</var> has an associated <a data-link-type="dfn" href="#internalpriority" id="ref-for-internalpriority">internalpriority</a> (null or a user-agent-defined object). Unless otherwise stated it is null. 
+       <li>
+        <p>We replace step 12 of <a class="idl-code" data-link-type="constructor" href="https://fetch.spec.whatwg.org/#dom-request" id="ref-for-dom-request①">new Request constructor steps</a> with :</p>
+        <dl>
+         <dt><a data-link-type="dfn" href="#internalpriority" id="ref-for-internalpriority①">internalpriority</a> 
+         <dd><var>request</var>’s <a data-link-type="dfn" href="#internalpriority" id="ref-for-internalpriority②">internalpriority</a>. 
+        </dl>
+      </ol>
+     <li>
+      <p>We modify step 14 in the process of <a data-link-type="dfn" href="https://fetch.spec.whatwg.org#concept-fetch" id="ref-for-concept-fetch">fetch</a> to read:</p>
+      <p>If <var>request</var>’s <a data-link-type="dfn" href="#internalpriority" id="ref-for-internalpriority③">internalpriority</a> is null, then use <var>request</var>’s <a data-link-type="dfn" href="#concept-request-priority" id="ref-for-concept-request-priority③">priority</a>, <a data-link-type="dfn" href="https://fetch.spec.whatwg.org/#concept-request-initiator" id="ref-for-concept-request-initiator">initiator</a> and <a data-link-type="dfn" href="https://fetch.spec.whatwg.org/#concept-request-destination" id="ref-for-concept-request-destination">destination</a> appropriately in setting <var>request</var>’s <a data-link-type="dfn" href="#internalpriority" id="ref-for-internalpriority④">internalpriority</a> to a user-agent-defined object.</p>
     </ol>
     <h3 class="heading settled" data-level="3.3" id="html-integration"><span class="secno">3.3. </span><span class="content">HTML Integration</span><a class="self-link" href="#html-integration"></a></h3>
      <em>This section will be removed once the <a data-link-type="biblio" href="#biblio-html">HTML</a> specification has been modified.</em> 
     <p>For the supported elements (<code class="highlight"><a data-link-type="element" href="https://html.spec.whatwg.org/multipage/embedded-content.html#the-img-element" id="ref-for-the-img-element②">img</a></code>, <code class="highlight"><a data-link-type="element" href="https://html.spec.whatwg.org/multipage/semantics.html#the-link-element" id="ref-for-the-link-element②">link</a></code>, <code class="highlight"><a data-link-type="element" href="https://html.spec.whatwg.org/multipage/scripting.html#script" id="ref-for-script②">script</a></code> and <code class="highlight"><a data-link-type="element" href="https://html.spec.whatwg.org/multipage/iframe-embed-object.html#the-iframe-element" id="ref-for-the-iframe-element②">iframe</a></code>) the integration
-    with HTML is to add an <code class="highlight" data-x>importance</code> attribute to the relevant element
-    specification and pass the value through to the underlying fetch for the resource referenced
-    by the given element.</p>
-    <p>The importance value is plumbed through to the fetch for the referenced resource with
+    with HTML is to add an <code class="highlight" data-x>fetchpriority</code> attribute to the relevant element
+    specification and pass the value through to the underlying fetch priority for the resource
+    referenced by the given element.</p>
+    <p>The fetchpriority value is plumbed through to the fetch for the referenced resource with
     no downstream impact on later behaviors of the given element (i.e. later fetches initiated by
     a frame or script are not impacted nor is the scheduling of execution or prioritization of
     tasks affected).</p>
     <ol>
      <li>
       <p>We extend the <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/urls-and-fetching.html#fetching-resources" id="ref-for-fetching-resources">Fetching resources</a> process with an additional section:</p>
-      <p>Importance attributes</p>
-      <p>An <dfn class="dfn-paneled" data-dfn-type="dfn" data-export id="importance-attribute">importance attribute</dfn> is an <span>enumerated attribute</span>.  Each <a data-link-type="dfn" href="#importance-enum" id="ref-for-importance-enum">Fetch importance enum</a> is a keyword for this attribute, mapping
+      <p>FetchPriority attributes</p>
+      <p>A <dfn class="dfn-paneled" data-dfn-type="dfn" data-export id="fetchpriority-attribute">fetchpriority attribute</dfn> is an <span>enumerated attribute</span>.  Each <a data-link-type="dfn" href="#fetchpriority-enum" id="ref-for-fetchpriority-enum">FetchPriority enum</a> is a keyword for this attribute, mapping
         to a state of the same name.</p>
-      <p>The attribute’s <i data-x="missing value default">missing value default</i> and <i data-x="invalid value default">invalid value default</i> are both the <a data-link-type="dfn" href="#importance-enum-auto" id="ref-for-importance-enum-auto">auto</a> state.</p>
+      <p>The attribute’s <i data-x="missing value default">missing value default</i> and <i data-x="invalid value default">invalid value default</i> are both the <a data-link-type="dfn" href="#fetchpriority-enum-auto" id="ref-for-fetchpriority-enum-auto">auto</a> state.</p>
       <p>The impact of these states on the processing model of various <a data-link-type="dfn" href="https://fetch.spec.whatwg.org#concept-fetch" id="ref-for-concept-fetch①">fetches</a> is defined
       in more detail throughout this specification, in <a data-link-type="biblio" href="#biblio-fetch">Fetch</a>, and in <a data-link-type="biblio" href="#biblio-priority-hints">Priority Hints</a>.</p>
     </ol>
@@ -806,115 +817,115 @@ A human-readable <a href="http://www.w3.org/community/about/agreements/cla-deed/
     <ol>
      <li>
       <p>We add to the <code class="highlight"><a data-link-type="element" href="https://html.spec.whatwg.org/multipage/embedded-content.html#the-img-element" id="ref-for-the-img-element③">img</a></code> element content attributes:</p>
-      <p><code class="highlight" data-x>importance</code> - Importance for <a data-link-type="dfn" href="https://fetch.spec.whatwg.org#concept-fetch" id="ref-for-concept-fetch②">fetches</a> initiated by the
-          element. </p>
+      <p><code class="highlight" data-x>fetchpriority</code> - FetchPriority for <a data-link-type="dfn" href="https://fetch.spec.whatwg.org#concept-fetch" id="ref-for-concept-fetch②">fetches</a> initiated by
+          the element. </p>
      <li>
       We extend the <code class="highlight"><a data-link-type="element" href="https://html.spec.whatwg.org/multipage/embedded-content.html#the-img-element" id="ref-for-the-img-element④">img</a></code> element DOM interface as follows: 
 <pre class="idl highlight def"><c- b>partial</c-> <c- b>interface</c-> <a class="idl-code" data-link-type="interface" href="https://html.spec.whatwg.org/multipage/embedded-content.html#htmlimageelement" id="ref-for-htmlimageelement"><c- g>HTMLImageElement</c-></a> {
-    [<a class="idl-code" data-link-type="extended-attribute" href="https://html.spec.whatwg.org/multipage/custom-elements.html#cereactions" id="ref-for-cereactions"><c- g>CEReactions</c-></a>] <c- b>attribute</c-> <a class="idl-code" data-link-type="interface" href="https://webidl.spec.whatwg.org/#idl-DOMString" id="ref-for-idl-DOMString"><c- b>DOMString</c-></a> <a class="idl-code" data-link-type="attribute" data-type="DOMString" href="#dom-htmlimageelement-importance" id="ref-for-dom-htmlimageelement-importance"><c- g>importance</c-></a>;
+    [<a class="idl-code" data-link-type="extended-attribute" href="https://html.spec.whatwg.org/multipage/custom-elements.html#cereactions" id="ref-for-cereactions"><c- g>CEReactions</c-></a>] <c- b>attribute</c-> <a class="idl-code" data-link-type="interface" href="https://webidl.spec.whatwg.org/#idl-DOMString" id="ref-for-idl-DOMString"><c- b>DOMString</c-></a> <a class="idl-code" data-link-type="attribute" data-type="DOMString" href="#dom-htmlimageelement-fetchpriority" id="ref-for-dom-htmlimageelement-fetchpriority"><c- g>fetchpriority</c-></a>;
 };
 </pre>
      <li>
       <p>We add to the <code class="highlight"><a data-link-type="element" href="https://html.spec.whatwg.org/multipage/embedded-content.html#the-img-element" id="ref-for-the-img-element⑤">img</a></code> element content attribute descriptions:</p>
-      <p>The <dfn data-dfn-for="img" data-dfn-type="element-attr" data-export data-lt="importance" id="element-attrdef-img-importance"><code class="highlight" data-x="attr-img-importance">importance</code> <a class="self-link" href="#element-attrdef-img-importance"></a></dfn> attribute is an <a data-link-type="dfn" href="#importance-attribute" id="ref-for-importance-attribute">importance attribute</a>. Its purpose is to set the <a data-link-type="dfn" href="#concept-request-importance" id="ref-for-concept-request-importance③">importance</a> used when <a data-link-type="dfn" href="https://fetch.spec.whatwg.org#concept-fetch" id="ref-for-concept-fetch③">fetching</a> the image.</p>
-      <p>The <dfn class="dfn-paneled idl-code" data-dfn-for="HTMLImageElement" data-dfn-type="attribute" data-export id="dom-htmlimageelement-importance"><code class="highlight" data-x="dom-img-importance">importance</code></dfn> IDL attribute must <span>reflect</span> the <code class="highlight" data-x="attr-img-importance">importance</code> content attribute, <span>limited to only known values</span>.</p>
+      <p>The <dfn data-dfn-for="img" data-dfn-type="element-attr" data-export data-lt="fetchpriority" id="element-attrdef-img-fetchpriority"><code class="highlight" data-x="attr-img-fetchpriority">fetchpriority</code> <a class="self-link" href="#element-attrdef-img-fetchpriority"></a></dfn> attribute is a <a data-link-type="dfn" href="#fetchpriority-attribute" id="ref-for-fetchpriority-attribute">fetchpriority attribute</a>. Its purpose is to set the <a data-link-type="dfn" href="#concept-request-priority" id="ref-for-concept-request-priority④">priority</a> used when <a data-link-type="dfn" href="https://fetch.spec.whatwg.org#concept-fetch" id="ref-for-concept-fetch③">fetching</a> the image.</p>
+      <p>The <dfn class="dfn-paneled idl-code" data-dfn-for="HTMLImageElement" data-dfn-type="attribute" data-export id="dom-htmlimageelement-fetchpriority"><code class="highlight" data-x="dom-img-fetchpriority">fetchpriority</code></dfn> IDL attribute must <span>reflect</span> the <code class="highlight" data-x="attr-img-fetchpriority">fetchpriority</code> content attribute, <span>limited to only known values</span>.</p>
      <li>
       <p>We add a step to <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/images.html#update-the-image-data" id="ref-for-update-the-image-data">Updating the image data</a> before fetching the
           image:</p>
-      <p>Set <var>request</var>’s <code class="idl"><a data-link-type="idl" href="#dom-request-importance" id="ref-for-dom-request-importance①">importance</a></code> to the current state of the element’s <code class="highlight" data-x="attr-img-importance">importance</code> attribute.</p>
+      <p>Set <var>request</var>’s <code class="idl"><a data-link-type="idl" href="#dom-request-priority" id="ref-for-dom-request-priority①">priority</a></code> to the current state of the element’s <code class="highlight" data-x="attr-img-fetchpriority">fetchpriority</code> attribute.</p>
      <li>
       <p>We add a step to <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/images.html#reacting-to-environment-changes" id="ref-for-reacting-to-environment-changes">Reacting to environment changes</a> when setting the image request’s
           image data, before the request is fetched:</p>
-      <p>Set <var>request</var>’s <code class="idl"><a data-link-type="idl" href="#dom-request-importance" id="ref-for-dom-request-importance②">importance</a></code> to the current state of the element’s <code class="highlight" data-x="attr-img-importance">importance</code> attribute.</p>
-     <li>We modify the <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/indices.html#elements-3" id="ref-for-elements-3">List of elements</a> to include the <span data-x="attr-img-importance">importance</span> attribute on the <code class="highlight"><a data-link-type="element" href="https://html.spec.whatwg.org/multipage/embedded-content.html#the-img-element" id="ref-for-the-img-element⑥">img</a></code> element. 
+      <p>Set <var>request</var>’s <code class="idl"><a data-link-type="idl" href="#dom-request-priority" id="ref-for-dom-request-priority②">priority</a></code> to the current state of the element’s <code class="highlight" data-x="attr-img-fetchpriority">fetchpriority</code> attribute.</p>
+     <li>We modify the <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/indices.html#elements-3" id="ref-for-elements-3">List of elements</a> to include the <span data-x="attr-img-fetchpriority">fetchpriority</span> attribute on the <code class="highlight"><a data-link-type="element" href="https://html.spec.whatwg.org/multipage/embedded-content.html#the-img-element" id="ref-for-the-img-element⑥">img</a></code> element. 
     </ol>
     <h4 class="heading settled" data-level="3.3.2" id="picture"><span class="secno">3.3.2. </span><span class="content">picture</span><a class="self-link" href="#picture"></a></h4>
-    <p>In the case of the <code class="highlight"><a data-link-type="element" href="https://html.spec.whatwg.org/multipage/embedded-content.html#the-picture-element" id="ref-for-the-picture-element">picture</a></code> element, no changes are necessary. The importance is applied
+    <p>In the case of the <code class="highlight"><a data-link-type="element" href="https://html.spec.whatwg.org/multipage/embedded-content.html#the-picture-element" id="ref-for-the-picture-element">picture</a></code> element, no changes are necessary. The fetchpriority is applied
     to the <code class="highlight"><a data-link-type="element" href="https://html.spec.whatwg.org/multipage/embedded-content.html#the-img-element" id="ref-for-the-img-element⑦">img</a></code> element within the <code class="highlight"><a data-link-type="element" href="https://html.spec.whatwg.org/multipage/embedded-content.html#the-picture-element" id="ref-for-the-picture-element①">picture</a></code> and applied to whatever <code class="highlight"><a data-link-type="element" href="https://html.spec.whatwg.org/multipage/embedded-content.html#the-source-element" id="ref-for-the-source-element">source</a></code> ends up being
     used. </p>
     <h4 class="heading settled" data-level="3.3.3" id="link"><span class="secno">3.3.3. </span><span class="content">link</span><a class="self-link" href="#link"></a></h4>
     <ol>
      <li>
       <p>We add to the <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/semantics.html#the-link-element" id="ref-for-the-link-element③">link element</a> content attributes:</p>
-      <p><code class="highlight" data-x>importance</code> - Importance for <a data-link-type="dfn" href="https://fetch.spec.whatwg.org#concept-fetch" id="ref-for-concept-fetch④">fetches</a> initiated by the
+      <p><code class="highlight" data-x>fetchpriority</code> - FetchPriority for <a data-link-type="dfn" href="https://fetch.spec.whatwg.org#concept-fetch" id="ref-for-concept-fetch④">fetches</a> initiated by the
           element. </p>
      <li>
       <p>We add to the <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/semantics.html#the-link-element" id="ref-for-the-link-element④">link element</a> content attribute descriptions:</p>
-      <p>The <dfn data-dfn-for="link" data-dfn-type="element-attr" data-export data-lt="importance" id="element-attrdef-link-importance"><code class="highlight" data-x="attr-link-importance">importance</code> <a class="self-link" href="#element-attrdef-link-importance"></a></dfn> attribute is an <a data-link-type="dfn" href="#importance-attribute" id="ref-for-importance-attribute①">importance attribute</a>. It is intended for use with <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/links.html#external-resource-link" id="ref-for-external-resource-link">external resource links</a>, where it helps set the <a data-link-type="dfn" href="#concept-request-importance" id="ref-for-concept-request-importance④">importance</a> used when <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/semantics.html#fetch-and-process-the-linked-resource" id="ref-for-fetch-and-process-the-linked-resource">fetching and processing the linked resource</a>.</p>
+      <p>The <dfn data-dfn-for="link" data-dfn-type="element-attr" data-export data-lt="fetchpriority" id="element-attrdef-link-fetchpriority"><code class="highlight" data-x="attr-link-fetchpriority">fetchpriority</code> <a class="self-link" href="#element-attrdef-link-fetchpriority"></a></dfn> attribute is a <a data-link-type="dfn" href="#fetchpriority-attribute" id="ref-for-fetchpriority-attribute①">fetchpriority attribute</a>. It is intended for use with <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/links.html#external-resource-link" id="ref-for-external-resource-link">external resource links</a>, where it helps set the <a data-link-type="dfn" href="#concept-request-priority" id="ref-for-concept-request-priority⑤">priority</a> used when <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/semantics.html#fetch-and-process-the-linked-resource" id="ref-for-fetch-and-process-the-linked-resource">fetching and processing the linked resource</a>.</p>
      <li>
       We extend the <code class="highlight"><a data-link-type="element" href="https://html.spec.whatwg.org/multipage/semantics.html#the-link-element" id="ref-for-the-link-element⑤">link</a></code> element as follows: 
 <pre class="idl highlight def"><c- b>partial</c-> <c- b>interface</c-> <a class="idl-code" data-link-type="interface" href="https://html.spec.whatwg.org/multipage/semantics.html#htmllinkelement" id="ref-for-htmllinkelement"><c- g>HTMLLinkElement</c-></a> {
-    [<a class="idl-code" data-link-type="extended-attribute" href="https://html.spec.whatwg.org/multipage/custom-elements.html#cereactions" id="ref-for-cereactions①"><c- g>CEReactions</c-></a>] <c- b>attribute</c-> <a class="idl-code" data-link-type="interface" href="https://webidl.spec.whatwg.org/#idl-DOMString" id="ref-for-idl-DOMString①"><c- b>DOMString</c-></a> <dfn class="idl-code" data-dfn-for="HTMLLinkElement" data-dfn-type="attribute" data-export data-type="DOMString" id="dom-htmllinkelement-importance"><code class="highlight"><c- g>importance</c-></code><a class="self-link" href="#dom-htmllinkelement-importance"></a></dfn>;
+    [<a class="idl-code" data-link-type="extended-attribute" href="https://html.spec.whatwg.org/multipage/custom-elements.html#cereactions" id="ref-for-cereactions①"><c- g>CEReactions</c-></a>] <c- b>attribute</c-> <a class="idl-code" data-link-type="interface" href="https://webidl.spec.whatwg.org/#idl-DOMString" id="ref-for-idl-DOMString①"><c- b>DOMString</c-></a> <dfn class="idl-code" data-dfn-for="HTMLLinkElement" data-dfn-type="attribute" data-export data-type="DOMString" id="dom-htmllinkelement-fetchpriority"><code class="highlight"><c- g>fetchpriority</c-></code><a class="self-link" href="#dom-htmllinkelement-fetchpriority"></a></dfn>;
 };
 </pre>
      <li>
       <p>We extend <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/semantics.html#create-a-link-element-request" id="ref-for-create-a-link-element-request">create a link element request</a> of <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/semantics.html#fetching-and-processing-a-resource-from-a-link-element" id="ref-for-fetching-and-processing-a-resource-from-a-link-element">Fetching and processing a resource
         from a link element</a> by adding a step before returning the request:</p>
-      <p>Set <var>request</var>’s <code class="idl"><a data-link-type="idl" href="#dom-request-importance" id="ref-for-dom-request-importance③">importance</a></code> to the current state of <var> el</var>’s <code class="highlight" data-x="attr-link-importance">importance</code> content attribute.</p>
+      <p>Set <var>request</var>’s <code class="idl"><a data-link-type="idl" href="#dom-request-priority" id="ref-for-dom-request-priority③">priority</a></code> to the current state of <var> el</var>’s <code class="highlight" data-x="attr-link-fetchpriority">fetchpriority</code> content attribute.</p>
      <li>
       <p>We extend the <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/semantics.html#fetch-and-process-the-linked-resource" id="ref-for-fetch-and-process-the-linked-resource①">fetch and process the linked resource</a> algorithm of <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/links.html#link-type-modulepreload" id="ref-for-link-type-modulepreload">modulepreload</a> links by adding a step before setting the render-blocking state:</p>
-      <p>Let <code class="idl"><a data-link-type="idl" href="#dom-request-importance" id="ref-for-dom-request-importance④">importance</a></code> be the current state of the element’s <code class="highlight" data-x="attr-link-importance">importance</code> attribute.</p>
-     <li>We modify the <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/indices.html#elements-3" id="ref-for-elements-3①">List of elements</a> to include the <span data-x="attr-link-importance">importance</span> attribute on the <code class="highlight"><a data-link-type="element" href="https://html.spec.whatwg.org/multipage/semantics.html#the-link-element" id="ref-for-the-link-element⑥">link</a></code> element. 
+      <p>Let <code class="idl"><a data-link-type="idl" href="#dom-request-priority" id="ref-for-dom-request-priority④">priority</a></code> be the current state of the element’s <code class="highlight" data-x="attr-link-fetchpriority">fetchpriority</code> attribute.</p>
+     <li>We modify the <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/indices.html#elements-3" id="ref-for-elements-3①">List of elements</a> to include the <span data-x="attr-link-fetchpriority">fetchpriority</span> attribute on the <code class="highlight"><a data-link-type="element" href="https://html.spec.whatwg.org/multipage/semantics.html#the-link-element" id="ref-for-the-link-element⑥">link</a></code> element. 
     </ol>
     <h4 class="heading settled" data-level="3.3.4" id="script"><span class="secno">3.3.4. </span><span class="content">script</span><a class="self-link" href="#script"></a></h4>
     <ol>
      <li>
       <p>We add to the <code class="highlight"><a data-link-type="element" href="https://html.spec.whatwg.org/multipage/scripting.html#script" id="ref-for-script③">script</a></code> element content attributes:</p>
-      <p><code class="highlight" data-x>importance</code> - Importance for <a data-link-type="dfn" href="https://fetch.spec.whatwg.org#concept-fetch" id="ref-for-concept-fetch⑤">fetches</a> initiated by the
+      <p><code class="highlight" data-x>fetchpriority</code> - FetchPriority for <a data-link-type="dfn" href="https://fetch.spec.whatwg.org#concept-fetch" id="ref-for-concept-fetch⑤">fetches</a> initiated by the
           element. </p>
      <li>
       We extend the <code class="highlight"><a data-link-type="element" href="https://html.spec.whatwg.org/multipage/scripting.html#script" id="ref-for-script④">script</a></code> element DOM interface as follows: 
 <pre class="idl highlight def"><c- b>partial</c-> <c- b>interface</c-> <a class="idl-code" data-link-type="interface" href="https://html.spec.whatwg.org/multipage/scripting.html#htmlscriptelement" id="ref-for-htmlscriptelement"><c- g>HTMLScriptElement</c-></a> {
-    [<a class="idl-code" data-link-type="extended-attribute" href="https://html.spec.whatwg.org/multipage/custom-elements.html#cereactions" id="ref-for-cereactions②"><c- g>CEReactions</c-></a>] <c- b>attribute</c-> <a class="idl-code" data-link-type="interface" href="https://webidl.spec.whatwg.org/#idl-DOMString" id="ref-for-idl-DOMString②"><c- b>DOMString</c-></a> <a class="idl-code" data-link-type="attribute" data-type="DOMString" href="#dom-htmlscriptelement-importance" id="ref-for-dom-htmlscriptelement-importance"><c- g>importance</c-></a>;
+    [<a class="idl-code" data-link-type="extended-attribute" href="https://html.spec.whatwg.org/multipage/custom-elements.html#cereactions" id="ref-for-cereactions②"><c- g>CEReactions</c-></a>] <c- b>attribute</c-> <a class="idl-code" data-link-type="interface" href="https://webidl.spec.whatwg.org/#idl-DOMString" id="ref-for-idl-DOMString②"><c- b>DOMString</c-></a> <a class="idl-code" data-link-type="attribute" data-type="DOMString" href="#dom-htmlscriptelement-fetchpriority" id="ref-for-dom-htmlscriptelement-fetchpriority"><c- g>fetchpriority</c-></a>;
 };
 </pre>
      <li>
       <p>We add to the <code class="highlight"><a data-link-type="element" href="https://html.spec.whatwg.org/multipage/scripting.html#script" id="ref-for-script⑤">script</a></code> element content attribute descriptions:</p>
       <ol>
-       <li>The <dfn data-dfn-for="script" data-dfn-type="element-attr" data-export data-lt="importance" id="element-attrdef-script-importance"><code class="highlight" data-x="attr-script-importance">importance </code><a class="self-link" href="#element-attrdef-script-importance"></a></dfn> attribute is an <a data-link-type="dfn" href="#importance-attribute" id="ref-for-importance-attribute②">importance attribute</a>. Its purpose is to set the <a data-link-type="dfn" href="#concept-request-importance" id="ref-for-concept-request-importance⑤">importance</a> used when <a data-link-type="dfn" href="https://fetch.spec.whatwg.org#concept-fetch" id="ref-for-concept-fetch⑥">fetching</a> the script. 
-       <li>The <dfn class="dfn-paneled idl-code" data-dfn-for="HTMLScriptElement" data-dfn-type="attribute" data-export id="dom-htmlscriptelement-importance"><code class="highlight" data-x="dom-script-importance">importance</code></dfn> IDL attribute must <span>reflect</span> the <code class="highlight" data-x="attr-script-importance">importance</code> content attribute, <span>limited to only known values</span>. 
-       <li>We add <code class="highlight" data-x="attr-script-importance">importance</code> to the list of
+       <li>The <dfn data-dfn-for="script" data-dfn-type="element-attr" data-export data-lt="fetchpriority" id="element-attrdef-script-fetchpriority"><code class="highlight" data-x="attr-script-fetchpriority">fetchpriority </code><a class="self-link" href="#element-attrdef-script-fetchpriority"></a></dfn> attribute is a <a data-link-type="dfn" href="#fetchpriority-attribute" id="ref-for-fetchpriority-attribute②">fetchpriority attribute</a>. Its purpose is to set the <a data-link-type="dfn" href="#concept-request-priority" id="ref-for-concept-request-priority⑥">priority</a> used when <a data-link-type="dfn" href="https://fetch.spec.whatwg.org#concept-fetch" id="ref-for-concept-fetch⑥">fetching</a> the script. 
+       <li>The <dfn class="dfn-paneled idl-code" data-dfn-for="HTMLScriptElement" data-dfn-type="attribute" data-export id="dom-htmlscriptelement-fetchpriority"><code class="highlight" data-x="dom-script-fetchpriority">fetchpriority</code></dfn> IDL attribute must <span>reflect</span> the <code class="highlight" data-x="attr-script-fetchpriority">fetchpriority</code> content attribute, <span>limited to only known values</span>. 
+       <li>We add <code class="highlight" data-x="attr-script-fetchpriority">fetchpriority</code> to the list of
             attributes that have no <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/scripting.html#:~:text=dynamically%20has%20no%20direct%20effect" id="ref-for-:~:text=dynamically%20has%20no%20direct%20effect">direct effect when changed dynamically</a> (For browsers that
             don’t support text linking, search for "dynamically has no direct effect"). 
       </ol>
      <li>We modify the list of attributes not to be specified when used in <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/scripting.html#the-script-element:data-block-2" id="ref-for-the-script-element:data-block-2">data blocks</a> to
-        include the <code class="highlight" data-x="attr-script-importance">importance</code> attribute. 
+        include the <code class="highlight" data-x="attr-script-fetchpriority">fetchpriority</code> attribute. 
      <li>
       <p>We extend the <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#script-fetch-options" id="ref-for-script-fetch-options">Script fetch options</a> struct:</p>
       <p></p>
-      <p><span data-x="concept-script-fetch-options-importance">importance</span> - The <code class="idl"><a data-link-type="idl" href="#dom-request-importance" id="ref-for-dom-request-importance⑤">importance</a></code> for the initial <a data-link-type="dfn" href="https://fetch.spec.whatwg.org#concept-fetch" id="ref-for-concept-fetch⑦">fetch</a>.</p>
+      <p><span data-x="concept-script-fetch-options-fetchpriority">fetchpriority</span> - The <code class="idl"><a data-link-type="idl" href="#dom-request-priority" id="ref-for-dom-request-priority⑤">priority</a></code> for the initial <a data-link-type="dfn" href="https://fetch.spec.whatwg.org#concept-fetch" id="ref-for-concept-fetch⑦">fetch</a>.</p>
      <li>We extend <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#default-classic-script-fetch-options" id="ref-for-default-classic-script-fetch-options">default classic script fetch options</a> to include "<code class="highlight">auto</code>"
-        as the default value for <code class="highlight" data-x="concept-script-fetch-options-importance"> importance </code>. 
-     <li>We extend <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#set-up-the-classic-script-request" id="ref-for-set-up-the-classic-script-request">set up the classic script request</a> to set <var>request</var>’s <code class="idl"><a data-link-type="idl" href="#dom-request-importance" id="ref-for-dom-request-importance⑥">importance</a></code> to <var>option</var>’s <code class="highlight" data-x="concept-script-fetch-options-importance">importance</code> 
+        as the default value for <code class="highlight" data-x="concept-script-fetch-options-fetchpriority"> fetchpriority </code>. 
+     <li>We extend <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#set-up-the-classic-script-request" id="ref-for-set-up-the-classic-script-request">set up the classic script request</a> to set <var>request</var>’s <code class="idl"><a data-link-type="idl" href="#dom-request-priority" id="ref-for-dom-request-priority⑥">priority</a></code> to <var>option</var>’s <code class="highlight" data-x="concept-script-fetch-options-fetchpriority">fetchpriority</code> 
      <li>
       <p>We insert a step before step 24 of <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/scripting.html#prepare-a-script" id="ref-for-prepare-a-script">prepare a script</a>:</p>
-      <p>Let <var>importance</var> be the current state of the element’s <code class="highlight" data-x="attr-script-importance">importance</code> attribute.</p>
+      <p>Let <var>fetchpriority</var> be the current state of the element’s <code class="highlight" data-x="attr-script-fetchpriority">fetchpriority</code> attribute.</p>
      <li>
       <p>We modify step 24 of <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/scripting.html#prepare-a-script" id="ref-for-prepare-a-script①">prepare a script</a> to include:</p>
-      <p><code class="highlight" data-x="concept-script-fetch-options-importance">importance</code> is <var>importance</var>.</p>
-     <li>We extend <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#set-up-the-module-script-request" id="ref-for-set-up-the-module-script-request">set up the module script request</a> to set <var>request</var>’s <code class="idl"><a data-link-type="idl" href="#dom-request-importance" id="ref-for-dom-request-importance⑦">importance</a></code> to <var>option</var>’s <code class="highlight" data-x="concept-script-fetch-options-importance">importance</code> 
-     <li>We modify the <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/indices.html#elements-3" id="ref-for-elements-3②">List of elements</a> to include the <span data-x="attr-script-importance">importance</span> attribute on the <code class="highlight"><a data-link-type="element" href="https://html.spec.whatwg.org/multipage/scripting.html#script" id="ref-for-script⑥">script</a></code> element. 
+      <p><code class="highlight" data-x="concept-script-fetch-options-fetchpriority">fetchpriority</code> is <var>fetchpriority</var>.</p>
+     <li>We extend <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/webappapis.html#set-up-the-module-script-request" id="ref-for-set-up-the-module-script-request">set up the module script request</a> to set <var>request</var>’s <code class="idl"><a data-link-type="idl" href="#dom-request-priority" id="ref-for-dom-request-priority⑦">priority</a></code> to <var>option</var>’s <code class="highlight" data-x="concept-script-fetch-options-fetchpriority">fetchpriority</code> 
+     <li>We modify the <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/indices.html#elements-3" id="ref-for-elements-3②">List of elements</a> to include the <span data-x="attr-script-fetchpriority">fetchpriority</span> attribute on the <code class="highlight"><a data-link-type="element" href="https://html.spec.whatwg.org/multipage/scripting.html#script" id="ref-for-script⑥">script</a></code> element. 
     </ol>
     <h4 class="heading settled" data-level="3.3.5" id="iframe"><span class="secno">3.3.5. </span><span class="content">iframe</span><a class="self-link" href="#iframe"></a></h4>
     <ol>
      <li>
       <p>We add to the <code class="highlight"><a data-link-type="element" href="https://html.spec.whatwg.org/multipage/iframe-embed-object.html#the-iframe-element" id="ref-for-the-iframe-element③">iframe</a></code> element content attributes:</p>
-      <p><code class="highlight" data-x>importance</code> - Importance for <a data-link-type="dfn" href="https://fetch.spec.whatwg.org#concept-fetch" id="ref-for-concept-fetch⑧">fetches</a> initiated by the
+      <p><code class="highlight" data-x>fetchpriority</code> - FetchPriority for <a data-link-type="dfn" href="https://fetch.spec.whatwg.org#concept-fetch" id="ref-for-concept-fetch⑧">fetches</a> initiated by the
           element. </p>
      <li>
       We extend the <code class="highlight"><a data-link-type="element" href="https://html.spec.whatwg.org/multipage/iframe-embed-object.html#the-iframe-element" id="ref-for-the-iframe-element④">iframe</a></code> element DOM interface as follows: 
 <pre class="idl highlight def"><c- b>partial</c-> <c- b>interface</c-> <a class="idl-code" data-link-type="interface" href="https://html.spec.whatwg.org/multipage/iframe-embed-object.html#htmliframeelement" id="ref-for-htmliframeelement"><c- g>HTMLIFrameElement</c-></a> {
-    [<a class="idl-code" data-link-type="extended-attribute" href="https://html.spec.whatwg.org/multipage/custom-elements.html#cereactions" id="ref-for-cereactions③"><c- g>CEReactions</c-></a>] <c- b>attribute</c-> <a class="idl-code" data-link-type="interface" href="https://webidl.spec.whatwg.org/#idl-DOMString" id="ref-for-idl-DOMString③"><c- b>DOMString</c-></a> <a class="idl-code" data-link-type="attribute" data-type="DOMString" href="#dom-htmliframeelement-importance" id="ref-for-dom-htmliframeelement-importance"><c- g>importance</c-></a>;
+    [<a class="idl-code" data-link-type="extended-attribute" href="https://html.spec.whatwg.org/multipage/custom-elements.html#cereactions" id="ref-for-cereactions③"><c- g>CEReactions</c-></a>] <c- b>attribute</c-> <a class="idl-code" data-link-type="interface" href="https://webidl.spec.whatwg.org/#idl-DOMString" id="ref-for-idl-DOMString③"><c- b>DOMString</c-></a> <a class="idl-code" data-link-type="attribute" data-type="DOMString" href="#dom-htmliframeelement-fetchpriority" id="ref-for-dom-htmliframeelement-fetchpriority"><c- g>fetchpriority</c-></a>;
 };
 </pre>
      <li>
       <p>We add to the <code class="highlight"><a data-link-type="element" href="https://html.spec.whatwg.org/multipage/iframe-embed-object.html#the-iframe-element" id="ref-for-the-iframe-element⑤">iframe</a></code> content attribute descriptions:</p>
-      <p>The <dfn data-dfn-for="iframe" data-dfn-type="element-attr" data-export data-lt="importance" id="element-attrdef-iframe-importance"><code class="highlight" data-x="attr-iframe-importance">importance </code><a class="self-link" href="#element-attrdef-iframe-importance"></a></dfn> attribute is an <a data-link-type="dfn" href="#importance-attribute" id="ref-for-importance-attribute③">importance attribute</a>. Its purpose is to set the <a data-link-type="dfn" href="#concept-request-importance" id="ref-for-concept-request-importance⑥">importance</a> used when <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/iframe-embed-object.html#process-the-iframe-attributes" id="ref-for-process-the-iframe-attributes">processing the iframe attributes</a>.</p>
-      <p>The <dfn class="dfn-paneled idl-code" data-dfn-for="HTMLIFrameElement" data-dfn-type="attribute" data-export id="dom-htmliframeelement-importance"><code class="highlight" data-x="dom-iframe-importance">importance</code></dfn> IDL attribute must <span>reflect</span> the <code class="highlight" data-x="attr-iframe-importance">importance</code> content attribute, <span>limited to only known values</span>.</p>
+      <p>The <dfn data-dfn-for="iframe" data-dfn-type="element-attr" data-export data-lt="fetchpriority" id="element-attrdef-iframe-fetchpriority"><code class="highlight" data-x="attr-iframe-fetchpriority">fetchpriority </code><a class="self-link" href="#element-attrdef-iframe-fetchpriority"></a></dfn> attribute is a <a data-link-type="dfn" href="#fetchpriority-attribute" id="ref-for-fetchpriority-attribute③">fetchpriority attribute</a>. Its purpose is to set the <a data-link-type="dfn" href="#concept-request-priority" id="ref-for-concept-request-priority⑦">priority</a> used when <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/iframe-embed-object.html#process-the-iframe-attributes" id="ref-for-process-the-iframe-attributes">processing the iframe attributes</a>.</p>
+      <p>The <dfn class="dfn-paneled idl-code" data-dfn-for="HTMLIFrameElement" data-dfn-type="attribute" data-export id="dom-htmliframeelement-fetchpriority"><code class="highlight" data-x="dom-iframe-fetchpriority">fetchpriority</code></dfn> IDL attribute must <span>reflect</span> the <code class="highlight" data-x="attr-iframe-fetchpriority">fetchpriority</code> content attribute, <span>limited to only known values</span>.</p>
      <li>
       <p>We modify step 5 (the resource creation step) of <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/iframe-embed-object.html#shared-attribute-processing-steps-for-iframe-and-frame-elements" id="ref-for-shared-attribute-processing-steps-for-iframe-and-frame-elements">shared attribute processing steps for iframe and frame elements</a> to include:</p>
-      <p>...and whose <code class="idl"><a data-link-type="idl" href="#dom-request-importance" id="ref-for-dom-request-importance⑧">importance</a></code> is the current state of element’s <code class="highlight" data-x="attr-iframe-importance">importance</code> content attribute</p>
-     <li>We modify the <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/indices.html#elements-3" id="ref-for-elements-3③">List of elements</a> to include the <span data-x="attr-iframe-importance">importance</span> attribute on the <code class="highlight"><a data-link-type="element" href="https://html.spec.whatwg.org/multipage/iframe-embed-object.html#the-iframe-element" id="ref-for-the-iframe-element⑥">iframe</a></code> element. 
+      <p>...and whose <code class="idl"><a data-link-type="idl" href="#dom-request-priority" id="ref-for-dom-request-priority⑧">priority</a></code> is the current state of element’s <code class="highlight" data-x="attr-iframe-fetchpriority">fetchpriority</code> content attribute</p>
+     <li>We modify the <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/indices.html#elements-3" id="ref-for-elements-3③">List of elements</a> to include the <span data-x="attr-iframe-fetchpriority">fetchpriority</span> attribute on the <code class="highlight"><a data-link-type="element" href="https://html.spec.whatwg.org/multipage/iframe-embed-object.html#the-iframe-element" id="ref-for-the-iframe-element⑥">iframe</a></code> element. 
     </ol>
     <h2 class="heading settled" data-level="4" id="effects-of-priority-hints"><span class="secno">4. </span><span class="content">Effects of Priority Hints</span><a class="self-link" href="#effects-of-priority-hints"></a></h2>
     <p>Since the user agents' resource loading pipeline is largely unspecified, this document doesn’t describe a specific mapping
@@ -925,24 +936,24 @@ A human-readable <a href="http://www.w3.org/community/about/agreements/cla-deed/
     <p>Implementations are encouraged to use Priority Hints to influence the <a href="https://httpwg.org/http-extensions/draft-ietf-httpbis-priority.html#name-urgency">stream urgency</a> assigned to
       a given request when <a href="https://httpwg.org/http-extensions/draft-ietf-httpbis-priority.html">HTTP extensible prioritization</a> is
       being used at the transport layer (for example, with HTTP/3).
-      It is not the intention of the different <code class="highlight">importance</code> states to directly map to existing browser priority values,
+      It is not the intention of the different <code class="highlight">priority</code> states to directly map to existing browser priority values,
       but instead act as a relative influencer among requests of a similar type.</p>
     <p></p>
-    <div class="example" id="example-0c319f11">
-     <a class="self-link" href="#example-0c319f11"></a> 
-     <p> If requests for <code class="highlight">image</code> <a data-link-type="dfn" href="https://fetch.spec.whatwg.org#destination" id="ref-for-destination①">destinations</a> in a particular implementation are typically assigned a stream urgency of <code class="highlight"><c- mf>3</c-></code>, a request for an image with <code class="highlight">importance<c- o>=</c-><c- u>"high"</c-></code> might be assigned a stream urgency less than <code class="highlight"><c- mf>3</c-></code> (where lower values are higher priority).</p>
+    <div class="example" id="example-69e5b29d">
+     <a class="self-link" href="#example-69e5b29d"></a> 
+     <p> If requests for <code class="highlight">image</code> <a data-link-type="dfn" href="https://fetch.spec.whatwg.org#destination" id="ref-for-destination①">destinations</a> in a particular implementation are typically assigned a stream urgency of <code class="highlight"><c- mf>3</c-></code>, a request for an image with <code class="highlight">fetchpriority<c- o>=</c-><c- u>"high"</c-></code> might be assigned a stream urgency less than <code class="highlight"><c- mf>3</c-></code> (where lower values are higher priority).</p>
     </div>
     <p><strong>HTTP/2 Relative Stream Priority</strong></p>
     <p>Implementations are encouraged to use Priority Hints to influence the HTTP/2 stream priority assigned to a given request
       when <a href="https://httpwg.org/http2-spec/draft-ietf-httpbis-http2bis.html#name-prioritization">HTTP/2 prioritization</a> is being used at the transport layer.
-      It is not the intention of the different <code class="highlight">importance</code> states to directly map to existing browser priority values,
+      It is not the intention of the different <code class="highlight">priority</code> states to directly map to existing browser priority values,
       but instead act as a relative influencer among requests of a similar type.</p>
-    <div class="example" id="example-13969b9b">
-     <a class="self-link" href="#example-13969b9b"></a> 
-     <p> If requests for <code class="highlight">image</code> <a data-link-type="dfn" href="https://fetch.spec.whatwg.org#destination" id="ref-for-destination②">destinations</a> in a particular implementation are typically assigned a stream weight of <code class="highlight"><c- mf>60</c-></code>, a request for an image with <code class="highlight">importance<c- o>=</c-><c- u>"high"</c-></code> might be assigned a stream weight higher than <code class="highlight"><c- mf>60</c-></code>. </p>
+    <div class="example" id="example-5350b444">
+     <a class="self-link" href="#example-5350b444"></a> 
+     <p> If requests for <code class="highlight">image</code> <a data-link-type="dfn" href="https://fetch.spec.whatwg.org#destination" id="ref-for-destination②">destinations</a> in a particular implementation are typically assigned a stream weight of <code class="highlight"><c- mf>60</c-></code>, a request for an image with <code class="highlight">fetchpriority<c- o>=</c-><c- u>"high"</c-></code> might be assigned a stream weight higher than <code class="highlight"><c- mf>60</c-></code>. </p>
     </div>
     <p><strong>Queueing</strong></p>
-    <p>A user agent might choose to queue up certain low priority requests until higher priority requests are sent out or finished
+    <p>A user agent might choose to queue up certain low-priority requests until higher-priority requests are sent out or finished
       in order to reduce bandwidth contention. Implementations are encouraged to use Priority Hints to determine whether a given
       request is a candidate for such queueing so that more important resources are fetched and used earlier, in order to improve
       the user’s experience.</p>
@@ -973,27 +984,27 @@ A human-readable <a href="http://www.w3.org/community/about/agreements/cla-deed/
       however doing so may not provide the outcome one expects: rel=preload may just change
       when the image is discovered but will not necessarily influence the priority of the image.
       Priority Hints may help here.</p>
-    <div class="example" id="example-b007520b" title="Images Example with Priority Hints">
-     <a class="self-link" href="#example-b007520b"></a> 
+    <div class="example" id="example-e38d9c01" title="Images Example with Priority Hints">
+     <a class="self-link" href="#example-e38d9c01"></a> 
 <pre class="highlight"><c- p>&lt;</c-><c- f>ul</c-> <c- e>class</c-><c- o>=</c-><c- s>"carousel"</c-><c- p>></c->
-  <c- p>&lt;</c-><c- f>img</c-> <c- e>src</c-><c- o>=</c-><c- s>"img/carousel-1.jpg"</c-> <c- e>importance</c-><c- o>=</c-><c- s>"high"</c-><c- p>></c->
-  <c- p>&lt;</c-><c- f>img</c-> <c- e>src</c-><c- o>=</c-><c- s>"img/carousel-2.jpg"</c-> <c- e>importance</c-><c- o>=</c-><c- s>"low"</c-><c- p>></c->
-  <c- p>&lt;</c-><c- f>img</c-> <c- e>src</c-><c- o>=</c-><c- s>"img/carousel-3.jpg"</c-> <c- e>importance</c-><c- o>=</c-><c- s>"low"</c-><c- p>></c->
-  <c- p>&lt;</c-><c- f>img</c-> <c- e>src</c-><c- o>=</c-><c- s>"img/carousel-4.jpg"</c-> <c- e>importance</c-><c- o>=</c-><c- s>"low"</c-><c- p>></c->
+  <c- p>&lt;</c-><c- f>img</c-> <c- e>src</c-><c- o>=</c-><c- s>"img/carousel-1.jpg"</c-> <c- e>fetchpriority</c-><c- o>=</c-><c- s>"high"</c-><c- p>></c->
+  <c- p>&lt;</c-><c- f>img</c-> <c- e>src</c-><c- o>=</c-><c- s>"img/carousel-2.jpg"</c-> <c- e>fetchpriority</c-><c- o>=</c-><c- s>"low"</c-><c- p>></c->
+  <c- p>&lt;</c-><c- f>img</c-> <c- e>src</c-><c- o>=</c-><c- s>"img/carousel-3.jpg"</c-> <c- e>fetchpriority</c-><c- o>=</c-><c- s>"low"</c-><c- p>></c->
+  <c- p>&lt;</c-><c- f>img</c-> <c- e>src</c-><c- o>=</c-><c- s>"img/carousel-4.jpg"</c-> <c- e>fetchpriority</c-><c- o>=</c-><c- s>"low"</c-><c- p>></c->
 <c- p>&lt;/</c-><c- f>ul</c-><c- p>></c->
 </pre>
     </div>
-    <p>When we assign the first image high importance, this can start the image at a high
+    <p>When we assign the first image high fetchpriority, this can start the image at a high
     priority as soon as it is discovered without having to wait for layout.</p>
-    <p>When we assign the off-screen images low importance, this will create less contention
-      between the remaining high priority images and other high priority resources.</p>
+    <p>When we assign the off-screen images low fetchpriority, this will create less contention
+      between the remaining high-priority images and other high-priority resources.</p>
     <p><strong>Signal Priority of Asynchronous Scripts</strong></p>
     <p>A browser may treat parser-blocking scripts, async scripts and preloaded scripts
     differently based on heuristics that work well in a general case but may not behave exactly
     as a developer desires.</p>
-    <div class="example" id="example-e2d525fa" title="Async Script Example Before">
-     <a class="self-link" href="#example-e2d525fa"></a> 
-     <p>if a browser treats preloaded scripts as high-priority and async scripts as low priority
+    <div class="example" id="example-129bfae4" title="Async Script Example Before">
+     <a class="self-link" href="#example-129bfae4"></a> 
+     <p>if a browser treats preloaded scripts as high-priority and async scripts as low-priority
       by default, it could be difficult to preload a dependency of an async script and still have
       them load in the desired order. For example, if we have a script <code class="highlight">a<c- p>.</c->js</code> that
       imports <code class="highlight">b<c- p>.</c->js</code>, it could be useful to preload <code class="highlight">b<c- p>.</c->js</code> so the fetch can
@@ -1007,12 +1018,12 @@ A human-readable <a href="http://www.w3.org/community/about/agreements/cla-deed/
     </div>
     <p>By using priority hints and assigning the same priority to both scripts, they can be loaded
     in the preferred order and at a priority that makes sense depending on the context of what the
-    script is being used for (say, high priority for user-facing UI or functionality or
+    script is being used for (say, high-priority for user-facing UI or functionality or
     low-priority for scripts responsible for background work).</p>
-    <div class="example" id="example-06f75b05" title="Async Script Example with Priority Hints">
-     <a class="self-link" href="#example-06f75b05"></a> 
-<pre class="highlight"><c- p>&lt;</c-><c- f>script</c-> <c- e>src</c-><c- o>=</c-><c- s>a.js</c-> <c- e>async</c-> <c- e>importance</c-><c- o>=</c-><c- s>high</c-><c- p>>&lt;/</c-><c- f>script</c-><c- p>></c->
-<c- p>&lt;</c-><c- f>link</c-> <c- e>rel</c-><c- o>=</c-><c- s>preload</c-> <c- e>href</c-><c- o>=</c-><c- s>b.js</c-> <c- e>as</c-><c- o>=</c-><c- s>script</c-> <c- e>importance</c-><c- o>=</c-><c- s>high</c-><c- p>></c->
+    <div class="example" id="example-539815ea" title="Async Script Example with Priority Hints">
+     <a class="self-link" href="#example-539815ea"></a> 
+<pre class="highlight"><c- p>&lt;</c-><c- f>script</c-> <c- e>src</c-><c- o>=</c-><c- s>a.js</c-> <c- e>async</c-> <c- e>fetchpriority</c-><c- o>=</c-><c- s>high</c-><c- p>>&lt;/</c-><c- f>script</c-><c- p>></c->
+<c- p>&lt;</c-><c- f>link</c-> <c- e>rel</c-><c- o>=</c-><c- s>preload</c-> <c- e>href</c-><c- o>=</c-><c- s>b.js</c-> <c- e>as</c-><c- o>=</c-><c- s>script</c-> <c- e>fetchpriority</c-><c- o>=</c-><c- s>high</c-><c- p>></c->
 </pre>
     </div>
     <p><strong>Reduce network contention from non-critical Fetch API requests</strong></p>
@@ -1029,34 +1040,34 @@ fetch<c- p>(</c-><c- t>'/api/articles.json'</c-><c- p>).</c->then<c- p>(</c-><c-
 fetch<c- p>(</c-><c- t>'/api/related.json'</c-><c- p>).</c->then<c- p>(</c-><c- d>/*...*/</c-><c- p>)</c->
 </pre>
     </div>
-    <p>By using the <code class="highlight">importance</code> attribute on the second Fetch request, we can hint that
+    <p>By using the <code class="highlight">priority</code> property on the second Fetch request, we can hint that
     the priority of that request is <code class="highlight">low</code>, reducing the chances of it contending with the
     Fetch request for article content. We can also explicitly state the priority of the first
     request is <code class="highlight">high</code> so that browsers where Fetch requests do not already have a high
     priority know that it is important to the page.</p>
-    <div class="example" id="example-6330e26d" title="Fetch Example with Priority Hints">
-     <a class="self-link" href="#example-6330e26d"></a> 
+    <div class="example" id="example-900fa3e9" title="Fetch Example with Priority Hints">
+     <a class="self-link" href="#example-900fa3e9"></a> 
 <pre class="highlight"><c- c1>// Critical Fetch request for article content</c->
-fetch<c- p>(</c-><c- t>'/api/articles.json'</c-><c- p>,</c-> <c- p>{</c-> importance<c- o>:</c-> <c- t>'high'</c-> <c- p>}).</c->then<c- p>(</c-><c- d>/*...*/</c-><c- p>)</c->
+fetch<c- p>(</c-><c- t>'/api/articles.json'</c-><c- p>,</c-> <c- p>{</c-> priority<c- o>:</c-> <c- t>'high'</c-> <c- p>}).</c->then<c- p>(</c-><c- d>/*...*/</c-><c- p>)</c->
 
 <c- c1>// Request for related content now reduced in priority</c->
 <c- c1>// reducing the opportunity for contention</c->
-fetch<c- p>(</c-><c- t>'/api/related.json'</c-><c- p>,</c-> <c- p>{</c-> importance<c- o>:</c-> <c- t>'low'</c-> <c- p>}).</c->then<c- p>(</c-><c- d>/*...*/</c-><c- p>)</c->
+fetch<c- p>(</c-><c- t>'/api/related.json'</c-><c- p>,</c-> <c- p>{</c-> priority<c- o>:</c-> <c- t>'low'</c-> <c- p>}).</c->then<c- p>(</c-><c- d>/*...*/</c-><c- p>)</c->
 </pre>
     </div>
     <p>This might be more pronounced on HTTP 1.1 with the impact being more visible with HTTP/2
     multiplexing if a large number of Fetch requests are being made and are contending with one
     another.</p>
     <p><strong>Providing Priority Hints through HTTP Headers</strong></p>
-    <p>The importance hint may be specified in the document markup, MAY be provided via JavaScript,
+    <p>The fetchpriority hint MAY be specified in the document markup, MAY be provided via JavaScript,
     MAY be provided via the HTTP header, and MAY be dynamically added to the document.</p>
-    <div class="example" id="example-9f82fd1a" title="HTTP Header Example">
-     <a class="self-link" href="#example-9f82fd1a"></a> 
-<pre class="highlight">Link<c- o>:</c-> <c- o>&lt;</c->/app/style.css>; importance=high
-Link<c- o>:</c-> <c- o>&lt;</c->/app/script.js>; importance=low
+    <div class="example" id="example-bb9ce34d" title="HTTP Header Example">
+     <a class="self-link" href="#example-bb9ce34d"></a> 
+<pre class="highlight">Link<c- o>:</c-> <c- o>&lt;</c->/app/style.css>; fetchpriority=high
+Link<c- o>:</c-> <c- o>&lt;</c->/app/script.js>; fetchpriority=low
 </pre>
     </div>
-    <p>As above examples illustrate, importance can be specified via declarative markup, Link HTTP header (<a data-link-type="biblio" href="#biblio-rfc5988">RFC5988</a>), 
+    <p>As above examples illustrate, fetchpriority can be specified via declarative markup, Link HTTP header (<a data-link-type="biblio" href="#biblio-rfc5988">RFC5988</a>), 
       or scheduled via JavaScript.</p>
     <h2 class="heading settled" data-level="6" id="adoptionpath"><span class="secno">6. </span><span class="content">Adoption path</span><a class="self-link" href="#adoptionpath"></a></h2>
     <p>Markup-based signals should be added in a way such that non-supporting browsers will simply ignore them and load all
@@ -1072,7 +1083,7 @@ Link<c- o>:</c-> <c- o>&lt;</c->/app/script.js>; importance=low
    <section>
     <h2 class="heading settled" data-level="8" id="use-cases"><span class="secno">8. </span><span class="content">Use Cases</span><a class="self-link" href="#use-cases"></a></h2>
     <p>This section outlines the different use-cases Priority Hints sets out to address.</p>
-    <h3 class="heading settled" data-level="8.1" id="communicateresourceimportancetothebrowser"><span class="secno">8.1. </span><span class="content">Communicate resource importance to the browser</span><a class="self-link" href="#communicateresourceimportancetothebrowser"></a></h3>
+    <h3 class="heading settled" data-level="8.1" id="communicateresourcefetchprioritytothebrowser"><span class="secno">8.1. </span><span class="content">Communicate resource fetch priority to the browser</span><a class="self-link" href="#communicateresourcefetchprioritytothebrowser"></a></h3>
     <p>The browser assigns priorities and certain dependencies to downloaded resources and uses them to determine:</p>
     <ul>
      <li>When the resource’s request is sent to the server.
@@ -1080,7 +1091,7 @@ Link<c- o>:</c-> <c- o>&lt;</c->/app/script.js>; importance=low
     </ul>
     <p>The browser uses various heuristics in order to do the above, which are based on the type of resource, its location in
       the document, and more.</p>
-    <p>Occasionally, web developers are in a better position to know which resources are more impactful than others on their
+    <p>Web developers can often be in a better position to know which resources are more impactful than others on their
       users' loading experience, and need a way to communicate that to the browser.</p>
     <h3 class="heading settled" data-level="8.2" id="signalaresourceasnoncritical"><span class="secno">8.2. </span><span class="content">Signal a resource as non-critical</span><a class="self-link" href="#signalaresourceasnoncritical"></a></h3>
     <p>Using <code class="highlight"><c- o>&lt;</c->link rel<c- o>=</c->preload<c- o>></c-></code> in order to get the browser to early-discover certain resources, especially in its header form, means that the browser
@@ -1090,27 +1101,27 @@ Link<c- o>:</c-> <c- o>&lt;</c->/app/script.js>; importance=low
     <p>While better transport protocols (e.g. QUIC) may address that at a lower layer for the single origin case, developers
       should be able to signal to the browser that a certain resource is not critical, and therefore should be queued until
       such resources are discovered. Such marking as "non-critical" should be orthogonal to the signaling of the resource’s
-      "importance" (e.g. this could be applied to high priority resources that shouldn’t contend with rendering-critical
+      "fetch priority" (e.g. this could be applied to high priority resources that shouldn’t contend with rendering-critical
       resources as well as low priority ones).</p>
     <h3 class="heading settled" data-level="8.3" id="avoidbandwidthcontentioninmultipleoriginscenarios"><span class="secno">8.3. </span><span class="content">Avoid bandwidth contention in multiple origin scenarios</span><a class="self-link" href="#avoidbandwidthcontentioninmultipleoriginscenarios"></a></h3>
     <p>When loading resources from multiple origins, setting HTTP/2 dependencies and weights do very little to avoid bandwidth
       contention between the origins, as each origin tries to send down its most critical resource without knowing of more
-      critical resources in other origins. Signaling resource importance to the browser can enable it to defer sending of
+      critical resources in other origins. Signaling resource priority to the browser can enable it to defer sending of
       non-critical third party requests while critical resources are still being downloaded.</p>
     <h3 class="heading settled" data-level="8.4" id="provideprioritysignalsformarkupbasedresources"><span class="secno">8.4. </span><span class="content">Provide priority signals for markup-based resources</span><a class="self-link" href="#provideprioritysignalsformarkupbasedresources"></a></h3>
     <p>Developers need a way to provide the above signals for resources that are loaded through markup (or through markup-equivalent
       HTTP headers, e.g. <code class="highlight">Link<c- o>:</c-></code>)</p>
     <h3 class="heading settled" data-level="8.5" id="provideprioritysignalsfordynamicallyloadedresources"><span class="secno">8.5. </span><span class="content">Provide priority signals for dynamically loaded resources</span><a class="self-link" href="#provideprioritysignalsfordynamicallyloadedresources"></a></h3>
-    <p>Developers need a way to provide the above signals for resources that are fetched through JavaScript, e.g., using the <code class="highlight">fetch<c- p>()</c-></code> API. That would enable them both to upgrade and downgrade those resource’s "importance". </p>
+    <p>Developers need a way to provide the above signals for resources that are fetched through JavaScript, e.g., using the <code class="highlight">fetch<c- p>()</c-></code> API. That would enable them both to upgrade and downgrade those resource’s "priority". </p>
    </section>
    <section>
     <h2 class="heading settled" data-level="9" id="safe-usage"><span class="secno">9. </span><span class="content">Safe usage</span><a class="self-link" href="#safe-usage"></a></h2>
     <div class="note" role="note">
-     <p>If the <code class="highlight">importance</code> keyword is used as an optimization to initiate earlier fetch then no additional feature detection checks are necessary:
-        browsers that support <code class="highlight">importance</code> may initiate earlier fetch, and those that do not will ignore it and fetch the resource as previously. Otherwise,
-        if the application intends to rely on <code class="highlight">importance</code> to fetch the resource, then it can execute a feature detection check to verify that it is supported. </p>
+     <p>If the <code class="highlight">fetchpriority</code> keyword is used as an optimization to initiate earlier fetch then no additional feature detection checks are necessary:
+        browsers that support <code class="highlight">fetchpriority</code> may initiate earlier fetch, and those that do not will ignore it and fetch the resource as previously. Otherwise,
+        if the application intends to rely on <code class="highlight">fetchpriority</code> to fetch the resource, then it can execute a feature detection check to verify that it is supported. </p>
     </div>
-    <p>Applying <code class="highlight">importance</code> appropriately to the resources in a page should never degrade performance. This should hold true for both browsers that support
+    <p>Applying <code class="highlight">fetchpriority</code> appropriately to the resources in a page should never degrade performance. This should hold true for both browsers that support
       Priority Hints as well as browsers that do not. UAs are free to apply other heuristics in addition to Priority Hints
       to decide on how they load content.</p>
     <p>With in-viewport images, a browser may automatically detect if the image is important and boost priority if it gets to
@@ -1190,42 +1201,47 @@ Link<c- o>:</c-> <c- o>&lt;</c->/app/script.js>; importance=low
   <h2 class="no-num no-ref heading settled" id="index"><span class="content">Index</span><a class="self-link" href="#index"></a></h2>
   <h3 class="no-num no-ref heading settled" id="index-defined-here"><span class="content">Terms defined by this specification</span><a class="self-link" href="#index-defined-here"></a></h3>
   <ul class="index">
-   <li><a href="#dom-importance-auto">"auto"</a><span>, in § 3.1</span>
-   <li><a href="#importance-enum-auto">auto</a><span>, in § 3.1</span>
-   <li><a href="#dom-importance-high">"high"</a><span>, in § 3.1</span>
-   <li><a href="#importance-enum-high">high</a><span>, in § 3.1</span>
-   <li><a href="#enumdef-importance">Importance</a><span>, in § 3.1</span>
+   <li><a href="#dom-fetchpriority-auto">"auto"</a><span>, in § 3.1</span>
+   <li><a href="#fetchpriority-enum-auto">auto</a><span>, in § 3.1</span>
+   <li><a href="#enumdef-fetchpriority">FetchPriority</a><span>, in § 3.1</span>
    <li>
-    importance
+    fetchpriority
     <ul>
-     <li><a href="#dom-htmliframeelement-importance">attribute for HTMLIFrameElement</a><span>, in § 3.3.5</span>
-     <li><a href="#dom-htmlimageelement-importance">attribute for HTMLImageElement</a><span>, in § 3.3.1</span>
-     <li><a href="#dom-htmllinkelement-importance">attribute for HTMLLinkElement</a><span>, in § 3.3.3</span>
-     <li><a href="#dom-htmlscriptelement-importance">attribute for HTMLScriptElement</a><span>, in § 3.3.4</span>
-     <li><a href="#dom-request-importance">attribute for Request</a><span>, in § 3.2</span>
-     <li><a href="#concept-request-importance">definition of</a><span>, in § 3.2</span>
-     <li><a href="#dom-requestinit-importance">dict-member for RequestInit</a><span>, in § 3.2</span>
-     <li><a href="#element-attrdef-iframe-importance">element-attr for iframe</a><span>, in § 3.3.5</span>
-     <li><a href="#element-attrdef-img-importance">element-attr for img</a><span>, in § 3.3.1</span>
-     <li><a href="#element-attrdef-link-importance">element-attr for link</a><span>, in § 3.3.3</span>
-     <li><a href="#element-attrdef-script-importance">element-attr for script</a><span>, in § 3.3.4</span>
+     <li><a href="#dom-htmliframeelement-fetchpriority">attribute for HTMLIFrameElement</a><span>, in § 3.3.5</span>
+     <li><a href="#dom-htmlimageelement-fetchpriority">attribute for HTMLImageElement</a><span>, in § 3.3.1</span>
+     <li><a href="#dom-htmllinkelement-fetchpriority">attribute for HTMLLinkElement</a><span>, in § 3.3.3</span>
+     <li><a href="#dom-htmlscriptelement-fetchpriority">attribute for HTMLScriptElement</a><span>, in § 3.3.4</span>
+     <li><a href="#element-attrdef-iframe-fetchpriority">element-attr for iframe</a><span>, in § 3.3.5</span>
+     <li><a href="#element-attrdef-img-fetchpriority">element-attr for img</a><span>, in § 3.3.1</span>
+     <li><a href="#element-attrdef-link-fetchpriority">element-attr for link</a><span>, in § 3.3.3</span>
+     <li><a href="#element-attrdef-script-fetchpriority">element-attr for script</a><span>, in § 3.3.4</span>
     </ul>
-   <li><a href="#importance-attribute">importance attribute</a><span>, in § 3.3</span>
-   <li><a href="#importance-enum">Importance enum</a><span>, in § 3.1</span>
-   <li><a href="#dom-importance-low">"low"</a><span>, in § 3.1</span>
-   <li><a href="#importance-enum-low">low</a><span>, in § 3.1</span>
+   <li><a href="#fetchpriority-attribute">fetchpriority attribute</a><span>, in § 3.3</span>
+   <li><a href="#fetchpriority-enum">FetchPriority enum</a><span>, in § 3.1</span>
+   <li><a href="#dom-fetchpriority-high">"high"</a><span>, in § 3.1</span>
+   <li><a href="#fetchpriority-enum-high">high</a><span>, in § 3.1</span>
+   <li><a href="#internalpriority">internalpriority</a><span>, in § 3.2</span>
+   <li><a href="#dom-fetchpriority-low">"low"</a><span>, in § 3.1</span>
+   <li><a href="#fetchpriority-enum-low">low</a><span>, in § 3.1</span>
+   <li>
+    priority
+    <ul>
+     <li><a href="#dom-request-priority">attribute for Request</a><span>, in § 3.2</span>
+     <li><a href="#concept-request-priority">definition of</a><span>, in § 3.2</span>
+     <li><a href="#dom-requestinit-priority">dict-member for RequestInit</a><span>, in § 3.2</span>
+    </ul>
   </ul>
   <aside class="dfn-panel" data-for="term-for-request">
    <a href="https://fetch.spec.whatwg.org/#request">https://fetch.spec.whatwg.org/#request</a><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-request">Unnumbered Section</a>
-    <li><a href="#ref-for-request①">3.2. Fetch Integration</a> <a href="#ref-for-request②">(2)</a>
+    <li><a href="#ref-for-request①">3.2. Fetch Integration</a> <a href="#ref-for-request②">(2)</a> <a href="#ref-for-request③">(3)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-dom-request">
    <a href="https://fetch.spec.whatwg.org/#dom-request">https://fetch.spec.whatwg.org/#dom-request</a><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-dom-request">3.2. Fetch Integration</a>
+    <li><a href="#ref-for-dom-request">3.2. Fetch Integration</a> <a href="#ref-for-dom-request①">(2)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-requestinit">
@@ -1260,7 +1276,7 @@ Link<c- o>:</c-> <c- o>&lt;</c->/app/script.js>; importance=low
   <aside class="dfn-panel" data-for="term-for-concept-request-priority">
    <a href="https://fetch.spec.whatwg.org/#concept-request-priority">https://fetch.spec.whatwg.org/#concept-request-priority</a><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-concept-request-priority">3.2. Fetch Integration</a> <a href="#ref-for-concept-request-priority①">(2)</a>
+    <li><a href="#ref-for-concept-request-priority②">3.2. Fetch Integration</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-concept-request">
@@ -1587,102 +1603,108 @@ Link<c- o>:</c-> <c- o>&lt;</c->/app/script.js>; importance=low
    <dd>Mark Nottingham. <a href="https://tools.ietf.org/html/rfc5988"><cite>Web Linking</cite></a>. URL: <a href="https://tools.ietf.org/html/rfc5988">https://tools.ietf.org/html/rfc5988</a>
   </dl>
   <h2 class="no-num no-ref heading settled" id="idl-index"><span class="content">IDL Index</span><a class="self-link" href="#idl-index"></a></h2>
-<pre class="idl highlight def"><c- b>enum</c-> <a href="#enumdef-importance"><code class="highlight"><c- g>Importance</c-></code></a> { <a href="#dom-importance-high"><code class="highlight"><c- s><c- u>"high"</c-></c-></code></a>, <a href="#dom-importance-low"><code class="highlight"><c- s><c- u>"low"</c-></c-></code></a>, <a href="#dom-importance-auto"><code class="highlight"><c- s><c- u>"auto"</c-></c-></code></a> };
+<pre class="idl highlight def"><c- b>enum</c-> <a href="#enumdef-fetchpriority"><code class="highlight"><c- g>FetchPriority</c-></code></a> { <a href="#dom-fetchpriority-high"><code class="highlight"><c- s><c- u>"high"</c-></c-></code></a>, <a href="#dom-fetchpriority-low"><code class="highlight"><c- s><c- u>"low"</c-></c-></code></a>, <a href="#dom-fetchpriority-auto"><code class="highlight"><c- s><c- u>"auto"</c-></c-></code></a> };
 
 <c- b>partial</c-> <c- b>interface</c-> <a class="idl-code" data-link-type="interface" href="https://fetch.spec.whatwg.org/#request"><c- g>Request</c-></a> {
-  <c- b>readonly</c-> <c- b>attribute</c-> <a data-link-type="idl-name" href="#enumdef-importance"><c- n>Importance</c-></a> <a data-readonly data-type="Importance" href="#dom-request-importance"><code class="highlight"><c- g>importance</c-></code></a>;
+  <c- b>readonly</c-> <c- b>attribute</c-> <a data-link-type="idl-name" href="#enumdef-fetchpriority"><c- n>FetchPriority</c-></a> <a data-readonly data-type="FetchPriority" href="#dom-request-priority"><code class="highlight"><c- g>priority</c-></code></a>;
 };
 
 <c- b>partial</c-> <c- b>dictionary</c-> <a class="idl-code" data-link-type="dictionary" href="https://fetch.spec.whatwg.org/#requestinit"><c- g>RequestInit</c-></a> {
-  <a data-link-type="idl-name" href="#enumdef-importance"><c- n>Importance</c-></a> <a data-type="Importance " href="#dom-requestinit-importance"><code class="highlight"><c- g>importance</c-></code></a>;
+  <a data-link-type="idl-name" href="#enumdef-fetchpriority"><c- n>FetchPriority</c-></a> <a data-type="FetchPriority " href="#dom-requestinit-priority"><code class="highlight"><c- g>priority</c-></code></a>;
 };
 
 <c- b>partial</c-> <c- b>interface</c-> <a class="idl-code" data-link-type="interface" href="https://html.spec.whatwg.org/multipage/embedded-content.html#htmlimageelement"><c- g>HTMLImageElement</c-></a> {
-    [<a class="idl-code" data-link-type="extended-attribute" href="https://html.spec.whatwg.org/multipage/custom-elements.html#cereactions"><c- g>CEReactions</c-></a>] <c- b>attribute</c-> <a class="idl-code" data-link-type="interface" href="https://webidl.spec.whatwg.org/#idl-DOMString"><c- b>DOMString</c-></a> <a class="idl-code" data-link-type="attribute" data-type="DOMString" href="#dom-htmlimageelement-importance"><c- g>importance</c-></a>;
+    [<a class="idl-code" data-link-type="extended-attribute" href="https://html.spec.whatwg.org/multipage/custom-elements.html#cereactions"><c- g>CEReactions</c-></a>] <c- b>attribute</c-> <a class="idl-code" data-link-type="interface" href="https://webidl.spec.whatwg.org/#idl-DOMString"><c- b>DOMString</c-></a> <a class="idl-code" data-link-type="attribute" data-type="DOMString" href="#dom-htmlimageelement-fetchpriority"><c- g>fetchpriority</c-></a>;
 };
 
 <c- b>partial</c-> <c- b>interface</c-> <a class="idl-code" data-link-type="interface" href="https://html.spec.whatwg.org/multipage/semantics.html#htmllinkelement"><c- g>HTMLLinkElement</c-></a> {
-    [<a class="idl-code" data-link-type="extended-attribute" href="https://html.spec.whatwg.org/multipage/custom-elements.html#cereactions"><c- g>CEReactions</c-></a>] <c- b>attribute</c-> <a class="idl-code" data-link-type="interface" href="https://webidl.spec.whatwg.org/#idl-DOMString"><c- b>DOMString</c-></a> <a data-type="DOMString" href="#dom-htmllinkelement-importance"><code class="highlight"><c- g>importance</c-></code></a>;
+    [<a class="idl-code" data-link-type="extended-attribute" href="https://html.spec.whatwg.org/multipage/custom-elements.html#cereactions"><c- g>CEReactions</c-></a>] <c- b>attribute</c-> <a class="idl-code" data-link-type="interface" href="https://webidl.spec.whatwg.org/#idl-DOMString"><c- b>DOMString</c-></a> <a data-type="DOMString" href="#dom-htmllinkelement-fetchpriority"><code class="highlight"><c- g>fetchpriority</c-></code></a>;
 };
 
 <c- b>partial</c-> <c- b>interface</c-> <a class="idl-code" data-link-type="interface" href="https://html.spec.whatwg.org/multipage/scripting.html#htmlscriptelement"><c- g>HTMLScriptElement</c-></a> {
-    [<a class="idl-code" data-link-type="extended-attribute" href="https://html.spec.whatwg.org/multipage/custom-elements.html#cereactions"><c- g>CEReactions</c-></a>] <c- b>attribute</c-> <a class="idl-code" data-link-type="interface" href="https://webidl.spec.whatwg.org/#idl-DOMString"><c- b>DOMString</c-></a> <a class="idl-code" data-link-type="attribute" data-type="DOMString" href="#dom-htmlscriptelement-importance"><c- g>importance</c-></a>;
+    [<a class="idl-code" data-link-type="extended-attribute" href="https://html.spec.whatwg.org/multipage/custom-elements.html#cereactions"><c- g>CEReactions</c-></a>] <c- b>attribute</c-> <a class="idl-code" data-link-type="interface" href="https://webidl.spec.whatwg.org/#idl-DOMString"><c- b>DOMString</c-></a> <a class="idl-code" data-link-type="attribute" data-type="DOMString" href="#dom-htmlscriptelement-fetchpriority"><c- g>fetchpriority</c-></a>;
 };
 
 <c- b>partial</c-> <c- b>interface</c-> <a class="idl-code" data-link-type="interface" href="https://html.spec.whatwg.org/multipage/iframe-embed-object.html#htmliframeelement"><c- g>HTMLIFrameElement</c-></a> {
-    [<a class="idl-code" data-link-type="extended-attribute" href="https://html.spec.whatwg.org/multipage/custom-elements.html#cereactions"><c- g>CEReactions</c-></a>] <c- b>attribute</c-> <a class="idl-code" data-link-type="interface" href="https://webidl.spec.whatwg.org/#idl-DOMString"><c- b>DOMString</c-></a> <a class="idl-code" data-link-type="attribute" data-type="DOMString" href="#dom-htmliframeelement-importance"><c- g>importance</c-></a>;
+    [<a class="idl-code" data-link-type="extended-attribute" href="https://html.spec.whatwg.org/multipage/custom-elements.html#cereactions"><c- g>CEReactions</c-></a>] <c- b>attribute</c-> <a class="idl-code" data-link-type="interface" href="https://webidl.spec.whatwg.org/#idl-DOMString"><c- b>DOMString</c-></a> <a class="idl-code" data-link-type="attribute" data-type="DOMString" href="#dom-htmliframeelement-fetchpriority"><c- g>fetchpriority</c-></a>;
 };
 
 </pre>
-  <aside class="dfn-panel" data-for="importance-enum">
-   <b><a href="#importance-enum">#importance-enum</a></b><b>Referenced in:</b>
+  <aside class="dfn-panel" data-for="fetchpriority-enum">
+   <b><a href="#fetchpriority-enum">#fetchpriority-enum</a></b><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-importance-enum">3.3. HTML Integration</a>
+    <li><a href="#ref-for-fetchpriority-enum">3.3. HTML Integration</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="enumdef-importance">
-   <b><a href="#enumdef-importance">#enumdef-importance</a></b><b>Referenced in:</b>
+  <aside class="dfn-panel" data-for="enumdef-fetchpriority">
+   <b><a href="#enumdef-fetchpriority">#enumdef-fetchpriority</a></b><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-enumdef-importance">3.2. Fetch Integration</a> <a href="#ref-for-enumdef-importance①">(2)</a>
+    <li><a href="#ref-for-enumdef-fetchpriority">3.2. Fetch Integration</a> <a href="#ref-for-enumdef-fetchpriority①">(2)</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="importance-enum-auto">
-   <b><a href="#importance-enum-auto">#importance-enum-auto</a></b><b>Referenced in:</b>
+  <aside class="dfn-panel" data-for="fetchpriority-enum-auto">
+   <b><a href="#fetchpriority-enum-auto">#fetchpriority-enum-auto</a></b><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-importance-enum-auto">3.3. HTML Integration</a>
+    <li><a href="#ref-for-fetchpriority-enum-auto">3.3. HTML Integration</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="concept-request-importance">
-   <b><a href="#concept-request-importance">#concept-request-importance</a></b><b>Referenced in:</b>
+  <aside class="dfn-panel" data-for="concept-request-priority">
+   <b><a href="#concept-request-priority">#concept-request-priority</a></b><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-concept-request-importance">3.2. Fetch Integration</a> <a href="#ref-for-concept-request-importance①">(2)</a> <a href="#ref-for-concept-request-importance②">(3)</a>
-    <li><a href="#ref-for-concept-request-importance③">3.3.1. img</a>
-    <li><a href="#ref-for-concept-request-importance④">3.3.3. link</a>
-    <li><a href="#ref-for-concept-request-importance⑤">3.3.4. script</a>
-    <li><a href="#ref-for-concept-request-importance⑥">3.3.5. iframe</a>
+    <li><a href="#ref-for-concept-request-priority">3.2. Fetch Integration</a> <a href="#ref-for-concept-request-priority①">(2)</a> <a href="#ref-for-concept-request-priority③">(3)</a>
+    <li><a href="#ref-for-concept-request-priority④">3.3.1. img</a>
+    <li><a href="#ref-for-concept-request-priority⑤">3.3.3. link</a>
+    <li><a href="#ref-for-concept-request-priority⑥">3.3.4. script</a>
+    <li><a href="#ref-for-concept-request-priority⑦">3.3.5. iframe</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="dom-request-importance">
-   <b><a href="#dom-request-importance">#dom-request-importance</a></b><b>Referenced in:</b>
+  <aside class="dfn-panel" data-for="dom-request-priority">
+   <b><a href="#dom-request-priority">#dom-request-priority</a></b><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-dom-request-importance">3.2. Fetch Integration</a>
-    <li><a href="#ref-for-dom-request-importance①">3.3.1. img</a> <a href="#ref-for-dom-request-importance②">(2)</a>
-    <li><a href="#ref-for-dom-request-importance③">3.3.3. link</a> <a href="#ref-for-dom-request-importance④">(2)</a>
-    <li><a href="#ref-for-dom-request-importance⑤">3.3.4. script</a> <a href="#ref-for-dom-request-importance⑥">(2)</a> <a href="#ref-for-dom-request-importance⑦">(3)</a>
-    <li><a href="#ref-for-dom-request-importance⑧">3.3.5. iframe</a>
+    <li><a href="#ref-for-dom-request-priority">3.2. Fetch Integration</a>
+    <li><a href="#ref-for-dom-request-priority①">3.3.1. img</a> <a href="#ref-for-dom-request-priority②">(2)</a>
+    <li><a href="#ref-for-dom-request-priority③">3.3.3. link</a> <a href="#ref-for-dom-request-priority④">(2)</a>
+    <li><a href="#ref-for-dom-request-priority⑤">3.3.4. script</a> <a href="#ref-for-dom-request-priority⑥">(2)</a> <a href="#ref-for-dom-request-priority⑦">(3)</a>
+    <li><a href="#ref-for-dom-request-priority⑧">3.3.5. iframe</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="dom-requestinit-importance">
-   <b><a href="#dom-requestinit-importance">#dom-requestinit-importance</a></b><b>Referenced in:</b>
+  <aside class="dfn-panel" data-for="dom-requestinit-priority">
+   <b><a href="#dom-requestinit-priority">#dom-requestinit-priority</a></b><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-dom-requestinit-importance">3.2. Fetch Integration</a>
+    <li><a href="#ref-for-dom-requestinit-priority">3.2. Fetch Integration</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="importance-attribute">
-   <b><a href="#importance-attribute">#importance-attribute</a></b><b>Referenced in:</b>
+  <aside class="dfn-panel" data-for="internalpriority">
+   <b><a href="#internalpriority">#internalpriority</a></b><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-importance-attribute">3.3.1. img</a>
-    <li><a href="#ref-for-importance-attribute①">3.3.3. link</a>
-    <li><a href="#ref-for-importance-attribute②">3.3.4. script</a>
-    <li><a href="#ref-for-importance-attribute③">3.3.5. iframe</a>
+    <li><a href="#ref-for-internalpriority">3.2. Fetch Integration</a> <a href="#ref-for-internalpriority①">(2)</a> <a href="#ref-for-internalpriority②">(3)</a> <a href="#ref-for-internalpriority③">(4)</a> <a href="#ref-for-internalpriority④">(5)</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="dom-htmlimageelement-importance">
-   <b><a href="#dom-htmlimageelement-importance">#dom-htmlimageelement-importance</a></b><b>Referenced in:</b>
+  <aside class="dfn-panel" data-for="fetchpriority-attribute">
+   <b><a href="#fetchpriority-attribute">#fetchpriority-attribute</a></b><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-dom-htmlimageelement-importance">3.3.1. img</a>
+    <li><a href="#ref-for-fetchpriority-attribute">3.3.1. img</a>
+    <li><a href="#ref-for-fetchpriority-attribute①">3.3.3. link</a>
+    <li><a href="#ref-for-fetchpriority-attribute②">3.3.4. script</a>
+    <li><a href="#ref-for-fetchpriority-attribute③">3.3.5. iframe</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="dom-htmlscriptelement-importance">
-   <b><a href="#dom-htmlscriptelement-importance">#dom-htmlscriptelement-importance</a></b><b>Referenced in:</b>
+  <aside class="dfn-panel" data-for="dom-htmlimageelement-fetchpriority">
+   <b><a href="#dom-htmlimageelement-fetchpriority">#dom-htmlimageelement-fetchpriority</a></b><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-dom-htmlscriptelement-importance">3.3.4. script</a>
+    <li><a href="#ref-for-dom-htmlimageelement-fetchpriority">3.3.1. img</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="dom-htmliframeelement-importance">
-   <b><a href="#dom-htmliframeelement-importance">#dom-htmliframeelement-importance</a></b><b>Referenced in:</b>
+  <aside class="dfn-panel" data-for="dom-htmlscriptelement-fetchpriority">
+   <b><a href="#dom-htmlscriptelement-fetchpriority">#dom-htmlscriptelement-fetchpriority</a></b><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-dom-htmliframeelement-importance">3.3.5. iframe</a>
+    <li><a href="#ref-for-dom-htmlscriptelement-fetchpriority">3.3.4. script</a>
+   </ul>
+  </aside>
+  <aside class="dfn-panel" data-for="dom-htmliframeelement-fetchpriority">
+   <b><a href="#dom-htmliframeelement-fetchpriority">#dom-htmliframeelement-fetchpriority</a></b><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-dom-htmliframeelement-fetchpriority">3.3.5. iframe</a>
    </ul>
   </aside>
 <script>/* script-dfn-panel */
