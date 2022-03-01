@@ -8,7 +8,7 @@ URL: https://wicg.github.io/priority-hints
 Editor: Patrick Meenan, Google Inc., patmeenan@gmail.com, https://twitter.com/patmeenan
 Editor: Addy Osmani, Google Inc., addyosmani@gmail.com, https://addyosmani.com/
 Editor: Yoav Weiss 58673, Google Inc., yoav@yoav.ws, https://blog.yoav.ws
-Abstract: Specification of the Priority Hints feature.
+Abstract: Priority Hints exposes a mechanism for developers to signal a relative priority for browsers to consider when fetching resources.
 Markup Shorthands: markdown yes
 Default Highlight: js
 </pre>
