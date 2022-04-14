@@ -20,6 +20,7 @@ urlPrefix: https://html.spec.whatwg.org/multipage; spec: HTML;
     type:dfn; for:/; text: missing value default
 urlPrefix: https://html.spec.whatwg.org/multipage/urls-and-fetching.html; spec: HTML;
     type: dfn; url: #fetching-resources; text: Fetching resources;
+    type: dfn; url: #render-blocking; text: render-blocking;
 urlPrefix: https://html.spec.whatwg.org/multipage/images.html; spec: HTML;
     type: dfn; url: #update-the-image-data; text: update the image data;
     type: dfn; url: #reacting-to-environment-changes; text: Reacting to environment changes;
@@ -271,6 +272,14 @@ urlPrefix: https://fetch.spec.whatwg.org; spec: FETCH;
       <p>The impact of these states on the processing model of various [=fetch|fetches=] is defined
       in more detail throughout this specification, in [[FETCH|Fetch]], and in
       [[PRIORITY-HINTS|Priority Hints]].</p>
+      <p>The <dfn export>computed fetch priority</dfn> of a supported element is defined as:</p>
+      <ol>
+        <li><p>If the element is [=render-blocking=] and the current state of its
+          [=fetchpriority attribute=] is [=low=], then the [=computed fetch priority=] is the
+          [=auto=] state;</p>
+	<li><p>Otherwise, the [=computed fetch priority=] is the current state of the element's
+          [=fetchpriority attribute=].
+      </ol>
     </ol>
 
     <h4 id="img">img</h4>
@@ -295,12 +304,12 @@ urlPrefix: https://fetch.spec.whatwg.org; spec: FETCH;
           content attribute, <span>limited to only known values</span>.</p>
       <li><p>We add a step to [=update the image data|Updating the image data=] before fetching the
           image:</p>
-        <p>Set <var>request</var>'s {{Request/priority}} to the current state of the element's
-          <code data-x="attr-img-fetchpriority">fetchpriority</code> attribute.</p>
+        <p>Set <var>request</var>'s {{Request/priority}} to the [=computed fetch priority=] of the
+          element.</p>
       <li><p>We add a step to [=Reacting to environment changes=] when setting the image request's
           image data, before the request is fetched:</p>
-        <p>Set <var>request</var>'s {{Request/priority}} to the current state of the element's
-          <code data-x="attr-img-fetchpriority">fetchpriority</code> attribute.</p>
+        <p>Set <var>request</var>'s {{Request/priority}} to the [=computed fetch priority=] of the
+          element.</p>
       <li>We modify the [=List of elements=] to include the 
         <span data-x="attr-img-fetchpriority">fetchpriority</span> attribute on the <{img}> element.
     </ol>
@@ -330,12 +339,11 @@ urlPrefix: https://fetch.spec.whatwg.org; spec: FETCH;
         </pre>
       <li><p>We extend [=create a link element request=] of [=Fetching and processing a resource
         from a link element=] by adding a step before returning the request:</p>
-        <p>Set <var>request</var>'s {{Request/priority}} to the current state of <var ignore=''>
-        el</var>'s <code data-x="attr-link-fetchpriority">fetchpriority</code> content attribute.</p>
+        <p>Set <var>request</var>'s {{Request/priority}} to the [=computed fetch priority=] of
+          <var ignore=''>el</var>.</p>
       <li><p>We extend the [=fetch and process the linked resource=] algorithm of [=modulepreload=]
         links by adding a step before setting the render-blocking state:</p>
-        <p>Let {{Request/priority}} be the current state of the element's
-        <code data-x="attr-link-fetchpriority">fetchpriority</code> attribute.</p>
+        <p>Let {{Request/priority}} be the [=computed fetch priority] of the element.</p>
       <li>We modify the [=List of elements=] to include the 
         <span data-x="attr-link-fetchpriority">fetchpriority</span> attribute on the <{link}> element.
     </ol>
@@ -377,8 +385,7 @@ urlPrefix: https://fetch.spec.whatwg.org; spec: FETCH;
         {{Request/priority}} to <var>option</var>'s
         <code data-x="concept-script-fetch-options-fetchpriority">fetchpriority</code>
       <li><p>We insert a step before step 24 of [=prepare a script=]:</p>
-        <p>Let <var>fetchpriority</var> be the current state of the element's <code
-          data-x="attr-script-fetchpriority">fetchpriority</code> attribute.</p>
+        <p>Let <var>fetchpriority</var> be the [=computed fetch priority=] of the element.</p>
       <li><p>We modify step 24 of [=prepare a script=] to include:</p>
         <p><code data-x="concept-script-fetch-options-fetchpriority">fetchpriority</code> is
         <var>fetchpriority</var>.</p>
@@ -412,8 +419,7 @@ urlPrefix: https://fetch.spec.whatwg.org; spec: FETCH;
           content attribute, <span>limited to only known values</span>.</p>
       <li><p>We modify step 5 (the resource creation step) of
           [=shared attribute processing steps for iframe and frame elements=] to include:</p>
-        <p>...and whose {{Request/priority}} is the current state of element's
-          <code data-x="attr-iframe-fetchpriority">fetchpriority</code> content attribute</p>
+        <p>...and whose {{Request/priority}} is the [=computed fetch priority=] of the element.</p>
       <li>We modify the [=List of elements=] to include the 
         <span data-x="attr-iframe-fetchpriority">fetchpriority</span> attribute on the <{iframe}>
         element.
