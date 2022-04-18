@@ -6,7 +6,7 @@
   <link href="https://www.w3.org/StyleSheets/TR/2021/cg-draft" rel="stylesheet">
   <meta content="Bikeshed version fb1e763a4, updated Tue Mar 1 13:13:50 2022 -0800" name="generator">
   <link href="https://wicg.github.io/priority-hints" rel="canonical">
-  <meta content="992b4adb555d385d67ca18c6668edc5bae491fd4" name="document-revision">
+  <meta content="5156b8b933b88386eb9078e360533b1fb44ca8c6" name="document-revision">
 <style>/* style-autolinks */
 
 .css.css, .property.property, .descriptor.descriptor {
@@ -577,7 +577,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
   <div class="head">
    <p data-fill-with="logo"><a class="logo" href="https://www.w3.org/"> <img alt="W3C" height="48" src="https://www.w3.org/StyleSheets/TR/2021/logos/W3C" width="72"> </a> </p>
    <h1 class="p-name no-ref" id="title">Priority Hints</h1>
-   <p id="w3c-state"><a href="https://www.w3.org/standards/types#CG-DRAFT">Draft Community Group Report</a>, <time class="dt-updated" datetime="2022-03-07">7 March 2022</time></p>
+   <p id="w3c-state"><a href="https://www.w3.org/standards/types#CG-DRAFT">Draft Community Group Report</a>, <time class="dt-updated" datetime="2022-04-18">18 April 2022</time></p>
    <div data-fill-with="spec-metadata">
     <dl>
      <dt>This version:
@@ -823,13 +823,13 @@ A human-readable <a href="http://www.w3.org/community/about/agreements/cla-deed/
      <li>
       We extend the <code class="highlight"><a data-link-type="element" href="https://html.spec.whatwg.org/multipage/embedded-content.html#the-img-element" id="ref-for-the-img-element④">img</a></code> element DOM interface as follows: 
 <pre class="idl highlight def"><c- b>partial</c-> <c- b>interface</c-> <a class="idl-code" data-link-type="interface" href="https://html.spec.whatwg.org/multipage/embedded-content.html#htmlimageelement" id="ref-for-htmlimageelement"><c- g>HTMLImageElement</c-></a> {
-    [<a class="idl-code" data-link-type="extended-attribute" href="https://html.spec.whatwg.org/multipage/custom-elements.html#cereactions" id="ref-for-cereactions"><c- g>CEReactions</c-></a>] <c- b>attribute</c-> <a class="idl-code" data-link-type="interface" href="https://webidl.spec.whatwg.org/#idl-DOMString" id="ref-for-idl-DOMString"><c- b>DOMString</c-></a> <a class="idl-code" data-link-type="attribute" data-type="DOMString" href="#dom-htmlimageelement-fetchpriority" id="ref-for-dom-htmlimageelement-fetchpriority"><c- g>fetchpriority</c-></a>;
+    [<a class="idl-code" data-link-type="extended-attribute" href="https://html.spec.whatwg.org/multipage/custom-elements.html#cereactions" id="ref-for-cereactions"><c- g>CEReactions</c-></a>] <c- b>attribute</c-> <a class="idl-code" data-link-type="interface" href="https://webidl.spec.whatwg.org/#idl-DOMString" id="ref-for-idl-DOMString"><c- b>DOMString</c-></a> <a class="idl-code" data-link-type="attribute" data-type="DOMString" href="#dom-htmlimageelement-fetchpriority" id="ref-for-dom-htmlimageelement-fetchpriority"><c- g>fetchPriority</c-></a>;
 };
 </pre>
      <li>
       <p>We add to the <code class="highlight"><a data-link-type="element" href="https://html.spec.whatwg.org/multipage/embedded-content.html#the-img-element" id="ref-for-the-img-element⑤">img</a></code> element content attribute descriptions:</p>
       <p>The <dfn data-dfn-for="img" data-dfn-type="element-attr" data-export data-lt="fetchpriority" id="element-attrdef-img-fetchpriority"><code class="highlight" data-x="attr-img-fetchpriority">fetchpriority</code> <a class="self-link" href="#element-attrdef-img-fetchpriority"></a></dfn> attribute is a <a data-link-type="dfn" href="#fetchpriority-attribute" id="ref-for-fetchpriority-attribute">fetchpriority attribute</a>. Its purpose is to set the <a data-link-type="dfn" href="#concept-request-priority" id="ref-for-concept-request-priority④">priority</a> used when <a data-link-type="dfn" href="https://fetch.spec.whatwg.org#concept-fetch" id="ref-for-concept-fetch③">fetching</a> the image.</p>
-      <p>The <dfn class="dfn-paneled idl-code" data-dfn-for="HTMLImageElement" data-dfn-type="attribute" data-export id="dom-htmlimageelement-fetchpriority"><code class="highlight" data-x="dom-img-fetchpriority">fetchpriority</code></dfn> IDL attribute must <span>reflect</span> the <code class="highlight" data-x="attr-img-fetchpriority">fetchpriority</code> content attribute, <span>limited to only known values</span>.</p>
+      <p>The <dfn class="dfn-paneled idl-code" data-dfn-for="HTMLImageElement" data-dfn-type="attribute" data-export id="dom-htmlimageelement-fetchpriority"><code class="highlight" data-x="dom-img-fetchpriority">fetchPriority</code></dfn> IDL attribute must <span>reflect</span> the <code class="highlight" data-x="attr-img-fetchpriority">fetchpriority</code> content attribute, <span>limited to only known values</span>.</p>
      <li>
       <p>We add a step to <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/images.html#update-the-image-data" id="ref-for-update-the-image-data">Updating the image data</a> before fetching the
           image:</p>
@@ -856,7 +856,7 @@ A human-readable <a href="http://www.w3.org/community/about/agreements/cla-deed/
      <li>
       We extend the <code class="highlight"><a data-link-type="element" href="https://html.spec.whatwg.org/multipage/semantics.html#the-link-element" id="ref-for-the-link-element⑤">link</a></code> element as follows: 
 <pre class="idl highlight def"><c- b>partial</c-> <c- b>interface</c-> <a class="idl-code" data-link-type="interface" href="https://html.spec.whatwg.org/multipage/semantics.html#htmllinkelement" id="ref-for-htmllinkelement"><c- g>HTMLLinkElement</c-></a> {
-    [<a class="idl-code" data-link-type="extended-attribute" href="https://html.spec.whatwg.org/multipage/custom-elements.html#cereactions" id="ref-for-cereactions①"><c- g>CEReactions</c-></a>] <c- b>attribute</c-> <a class="idl-code" data-link-type="interface" href="https://webidl.spec.whatwg.org/#idl-DOMString" id="ref-for-idl-DOMString①"><c- b>DOMString</c-></a> <dfn class="idl-code" data-dfn-for="HTMLLinkElement" data-dfn-type="attribute" data-export data-type="DOMString" id="dom-htmllinkelement-fetchpriority"><code class="highlight"><c- g>fetchpriority</c-></code><a class="self-link" href="#dom-htmllinkelement-fetchpriority"></a></dfn>;
+    [<a class="idl-code" data-link-type="extended-attribute" href="https://html.spec.whatwg.org/multipage/custom-elements.html#cereactions" id="ref-for-cereactions①"><c- g>CEReactions</c-></a>] <c- b>attribute</c-> <a class="idl-code" data-link-type="interface" href="https://webidl.spec.whatwg.org/#idl-DOMString" id="ref-for-idl-DOMString①"><c- b>DOMString</c-></a> <dfn class="idl-code" data-dfn-for="HTMLLinkElement" data-dfn-type="attribute" data-export data-type="DOMString" id="dom-htmllinkelement-fetchpriority"><code class="highlight"><c- g>fetchPriority</c-></code><a class="self-link" href="#dom-htmllinkelement-fetchpriority"></a></dfn>;
 };
 </pre>
      <li>
@@ -877,14 +877,14 @@ A human-readable <a href="http://www.w3.org/community/about/agreements/cla-deed/
      <li>
       We extend the <code class="highlight"><a data-link-type="element" href="https://html.spec.whatwg.org/multipage/scripting.html#script" id="ref-for-script④">script</a></code> element DOM interface as follows: 
 <pre class="idl highlight def"><c- b>partial</c-> <c- b>interface</c-> <a class="idl-code" data-link-type="interface" href="https://html.spec.whatwg.org/multipage/scripting.html#htmlscriptelement" id="ref-for-htmlscriptelement"><c- g>HTMLScriptElement</c-></a> {
-    [<a class="idl-code" data-link-type="extended-attribute" href="https://html.spec.whatwg.org/multipage/custom-elements.html#cereactions" id="ref-for-cereactions②"><c- g>CEReactions</c-></a>] <c- b>attribute</c-> <a class="idl-code" data-link-type="interface" href="https://webidl.spec.whatwg.org/#idl-DOMString" id="ref-for-idl-DOMString②"><c- b>DOMString</c-></a> <a class="idl-code" data-link-type="attribute" data-type="DOMString" href="#dom-htmlscriptelement-fetchpriority" id="ref-for-dom-htmlscriptelement-fetchpriority"><c- g>fetchpriority</c-></a>;
+    [<a class="idl-code" data-link-type="extended-attribute" href="https://html.spec.whatwg.org/multipage/custom-elements.html#cereactions" id="ref-for-cereactions②"><c- g>CEReactions</c-></a>] <c- b>attribute</c-> <a class="idl-code" data-link-type="interface" href="https://webidl.spec.whatwg.org/#idl-DOMString" id="ref-for-idl-DOMString②"><c- b>DOMString</c-></a> <a class="idl-code" data-link-type="attribute" data-type="DOMString" href="#dom-htmlscriptelement-fetchpriority" id="ref-for-dom-htmlscriptelement-fetchpriority"><c- g>fetchPriority</c-></a>;
 };
 </pre>
      <li>
       <p>We add to the <code class="highlight"><a data-link-type="element" href="https://html.spec.whatwg.org/multipage/scripting.html#script" id="ref-for-script⑤">script</a></code> element content attribute descriptions:</p>
       <ol>
        <li>The <dfn data-dfn-for="script" data-dfn-type="element-attr" data-export data-lt="fetchpriority" id="element-attrdef-script-fetchpriority"><code class="highlight" data-x="attr-script-fetchpriority">fetchpriority </code><a class="self-link" href="#element-attrdef-script-fetchpriority"></a></dfn> attribute is a <a data-link-type="dfn" href="#fetchpriority-attribute" id="ref-for-fetchpriority-attribute②">fetchpriority attribute</a>. Its purpose is to set the <a data-link-type="dfn" href="#concept-request-priority" id="ref-for-concept-request-priority⑥">priority</a> used when <a data-link-type="dfn" href="https://fetch.spec.whatwg.org#concept-fetch" id="ref-for-concept-fetch⑥">fetching</a> the script. 
-       <li>The <dfn class="dfn-paneled idl-code" data-dfn-for="HTMLScriptElement" data-dfn-type="attribute" data-export id="dom-htmlscriptelement-fetchpriority"><code class="highlight" data-x="dom-script-fetchpriority">fetchpriority</code></dfn> IDL attribute must <span>reflect</span> the <code class="highlight" data-x="attr-script-fetchpriority">fetchpriority</code> content attribute, <span>limited to only known values</span>. 
+       <li>The <dfn class="dfn-paneled idl-code" data-dfn-for="HTMLScriptElement" data-dfn-type="attribute" data-export id="dom-htmlscriptelement-fetchpriority"><code class="highlight" data-x="dom-script-fetchpriority">fetchPriority</code></dfn> IDL attribute must <span>reflect</span> the <code class="highlight" data-x="attr-script-fetchpriority">fetchpriority</code> content attribute, <span>limited to only known values</span>. 
        <li>We add <code class="highlight" data-x="attr-script-fetchpriority">fetchpriority</code> to the list of
             attributes that have no <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/scripting.html#:~:text=dynamically%20has%20no%20direct%20effect" id="ref-for-:~:text=dynamically%20has%20no%20direct%20effect">direct effect when changed dynamically</a> (For browsers that
             don’t support text linking, search for "dynamically has no direct effect"). 
@@ -916,13 +916,13 @@ A human-readable <a href="http://www.w3.org/community/about/agreements/cla-deed/
      <li>
       We extend the <code class="highlight"><a data-link-type="element" href="https://html.spec.whatwg.org/multipage/iframe-embed-object.html#the-iframe-element" id="ref-for-the-iframe-element④">iframe</a></code> element DOM interface as follows: 
 <pre class="idl highlight def"><c- b>partial</c-> <c- b>interface</c-> <a class="idl-code" data-link-type="interface" href="https://html.spec.whatwg.org/multipage/iframe-embed-object.html#htmliframeelement" id="ref-for-htmliframeelement"><c- g>HTMLIFrameElement</c-></a> {
-    [<a class="idl-code" data-link-type="extended-attribute" href="https://html.spec.whatwg.org/multipage/custom-elements.html#cereactions" id="ref-for-cereactions③"><c- g>CEReactions</c-></a>] <c- b>attribute</c-> <a class="idl-code" data-link-type="interface" href="https://webidl.spec.whatwg.org/#idl-DOMString" id="ref-for-idl-DOMString③"><c- b>DOMString</c-></a> <a class="idl-code" data-link-type="attribute" data-type="DOMString" href="#dom-htmliframeelement-fetchpriority" id="ref-for-dom-htmliframeelement-fetchpriority"><c- g>fetchpriority</c-></a>;
+    [<a class="idl-code" data-link-type="extended-attribute" href="https://html.spec.whatwg.org/multipage/custom-elements.html#cereactions" id="ref-for-cereactions③"><c- g>CEReactions</c-></a>] <c- b>attribute</c-> <a class="idl-code" data-link-type="interface" href="https://webidl.spec.whatwg.org/#idl-DOMString" id="ref-for-idl-DOMString③"><c- b>DOMString</c-></a> <a class="idl-code" data-link-type="attribute" data-type="DOMString" href="#dom-htmliframeelement-fetchpriority" id="ref-for-dom-htmliframeelement-fetchpriority"><c- g>fetchPriority</c-></a>;
 };
 </pre>
      <li>
       <p>We add to the <code class="highlight"><a data-link-type="element" href="https://html.spec.whatwg.org/multipage/iframe-embed-object.html#the-iframe-element" id="ref-for-the-iframe-element⑤">iframe</a></code> content attribute descriptions:</p>
       <p>The <dfn data-dfn-for="iframe" data-dfn-type="element-attr" data-export data-lt="fetchpriority" id="element-attrdef-iframe-fetchpriority"><code class="highlight" data-x="attr-iframe-fetchpriority">fetchpriority </code><a class="self-link" href="#element-attrdef-iframe-fetchpriority"></a></dfn> attribute is a <a data-link-type="dfn" href="#fetchpriority-attribute" id="ref-for-fetchpriority-attribute③">fetchpriority attribute</a>. Its purpose is to set the <a data-link-type="dfn" href="#concept-request-priority" id="ref-for-concept-request-priority⑦">priority</a> used when <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/iframe-embed-object.html#process-the-iframe-attributes" id="ref-for-process-the-iframe-attributes">processing the iframe attributes</a>.</p>
-      <p>The <dfn class="dfn-paneled idl-code" data-dfn-for="HTMLIFrameElement" data-dfn-type="attribute" data-export id="dom-htmliframeelement-fetchpriority"><code class="highlight" data-x="dom-iframe-fetchpriority">fetchpriority</code></dfn> IDL attribute must <span>reflect</span> the <code class="highlight" data-x="attr-iframe-fetchpriority">fetchpriority</code> content attribute, <span>limited to only known values</span>.</p>
+      <p>The <dfn class="dfn-paneled idl-code" data-dfn-for="HTMLIFrameElement" data-dfn-type="attribute" data-export id="dom-htmliframeelement-fetchpriority"><code class="highlight" data-x="dom-iframe-fetchpriority">fetchPriority</code></dfn> IDL attribute must <span>reflect</span> the <code class="highlight" data-x="attr-iframe-fetchpriority">fetchpriority</code> content attribute, <span>limited to only known values</span>.</p>
      <li>
       <p>We modify step 5 (the resource creation step) of <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/iframe-embed-object.html#shared-attribute-processing-steps-for-iframe-and-frame-elements" id="ref-for-shared-attribute-processing-steps-for-iframe-and-frame-elements">shared attribute processing steps for iframe and frame elements</a> to include:</p>
       <p>...and whose <code class="idl"><a data-link-type="idl" href="#dom-request-priority" id="ref-for-dom-request-priority⑧">priority</a></code> is the current state of element’s <code class="highlight" data-x="attr-iframe-fetchpriority">fetchpriority</code> content attribute</p>
@@ -1206,12 +1206,16 @@ Link<c- o>:</c-> <c- o>&lt;</c->/app/script.js>; fetchpriority=low
    <li><a href="#fetchpriority-enum-auto">auto</a><span>, in § 3.1</span>
    <li><a href="#enumdef-fetchpriority">FetchPriority</a><span>, in § 3.1</span>
    <li>
-    fetchpriority
+    fetchPriority
     <ul>
      <li><a href="#dom-htmliframeelement-fetchpriority">attribute for HTMLIFrameElement</a><span>, in § 3.3.5</span>
      <li><a href="#dom-htmlimageelement-fetchpriority">attribute for HTMLImageElement</a><span>, in § 3.3.1</span>
      <li><a href="#dom-htmllinkelement-fetchpriority">attribute for HTMLLinkElement</a><span>, in § 3.3.3</span>
      <li><a href="#dom-htmlscriptelement-fetchpriority">attribute for HTMLScriptElement</a><span>, in § 3.3.4</span>
+    </ul>
+   <li>
+    fetchpriority
+    <ul>
      <li><a href="#element-attrdef-iframe-fetchpriority">element-attr for iframe</a><span>, in § 3.3.5</span>
      <li><a href="#element-attrdef-img-fetchpriority">element-attr for img</a><span>, in § 3.3.1</span>
      <li><a href="#element-attrdef-link-fetchpriority">element-attr for link</a><span>, in § 3.3.3</span>
@@ -1615,19 +1619,19 @@ Link<c- o>:</c-> <c- o>&lt;</c->/app/script.js>; fetchpriority=low
 };
 
 <c- b>partial</c-> <c- b>interface</c-> <a class="idl-code" data-link-type="interface" href="https://html.spec.whatwg.org/multipage/embedded-content.html#htmlimageelement"><c- g>HTMLImageElement</c-></a> {
-    [<a class="idl-code" data-link-type="extended-attribute" href="https://html.spec.whatwg.org/multipage/custom-elements.html#cereactions"><c- g>CEReactions</c-></a>] <c- b>attribute</c-> <a class="idl-code" data-link-type="interface" href="https://webidl.spec.whatwg.org/#idl-DOMString"><c- b>DOMString</c-></a> <a class="idl-code" data-link-type="attribute" data-type="DOMString" href="#dom-htmlimageelement-fetchpriority"><c- g>fetchpriority</c-></a>;
+    [<a class="idl-code" data-link-type="extended-attribute" href="https://html.spec.whatwg.org/multipage/custom-elements.html#cereactions"><c- g>CEReactions</c-></a>] <c- b>attribute</c-> <a class="idl-code" data-link-type="interface" href="https://webidl.spec.whatwg.org/#idl-DOMString"><c- b>DOMString</c-></a> <a class="idl-code" data-link-type="attribute" data-type="DOMString" href="#dom-htmlimageelement-fetchpriority"><c- g>fetchPriority</c-></a>;
 };
 
 <c- b>partial</c-> <c- b>interface</c-> <a class="idl-code" data-link-type="interface" href="https://html.spec.whatwg.org/multipage/semantics.html#htmllinkelement"><c- g>HTMLLinkElement</c-></a> {
-    [<a class="idl-code" data-link-type="extended-attribute" href="https://html.spec.whatwg.org/multipage/custom-elements.html#cereactions"><c- g>CEReactions</c-></a>] <c- b>attribute</c-> <a class="idl-code" data-link-type="interface" href="https://webidl.spec.whatwg.org/#idl-DOMString"><c- b>DOMString</c-></a> <a data-type="DOMString" href="#dom-htmllinkelement-fetchpriority"><code class="highlight"><c- g>fetchpriority</c-></code></a>;
+    [<a class="idl-code" data-link-type="extended-attribute" href="https://html.spec.whatwg.org/multipage/custom-elements.html#cereactions"><c- g>CEReactions</c-></a>] <c- b>attribute</c-> <a class="idl-code" data-link-type="interface" href="https://webidl.spec.whatwg.org/#idl-DOMString"><c- b>DOMString</c-></a> <a data-type="DOMString" href="#dom-htmllinkelement-fetchpriority"><code class="highlight"><c- g>fetchPriority</c-></code></a>;
 };
 
 <c- b>partial</c-> <c- b>interface</c-> <a class="idl-code" data-link-type="interface" href="https://html.spec.whatwg.org/multipage/scripting.html#htmlscriptelement"><c- g>HTMLScriptElement</c-></a> {
-    [<a class="idl-code" data-link-type="extended-attribute" href="https://html.spec.whatwg.org/multipage/custom-elements.html#cereactions"><c- g>CEReactions</c-></a>] <c- b>attribute</c-> <a class="idl-code" data-link-type="interface" href="https://webidl.spec.whatwg.org/#idl-DOMString"><c- b>DOMString</c-></a> <a class="idl-code" data-link-type="attribute" data-type="DOMString" href="#dom-htmlscriptelement-fetchpriority"><c- g>fetchpriority</c-></a>;
+    [<a class="idl-code" data-link-type="extended-attribute" href="https://html.spec.whatwg.org/multipage/custom-elements.html#cereactions"><c- g>CEReactions</c-></a>] <c- b>attribute</c-> <a class="idl-code" data-link-type="interface" href="https://webidl.spec.whatwg.org/#idl-DOMString"><c- b>DOMString</c-></a> <a class="idl-code" data-link-type="attribute" data-type="DOMString" href="#dom-htmlscriptelement-fetchpriority"><c- g>fetchPriority</c-></a>;
 };
 
 <c- b>partial</c-> <c- b>interface</c-> <a class="idl-code" data-link-type="interface" href="https://html.spec.whatwg.org/multipage/iframe-embed-object.html#htmliframeelement"><c- g>HTMLIFrameElement</c-></a> {
-    [<a class="idl-code" data-link-type="extended-attribute" href="https://html.spec.whatwg.org/multipage/custom-elements.html#cereactions"><c- g>CEReactions</c-></a>] <c- b>attribute</c-> <a class="idl-code" data-link-type="interface" href="https://webidl.spec.whatwg.org/#idl-DOMString"><c- b>DOMString</c-></a> <a class="idl-code" data-link-type="attribute" data-type="DOMString" href="#dom-htmliframeelement-fetchpriority"><c- g>fetchpriority</c-></a>;
+    [<a class="idl-code" data-link-type="extended-attribute" href="https://html.spec.whatwg.org/multipage/custom-elements.html#cereactions"><c- g>CEReactions</c-></a>] <c- b>attribute</c-> <a class="idl-code" data-link-type="interface" href="https://webidl.spec.whatwg.org/#idl-DOMString"><c- b>DOMString</c-></a> <a class="idl-code" data-link-type="attribute" data-type="DOMString" href="#dom-htmliframeelement-fetchpriority"><c- g>fetchPriority</c-></a>;
 };
 
 </pre>
