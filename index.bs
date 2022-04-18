@@ -282,7 +282,7 @@ urlPrefix: https://fetch.spec.whatwg.org; spec: FETCH;
       <li>We extend the <{img}> element DOM interface as follows:
         <pre class="idl">
         partial interface HTMLImageElement {
-            [CEReactions] attribute DOMString <span data-x="dom-img-fetchpriority">fetchpriority</span>;
+            [CEReactions] attribute DOMString <span data-x="dom-img-fetchpriority">fetchPriority</span>;
         };
         </pre>
       <li><p>We add to the <{img}> element content attribute descriptions:</p>
@@ -290,7 +290,7 @@ urlPrefix: https://fetch.spec.whatwg.org; spec: FETCH;
           </dfn> attribute is a [=fetchpriority attribute=]. Its purpose is to set the [=priority=]
           used when [=fetching=] the image.</p>
         <p>The <dfn attribute for="HTMLImageElement"><code
-          data-x="dom-img-fetchpriority">fetchpriority</code></dfn> IDL attribute must
+          data-x="dom-img-fetchpriority">fetchPriority</code></dfn> IDL attribute must
           <span>reflect</span> the <code data-x="attr-img-fetchpriority">fetchpriority</code>
           content attribute, <span>limited to only known values</span>.</p>
       <li><p>We add a step to [=update the image data|Updating the image data=] before fetching the
@@ -325,7 +325,7 @@ urlPrefix: https://fetch.spec.whatwg.org; spec: FETCH;
       <li>We extend the <{link}> element as follows:
         <pre class="idl">
         partial interface HTMLLinkElement {
-            [CEReactions] attribute DOMString fetchpriority;
+            [CEReactions] attribute DOMString fetchPriority;
         };
         </pre>
       <li><p>We extend [=create a link element request=] of [=Fetching and processing a resource
@@ -349,7 +349,7 @@ urlPrefix: https://fetch.spec.whatwg.org; spec: FETCH;
       <li>We extend the <{script}> element DOM interface as follows:
         <pre class="idl">
         partial interface HTMLScriptElement {
-            [CEReactions] attribute DOMString <span data-x="dom-script-fetchpriority">fetchpriority</script>;
+            [CEReactions] attribute DOMString <span data-x="dom-script-fetchpriority">fetchPriority</script>;
         };
         </pre>
       <li><p>We add to the <{script}> element content attribute descriptions:</p>
@@ -358,7 +358,7 @@ urlPrefix: https://fetch.spec.whatwg.org; spec: FETCH;
             </code></dfn> attribute is a [=fetchpriority attribute=]. Its purpose is to set the
             [=priority=] used when [=fetching=] the script.
           <li>The <dfn attribute for="HTMLScriptElement"><code
-            data-x="dom-script-fetchpriority">fetchpriority</code></dfn> IDL attribute must
+            data-x="dom-script-fetchpriority">fetchPriority</code></dfn> IDL attribute must
             <span>reflect</span> the <code data-x="attr-script-fetchpriority">fetchpriority</code>
             content attribute, <span>limited to only known values</span>.
           <li>We add <code data-x="attr-script-fetchpriority">fetchpriority</code> to the list of
@@ -399,7 +399,7 @@ urlPrefix: https://fetch.spec.whatwg.org; spec: FETCH;
       <li>We extend the <{iframe}> element DOM interface as follows:
         <pre class="idl">
         partial interface HTMLIFrameElement {
-            [CEReactions] attribute DOMString <span data-x="dom-iframe-fetchpriority">fetchpriority</span>;
+            [CEReactions] attribute DOMString <span data-x="dom-iframe-fetchpriority">fetchPriority</span>;
         };
         </pre>
       <li><p>We add to the <{iframe}> content attribute descriptions:</p>
@@ -407,7 +407,7 @@ urlPrefix: https://fetch.spec.whatwg.org; spec: FETCH;
           </code></dfn> attribute is a [=fetchpriority attribute=]. Its purpose is to set the
           [=priority=] used when [=processing the iframe attributes=].</p>
         <p>The <dfn attribute for="HTMLIFrameElement"><code
-          data-x="dom-iframe-fetchpriority">fetchpriority</code></dfn> IDL attribute must
+          data-x="dom-iframe-fetchpriority">fetchPriority</code></dfn> IDL attribute must
           <span>reflect</span> the <code data-x="attr-iframe-fetchpriority">fetchpriority</code>
           content attribute, <span>limited to only known values</span>.</p>
       <li><p>We modify step 5 (the resource creation step) of
