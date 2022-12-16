@@ -55,24 +55,11 @@ urlPrefix: https://html.spec.whatwg.org/multipage/iframe-embed-object.html; spec
 urlPrefix: https://html.spec.whatwg.org/multipage/indices.html; spec: HTML;
     type: dfn; url: #elements-3; text: List of elements;
 urlPrefix: https://fetch.spec.whatwg.org; spec: FETCH;
-    type: dfn; url: #concept-request; text: fetch request;
-    type: dfn; url: #concept-request; text: request;
-    type: dfn; url: #concept-request-url; text: request URL;
     type:dfn; text:destination
-    type:interface; text:request
-    type: dfn; url: #concept-fetch; text: fetch;
 </pre>
 
 <pre class=biblio>
 {
-    "PRELOAD": {
-        "authors": [
-            "Ilya Grigorik", "Yoav Weiss"
-        ],
-        "href": "https://w3c.github.io/preload/",
-        "publisher": "W3C",
-        "title": "Preload"
-    },
     "RFC5988": {
         "authors": [
             "Mark Nottingham"
@@ -90,8 +77,8 @@ urlPrefix: https://fetch.spec.whatwg.org; spec: FETCH;
       This specification describes a browser API enabling developers to signal the priority of each resource they need to download.
       It introduces the
       <a href="#solution">fetchpriority</a> <a data-lt="enumerated attribute">attribute</a> that may be used with <code>HTML</code> elements such as
-      <{img}>, <{link}>, <{script}> and <{iframe}> and the <a href="#solution">priority</a> <a data-lt="enumerated attribute">attribute</a>
-      on the {{Request|RequestInfo}} of [[fetch#fetch-method|fetch]]. 
+      <{img}>, <{link}>, <{script}> and <{iframe}> and the {{RequestInit/priority}} <a data-lt="enumerated attribute">attribute</a>
+      on the {{Request|RequestInit}} of [[fetch#fetch-method|fetch]]. 
     </p>
   </section>
   <section id="sotd">
@@ -109,11 +96,10 @@ urlPrefix: https://fetch.spec.whatwg.org; spec: FETCH;
       to their heuristic priority. Browsers might also use this heuristic resource priority to delay sending certain requests
       in order to avoid bandwidth contention of these resources with more critical ones.</p>
 
-    <p>Currently web developers have very little control over the heuristic priority of loaded resources, other than speeding
-      up their discovery using <code>&lt;link rel=preload&gt;</code>([[PRELOAD|Preload]]). Browsers mostly determine a request's priority based on the
+    <p>Browsers mostly determine a request's priority based on the
       request's <a>destination</a>, and location in the containing document if applicable.</p>
 
-    <p>This document details use cases and modifications to [[FETCH|Fetch]] and [[HTML|HTML]] markup that will provide developers
+    <p>This document details use cases and modifications to [[FETCH|Fetch]] and [[HTML|HTML]] markup that provide developers
       control to indicate a resource's relative priority to the browser, enabling the browser to act on those indications to influence
       the request's overall priority in ways described in the <a href="#effects-of-priority-hints">Effects of Priority Hints</a> section.
     </p>
@@ -134,14 +120,16 @@ urlPrefix: https://fetch.spec.whatwg.org; spec: FETCH;
       a developer intends for a resource to have.</p>
 
     <ul>
-      <li>The <code>fetchpriority</code> attribute will have three states:
+      <li>The <code>fetchpriority</code> attribute has three states:
         <ul>
           <li>
-            <code>high</code> - The developer considers the resource as being important relative to other resources of the
+            <code>high</code> - The developer considers the resource as being
+            important relative to the default priority for resources of the
             same type.
           </li>
           <li>
-            <code>low</code> - The developer considers the resource as being less important relative to other resources of
+            <code>low</code> - The developer considers the resource as being
+            less important relative to the default priority for resources of
             the same type.
           </li>
           <li>
@@ -183,71 +171,17 @@ urlPrefix: https://fetch.spec.whatwg.org; spec: FETCH;
       <tbody>
       <tr>
         <td><dfn id="fetchpriority-enum-high" export>high</dfn>
-        <td>Signal a high-priority fetch relative to other resources of the same type.
+        <td>Signal a high-priority fetch relative to the default priority for resources of the same type.
       <tr>
         <td><dfn id="fetchpriority-enum-low" export>low</dfn>
-        <td>Signal a low-priority fetch relative to other resources of the same type.
+        <td>Signal a low-priority fetch relative to the default priority for resources of the same type.
       <tr>
         <td><dfn id="fetchpriority-enum-auto" export>auto</dfn>
-        <td>Signal automatic determination of fetch priority relative to other resources of the same type.
+        <td>Signal automatic determination of fetch priority.
     </table>
 
     <h3 id="fetch-integration">Fetch Integration</h3>
-    <em>This section will be removed once the [[FETCH|Fetch]] specification has been modified.</em>
-    <ol>
-      <li>
-        <p>We extend the [=request=] definition:</p>
-        <p>
-        A [=request=] has an associated
-        <dfn export id=concept-request-priority>priority</dfn>, which is
-        "<code>high</code>",
-        "<code>low</code>" or
-        "<code>auto</code>".
-        Unless stated otherwise it is "<code>auto</code>".
-        </p>
-
-      <li>We extend the {{Request}} interface as follows:
-        <pre class="idl">
-        partial interface Request {
-          readonly attribute FetchPriority priority;
-        };
-
-        partial dictionary RequestInit {
-          FetchPriority priority;
-        };
-        </pre>
-
-      <li><p>We add the following to the "For web developers (non-normative)"" note in the
-        [[fetch#request-class|Request class]] constructor:</p>
-        <dl>
-        <dt>{{RequestInit/priority}}
-        <dd>A string to set request's {{Request/priority}}.
-        </dl>
-
-      <li><p>We add to step 12 of the <a constructor spec=fetch lt="Request()">new Request
-        constructor steps</a>:</p>
-        <dl>
-        <dt><a>priority</a>
-        <dd><var>request</var>'s <a>priority</a>.
-        </dl>
-
-      <li><p>We rename references to {{Request}}'s opaque <a spec=fetch for=request>priority</a> to
-        <dfn id="internalpriority" export>internalpriority</dfn>:</p>
-        <ol>
-        <li>A <var>request</var> has an associated <a>internalpriority</a> (null or a user-agent-defined object). Unless otherwise stated it is null.
-        <li><p>We replace step 12 of <a constructor spec=fetch lt="Request()">new Request constructor steps</a> with :</p>
-        <dl>
-        <dt><a>internalpriority</a>
-        <dd><var>request</var>'s <a>internalpriority</a>.
-        </dl>
-        </ol>
-
-      <li><p>We modify step 14 in the process of [=fetch=] to read:</p>
-        <p>If <var>request</var>'s <a>internalpriority</a> is null, then use
-        <var>request</var>'s <a>priority</a>, <a spec=fetch for=request>initiator</a> and
-        <a spec=fetch for=request>destination</a> appropriately in setting <var>request</var>'s
-        <a>internalpriority</a> to a user-agent-defined object.</p>
-    </ol>
+    <p>The {{RequestInit/priority}} attribute is documented in the [[FETCH|Fetch]] specification.</p>
 
     <h3 id="html-integration">HTML Integration</h3>
     <em>This section will be removed once the [[HTML|HTML]] specification has been modified.</em>
@@ -295,11 +229,11 @@ urlPrefix: https://fetch.spec.whatwg.org; spec: FETCH;
           content attribute, <span>limited to only known values</span>.</p>
       <li><p>We add a step to [=update the image data|Updating the image data=] before fetching the
           image:</p>
-        <p>Set <var>request</var>'s {{Request/priority}} to the current state of the element's
+        <p>Set <var>request</var>'s <a spec=fetch for=request>priority</a> to the current state of the element's
           <code data-x="attr-img-fetchpriority">fetchpriority</code> attribute.</p>
       <li><p>We add a step to [=Reacting to environment changes=] when setting the image request's
           image data, before the request is fetched:</p>
-        <p>Set <var>request</var>'s {{Request/priority}} to the current state of the element's
+        <p>Set <var>request</var>'s <a spec=fetch for=request>priority</a> to the current state of the element's
           <code data-x="attr-img-fetchpriority">fetchpriority</code> attribute.</p>
       <li>We modify the [=List of elements=] to include the 
         <span data-x="attr-img-fetchpriority">fetchpriority</span> attribute on the <{img}> element.
@@ -330,11 +264,11 @@ urlPrefix: https://fetch.spec.whatwg.org; spec: FETCH;
         </pre>
       <li><p>We extend [=create a link element request=] of [=Fetching and processing a resource
         from a link element=] by adding a step before returning the request:</p>
-        <p>Set <var>request</var>'s {{Request/priority}} to the current state of <var ignore=''>
+        <p>Set <var>request</var>'s <a spec=fetch for=request>priority</a> to the current state of <var ignore=''>
         el</var>'s <code data-x="attr-link-fetchpriority">fetchpriority</code> content attribute.</p>
       <li><p>We extend the [=fetch and process the linked resource=] algorithm of [=modulepreload=]
         links by adding a step before setting the render-blocking state:</p>
-        <p>Let {{Request/priority}} be the current state of the element's
+        <p>Let <a spec=fetch for=request>priority</a> be the current state of the element's
         <code data-x="attr-link-fetchpriority">fetchpriority</code> attribute.</p>
       <li>We modify the [=List of elements=] to include the 
         <span data-x="attr-link-fetchpriority">fetchpriority</span> attribute on the <{link}> element.
@@ -369,12 +303,12 @@ urlPrefix: https://fetch.spec.whatwg.org; spec: FETCH;
         include the <code data-x="attr-script-fetchpriority">fetchpriority</code> attribute.
       <li><p>We extend the [=Script fetch options=] struct:<p>
         <p><span data-x="concept-script-fetch-options-fetchpriority">fetchpriority</span> - The
-          {{Request/priority}} for the initial [=fetch=].</p>
+          <a spec=fetch for=request>priority</a> for the initial [=fetch=].</p>
       <li>We extend [=default classic script fetch options=] to include "<code>auto</code>"
         as the default value for <code data-x="concept-script-fetch-options-fetchpriority">
         fetchpriority</code>.
       <li>We extend [=set up the classic script request=] to set <var>request</var>'s
-        {{Request/priority}} to <var>option</var>'s
+        <a spec=fetch for=request>priority</a> to <var>option</var>'s
         <code data-x="concept-script-fetch-options-fetchpriority">fetchpriority</code>
       <li><p>We insert a step before step 24 of [=prepare a script=]:</p>
         <p>Let <var>fetchpriority</var> be the current state of the element's <code
@@ -383,7 +317,7 @@ urlPrefix: https://fetch.spec.whatwg.org; spec: FETCH;
         <p><code data-x="concept-script-fetch-options-fetchpriority">fetchpriority</code> is
         <var>fetchpriority</var>.</p>
       <li>We extend [=set up the module script request=] to set <var>request</var>'s
-        {{Request/priority}} to <var>option</var>'s
+        <a spec=fetch for=request>priority</a> to <var>option</var>'s
         <code data-x="concept-script-fetch-options-fetchpriority">fetchpriority</code>
       <li>We modify the [=List of elements=] to include the 
         <span data-x="attr-script-fetchpriority">fetchpriority</span> attribute on the <{script}>
@@ -412,7 +346,7 @@ urlPrefix: https://fetch.spec.whatwg.org; spec: FETCH;
           content attribute, <span>limited to only known values</span>.</p>
       <li><p>We modify step 5 (the resource creation step) of
           [=shared attribute processing steps for iframe and frame elements=] to include:</p>
-        <p>...and whose {{Request/priority}} is the current state of element's
+        <p>...and whose <a spec=fetch for=request>priority</a> is the current state of element's
           <code data-x="attr-iframe-fetchpriority">fetchpriority</code> content attribute</p>
       <li>We modify the [=List of elements=] to include the 
         <span data-x="attr-iframe-fetchpriority">fetchpriority</span> attribute on the <{iframe}>
@@ -599,13 +533,13 @@ urlPrefix: https://fetch.spec.whatwg.org; spec: FETCH;
     </div>
 
     <p>As above examples illustrate, fetchpriority can be specified via declarative markup, Link HTTP header ([[RFC5988|RFC5988]]), 
-      or scheduled via JavaScript.</p>
+    or scheduled via JavaScript.</p>
 
     <h2 id="adoptionpath">Adoption path</h2>
 
-    <p>Markup-based signals should be added in a way such that non-supporting browsers will simply ignore them and load all
-      resources, potentially not with the intended priority and dependency. Script-based signaling APIs should be created
-      in a way that non-supporting browsers simply ignore the signals.</p>
+    <p>The markup signals and script APIs are backward-compatible in that
+    non-supporting browsers will simply ignore them and load all resources as they
+    normally would without the additional hints.</p>
 
     <h2 id="outofscope">Out of scope</h2>
 
