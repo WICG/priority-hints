@@ -6,16 +6,12 @@ Browsers may also use this heuristic resource priority to delay sending
 certain requests in order to avoid bandwidth contention of these resources
 with more critical ones.
 
-Currently web developers have very little control over the heuristic
-priority of loaded resources, other than speeding up their discovery
-using `<link rel=preload>`.
 Browsers make many assumptions on the priority of resources based on the
 resource's type (AKA its request destination), and based on its location
 in the containing document.
 
-This document will detail use cases and an API/markup sketch that will
-provide developers with the control to indicate a resource's
-relative priority to the browser for the browser to use when making
+This document will detail use cases and show how developers can indicate a
+resource's relative priority to the browser for the browser to use when making
 loading prioritization decisions.
 
 It is important to note that changing the priority of one resource usually
@@ -25,11 +21,9 @@ user experience but correctly tagging a few resources that the browser would
 otherwise not load optimally can have a huge benefit.
 
 ### Adoption path
-Markup based signal should be added in a way such that non-supporting
-browsers will simply ignore them and load all resources, potentially not
-in the intended priority and dependency. Script based signaling APIs
-should be created in a way that non-supporting browsers simply ignore
-the signals.
+The markup signals and script APIs are backward-compatible in that
+non-supporting browsers will simply ignore them and load all resources as they
+normally would without the additional hints.
 
 ## Out of scope
 * Anything besides an initial priority signal for the loading of the
@@ -40,27 +34,23 @@ the signals.
 
 ## Solution
 
-We propose to address the above use-cases using the following concepts:
+Priority Hints addresses the above use-cases using the following concepts:
 
-* We will define a new standard `fetchpriority` attribute to signal to the browser the relative priority of a resource.
+* A `fetchpriority` attribute to signal to the browser the relative priority of a resource.
 
 * The `fetchpriority` attribute may be used with elements including link, img, script and iframe. This keyword hints to the browser the relative fetch priority a developer intends for a resource to have. Consider it an upgrade/downgrade mechanism for hinting at resource priority.
 
-* The `fetchpriority` attribute will have three states that will map to current browser priorities:
+* The `fetchpriority` attribute will has three states that will influence the current browser priorities:
 
-  * `high` - The developer considers the resource as being important relative to other resources of the same type.
-  * `low` - The developer considers the resource as being less important relative to other resources of the same type.
+  * `high` - The developer considers the resource as being important relative to the default priority for resources of the same type.
+  * `low` - The developer considers the resource as being less important relative to the default priority for resources of the same type.
   * `auto` - The developer does not indicate a preference and defers to the browser's default heuristics. This also serves as the default value if the attribute is not specified.
-
-* Developers would annotate resource-requesting tags such as img, script and link using the `fetchpriority` attribute as a hint of the preferred priority with which the resource should be fetched.
-
-* Developers would be able to specify that certain resources are more or less important than others using this attribute. It would act as a hint of the intended priority rather than an instruction to the browser.
 
 * With the `fetchpriority` attribute, the browser should make an effort to respect the developer's preference for the priority of a resource when fetching it. Note that this is intentionally weak language, allowing for a browser to apply its own preferences for resource priority or heuristics if deemed important.
 
 * Priority Hints compliment existing browser loading primitives such as preload. Preload is a mandatory fetch for a resource that is necessary for the current navigation. Priority Hints can hint that a resource's priority should be lower or higher than its default, and can also be used to provide more granular prioritization to preloads.
 
-* The JavaScript fetch() API will expose the priority hint as a `priority` property of the Request using the same `high`, `low` and `auto` values as the HTML `fetchpriority` attribute.
+* The JavaScript fetch() API exposes the priority hint as a [`priority` property of RequestInit](https://fetch.spec.whatwg.org/#dom-requestinit-priority) using the same `high`, `low` and `auto` values as the HTML `fetchpriority` attribute.
 
 This is how we conceptually think about different resource types under the hood in browsers today.
 It may translate well to user-space where different types of content share similar properties.
@@ -120,4 +110,4 @@ function autocomplete() {
 ```
 ## Further reading
 
-For a more complete overview of the Priority Hints proposal, please see the [draft specification](https://wicg.github.io/priority-hints/).
+For a more complete overview of Priority Hints, please see the [specification](https://wicg.github.io/priority-hints/).
