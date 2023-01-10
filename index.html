@@ -6,7 +6,7 @@
   <link href="https://www.w3.org/StyleSheets/TR/2021/cg-draft" rel="stylesheet">
   <meta content="Bikeshed version 26e85e599, updated Thu Dec 8 15:29:31 2022 -0800" name="generator">
   <link href="https://wicg.github.io/priority-hints" rel="canonical">
-  <meta content="fc49ea4dbbf9331b2db7bf0f5fa461bcff85bcda" name="document-revision">
+  <meta content="c877553981509c6b11b5434a4a119e5a22dbc415" name="document-revision">
 <style>/* style-autolinks */
 
 .css.css, .property.property, .descriptor.descriptor {
@@ -585,7 +585,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
   <div class="head">
    <p data-fill-with="logo"><a class="logo" href="https://www.w3.org/"> <img alt="W3C" height="48" src="https://www.w3.org/StyleSheets/TR/2021/logos/W3C" width="72"> </a> </p>
    <h1 class="p-name no-ref" id="title">Priority Hints</h1>
-   <p id="w3c-state"><a href="https://www.w3.org/standards/types#CG-DRAFT">Draft Community Group Report</a>, <time class="dt-updated" datetime="2022-12-26">26 December 2022</time></p>
+   <p id="w3c-state"><a href="https://www.w3.org/standards/types#CG-DRAFT">Draft Community Group Report</a>, <time class="dt-updated" datetime="2023-01-10">10 January 2023</time></p>
    <div data-fill-with="spec-metadata">
     <dl>
      <dt>This version:
@@ -600,7 +600,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
     </dl>
    </div>
    <div data-fill-with="warning"></div>
-   <p class="copyright" data-fill-with="copyright"><a href="http://www.w3.org/Consortium/Legal/ipr-notice#Copyright">Copyright</a> © 2022 the Contributors to the Priority Hints Specification, published by the <a href="https://www.w3.org/community/wicg/">Web Platform Incubator Community Group</a> under the <a href="https://www.w3.org/community/about/agreements/cla/">W3C Community Contributor License Agreement (CLA)</a>.
+   <p class="copyright" data-fill-with="copyright"><a href="http://www.w3.org/Consortium/Legal/ipr-notice#Copyright">Copyright</a> © 2023 the Contributors to the Priority Hints Specification, published by the <a href="https://www.w3.org/community/wicg/">Web Platform Incubator Community Group</a> under the <a href="https://www.w3.org/community/about/agreements/cla/">W3C Community Contributor License Agreement (CLA)</a>.
 A human-readable <a href="http://www.w3.org/community/about/agreements/cla-deed/">summary</a> is available. </p>
    <hr title="Separator for header">
   </div>
@@ -696,7 +696,7 @@ A human-readable <a href="http://www.w3.org/community/about/agreements/cla-deed/
       to their heuristic priority. Browsers might also use this heuristic resource priority to delay sending certain requests
       in order to avoid bandwidth contention of these resources with more critical ones.</p>
     <p>Browsers mostly determine a request’s priority based on the
-      request’s <a data-link-type="dfn" href="https://fetch.spec.whatwg.org#destination" id="ref-for-destination">destination</a>, and location in the containing document if applicable.</p>
+      request’s <a data-link-type="dfn" href="https://fetch.spec.whatwg.org#concept-request-destination" id="ref-for-concept-request-destination">destination</a>, and location in the containing document if applicable.</p>
     <p>This document details use cases and modifications to <a data-link-type="biblio" href="#biblio-fetch" title="Fetch Standard">Fetch</a> and <a data-link-type="biblio" href="#biblio-html" title="HTML Standard">HTML</a> markup that provide developers
       control to indicate a resource’s relative priority to the browser, enabling the browser to act on those indications to influence
       the request’s overall priority in ways described in the <a href="#effects-of-priority-hints">Effects of Priority Hints</a> section. </p>
@@ -823,7 +823,7 @@ A human-readable <a href="http://www.w3.org/community/about/agreements/cla-deed/
 };
 </pre>
      <li>
-      <p>We extend <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/semantics.html#create-a-link-element-request" id="ref-for-create-a-link-element-request">create a link element request</a> of <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/semantics.html#fetching-and-processing-a-resource-from-a-link-element" id="ref-for-fetching-and-processing-a-resource-from-a-link-element">Fetching and processing a resource
+      <p>We extend <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/semantics.html#create-a-link-request" id="ref-for-create-a-link-request">create a link request</a> of <a data-link-type="dfn" href="https://html.spec.whatwg.org/multipage/semantics.html#fetching-and-processing-a-resource-from-a-link-element" id="ref-for-fetching-and-processing-a-resource-from-a-link-element">Fetching and processing a resource
         from a link element</a> by adding a step before returning the request:</p>
       <p>Set <var>request</var>’s <a data-link-type="dfn" href="https://fetch.spec.whatwg.org/#request-priority" id="ref-for-request-priority④">priority</a> to the current state of <var> el</var>’s <code class="highlight" data-x="attr-link-fetchpriority">fetchpriority</code> content attribute.</p>
      <li>
@@ -905,7 +905,7 @@ A human-readable <a href="http://www.w3.org/community/about/agreements/cla-deed/
     <p></p>
     <div class="example" id="example-69e5b29d">
      <a class="self-link" href="#example-69e5b29d"></a> 
-     <p> If requests for <code class="highlight">image</code> <a data-link-type="dfn" href="https://fetch.spec.whatwg.org#destination" id="ref-for-destination①">destinations</a> in a particular implementation are typically assigned a stream urgency of <code class="highlight"><c- mf>3</c-></code>, a request for an image with <code class="highlight">fetchpriority<c- o>=</c-><c- u>"high"</c-></code> might be assigned a stream urgency less than <code class="highlight"><c- mf>3</c-></code> (where lower values are higher priority).</p>
+     <p> If requests for <code class="highlight">image</code> <a data-link-type="dfn" href="https://fetch.spec.whatwg.org#concept-request-destination" id="ref-for-concept-request-destination①">destinations</a> in a particular implementation are typically assigned a stream urgency of <code class="highlight"><c- mf>3</c-></code>, a request for an image with <code class="highlight">fetchpriority<c- o>=</c-><c- u>"high"</c-></code> might be assigned a stream urgency less than <code class="highlight"><c- mf>3</c-></code> (where lower values are higher priority).</p>
     </div>
     <p><strong>HTTP/2 Relative Stream Priority</strong></p>
     <p>Implementations are encouraged to use Priority Hints to influence the HTTP/2 stream priority assigned to a given request
@@ -914,7 +914,7 @@ A human-readable <a href="http://www.w3.org/community/about/agreements/cla-deed/
       but instead act as a relative influencer among requests of a similar type.</p>
     <div class="example" id="example-5350b444">
      <a class="self-link" href="#example-5350b444"></a> 
-     <p> If requests for <code class="highlight">image</code> <a data-link-type="dfn" href="https://fetch.spec.whatwg.org#destination" id="ref-for-destination②">destinations</a> in a particular implementation are typically assigned a stream weight of <code class="highlight"><c- mf>60</c-></code>, a request for an image with <code class="highlight">fetchpriority<c- o>=</c-><c- u>"high"</c-></code> might be assigned a stream weight higher than <code class="highlight"><c- mf>60</c-></code>. </p>
+     <p> If requests for <code class="highlight">image</code> <a data-link-type="dfn" href="https://fetch.spec.whatwg.org#concept-request-destination" id="ref-for-concept-request-destination②">destinations</a> in a particular implementation are typically assigned a stream weight of <code class="highlight"><c- mf>60</c-></code>, a request for an image with <code class="highlight">fetchpriority<c- o>=</c-><c- u>"high"</c-></code> might be assigned a stream weight higher than <code class="highlight"><c- mf>60</c-></code>. </p>
     </div>
     <p><strong>Queueing</strong></p>
     <p>A user agent might choose to queue up certain low-priority requests until higher-priority requests are sent out or finished
@@ -1197,11 +1197,11 @@ Link<c- o>:</c-> <c- o>&lt;</c->/app/script.js>; fetchpriority=low
     <li><a href="#ref-for-request">Unnumbered Section</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="term-for-destination">
-   <a href="https://fetch.spec.whatwg.org#destination">https://fetch.spec.whatwg.org#destination</a><b>Referenced in:</b>
+  <aside class="dfn-panel" data-for="term-for-concept-request-destination">
+   <a href="https://fetch.spec.whatwg.org#concept-request-destination">https://fetch.spec.whatwg.org#concept-request-destination</a><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-destination">1. Introduction</a>
-    <li><a href="#ref-for-destination①">4. Effects of Priority Hints</a> <a href="#ref-for-destination②">(2)</a>
+    <li><a href="#ref-for-concept-request-destination">1. Introduction</a>
+    <li><a href="#ref-for-concept-request-destination①">4. Effects of Priority Hints</a> <a href="#ref-for-concept-request-destination②">(2)</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-concept-fetch">
@@ -1263,10 +1263,10 @@ Link<c- o>:</c-> <c- o>&lt;</c->/app/script.js>; fetchpriority=low
     <li><a href="#ref-for-htmlscriptelement">3.3.4. script</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="term-for-create-a-link-element-request">
-   <a href="https://html.spec.whatwg.org/multipage/semantics.html#create-a-link-element-request">https://html.spec.whatwg.org/multipage/semantics.html#create-a-link-element-request</a><b>Referenced in:</b>
+  <aside class="dfn-panel" data-for="term-for-create-a-link-request">
+   <a href="https://html.spec.whatwg.org/multipage/semantics.html#create-a-link-request">https://html.spec.whatwg.org/multipage/semantics.html#create-a-link-request</a><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-create-a-link-element-request">3.3.3. link</a>
+    <li><a href="#ref-for-create-a-link-request">3.3.3. link</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="term-for-the-script-element:data-block-2">
@@ -1474,7 +1474,7 @@ Link<c- o>:</c-> <c- o>&lt;</c->/app/script.js>; fetchpriority=low
     <a data-link-type="biblio">[FETCH]</a> defines the following terms:
     <ul>
      <li><span class="dfn-paneled" id="term-for-request">Request</span>
-     <li><span class="dfn-paneled" id="term-for-destination">destination</span>
+     <li><span class="dfn-paneled" id="term-for-concept-request-destination">destination</span>
      <li><span class="dfn-paneled" id="term-for-concept-fetch">fetch</span>
      <li><span class="dfn-paneled" id="term-for-dom-requestinit-priority">priority <small>(for RequestInit)</small></span>
      <li><span class="dfn-paneled" id="term-for-request-priority">priority <small>(for request)</small></span>
@@ -1487,7 +1487,7 @@ Link<c- o>:</c-> <c- o>&lt;</c->/app/script.js>; fetchpriority=low
      <li><span class="dfn-paneled" id="term-for-htmlimageelement">HTMLImageElement</span>
      <li><span class="dfn-paneled" id="term-for-htmllinkelement">HTMLLinkElement</span>
      <li><span class="dfn-paneled" id="term-for-htmlscriptelement">HTMLScriptElement</span>
-     <li><span class="dfn-paneled" id="term-for-create-a-link-element-request">create a link element request</span>
+     <li><span class="dfn-paneled" id="term-for-create-a-link-request">create a link request</span>
      <li><span class="dfn-paneled" id="term-for-the-script-element:data-block-2">data blocks</span>
      <li><span class="dfn-paneled" id="term-for-default-classic-script-fetch-options">default classic script fetch options</span>
      <li><span class="dfn-paneled" id="term-for-:~:text=dynamically%20has%20no%20direct%20effect">direct effect when changed dynamically</span>
