@@ -32,7 +32,7 @@ urlPrefix: https://html.spec.whatwg.org/multipage/links.html; spec: HTML;
 urlPrefix: https://html.spec.whatwg.org/multipage/semantics.html; spec: HTML;
     type: element; url: #the-link-element; text:link
     type: dfn; url: #the-link-element; text: link element;
-    type: dfn; url: #create-a-link-element-request; text: create a link element request;
+    type: dfn; url: #create-a-link-request; text: create a link request;
     type: dfn; url: #fetch-and-process-the-linked-resource; text: fetching and processing the linked resource;
     type: dfn; url: #fetch-and-process-the-linked-resource; text: fetch and process the linked resource;
     type: dfn; url: #fetching-and-processing-a-resource-from-a-link-element; text: Fetching and processing a resource from a link element;
@@ -55,7 +55,7 @@ urlPrefix: https://html.spec.whatwg.org/multipage/iframe-embed-object.html; spec
 urlPrefix: https://html.spec.whatwg.org/multipage/indices.html; spec: HTML;
     type: dfn; url: #elements-3; text: List of elements;
 urlPrefix: https://fetch.spec.whatwg.org; spec: FETCH;
-    type:dfn; text:destination
+    type:dfn; url: #concept-request-destination; text:destination
 </pre>
 
 <pre class=biblio>
@@ -262,7 +262,7 @@ urlPrefix: https://fetch.spec.whatwg.org; spec: FETCH;
             [CEReactions] attribute DOMString fetchPriority;
         };
         </pre>
-      <li><p>We extend [=create a link element request=] of [=Fetching and processing a resource
+      <li><p>We extend [=create a link request=] of [=Fetching and processing a resource
         from a link element=] by adding a step before returning the request:</p>
         <p>Set <var>request</var>'s <a spec=fetch for=request>priority</a> to the current state of <var ignore=''>
         el</var>'s <code data-x="attr-link-fetchpriority">fetchpriority</code> content attribute.</p>
