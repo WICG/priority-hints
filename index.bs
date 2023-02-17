@@ -68,6 +68,7 @@ urlPrefix: https://fetch.spec.whatwg.org; spec: FETCH;
 
 <body>
   <section>
+    <h2 id="summary">Summary</h2>
     <p>
       This specification describes a browser API enabling developers to signal the priority of each resource they need to download.
       It introduces the
@@ -77,6 +78,7 @@ urlPrefix: https://fetch.spec.whatwg.org; spec: FETCH;
     </p>
   </section>
   <section id="sotd">
+    <h2 id="unofficial">Unofficial</h2>
     <p>
       This is an unofficial proposal.
     </p>
