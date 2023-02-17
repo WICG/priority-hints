@@ -40,7 +40,7 @@ Priority Hints addresses the above use-cases using the following concepts:
 
 * The `fetchpriority` attribute may be used with elements including link, img and script. This keyword hints to the browser the relative fetch priority a developer intends for a resource to have. Consider it an upgrade/downgrade mechanism for hinting at resource priority.
 
-* The `fetchpriority` attribute will has three states that will influence the current browser priorities:
+* The `fetchpriority` attribute has three states that will influence the current browser priorities:
 
   * `high` - The developer considers the resource as being important relative to the default priority for resources of the same type.
   * `low` - The developer considers the resource as being less important relative to the default priority for resources of the same type.
