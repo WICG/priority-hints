@@ -16,19 +16,6 @@ Markup Shorthands: markdown yes
 Default Highlight: js
 </pre>
 
-<pre class=biblio>
-{
-    "RFC5988": {
-        "authors": [
-            "Mark Nottingham"
-        ],
-        "href": "https://tools.ietf.org/html/rfc5988",
-        "publisher": "IETF",
-        "title": "Web Linking"
-    }
-}
-</pre>
-
 <body>
   <section>
     <h2 id="introduction">Introduction</h2>
