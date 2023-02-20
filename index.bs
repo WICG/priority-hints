@@ -16,11 +16,6 @@ Markup Shorthands: markdown yes
 Default Highlight: js
 </pre>
 
-<pre class=anchors>
-urlPrefix: https://html.spec.whatwg.org/multipage; spec: HTML;
-urlPrefix: https://fetch.spec.whatwg.org; spec: FETCH;
-</pre>
-
 <pre class=biblio>
 {
     "RFC5988": {
