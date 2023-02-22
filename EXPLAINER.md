@@ -36,21 +36,21 @@ normally would without the additional hints.
 
 Priority Hints addresses the above use-cases using the following concepts:
 
-* A `fetchpriority` attribute to signal to the browser the relative priority of a resource.
+* A [`fetchpriority` attribute](https://html.spec.whatwg.org/multipage/urls-and-fetching.html#fetch-priority-attribute) to signal to the browser the relative priority of a resource.
 
-* The `fetchpriority` attribute may be used with elements including link, img and script. This keyword hints to the browser the relative fetch priority a developer intends for a resource to have. Consider it an upgrade/downgrade mechanism for hinting at resource priority.
+* The [`fetchpriority` attribute](https://html.spec.whatwg.org/multipage/urls-and-fetching.html#fetch-priority-attribute) may be used with elements including [link](https://html.spec.whatwg.org/multipage/semantics.html#attr-link-fetchpriority), [img](https://html.spec.whatwg.org/multipage/embedded-content.html#attr-img-fetchpriority) and [script](https://html.spec.whatwg.org/multipage/scripting.html#attr-script-fetchpriority). This keyword hints to the browser the relative fetch priority a developer intends for a resource to have. Consider it an upgrade/downgrade mechanism for hinting at resource priority.
 
-* The `fetchpriority` attribute has three states that will influence the current browser priorities:
+* The [`fetchpriority` attribute](https://html.spec.whatwg.org/multipage/urls-and-fetching.html#fetch-priority-attribute) has three states that will influence the current browser priorities:
 
-  * `high` - The developer considers the resource as being important relative to the default priority for resources of the same type.
-  * `low` - The developer considers the resource as being less important relative to the default priority for resources of the same type.
-  * `auto` - The developer does not indicate a preference and defers to the browser's default heuristics. This also serves as the default value if the attribute is not specified.
+  * [`high`](https://html.spec.whatwg.org/multipage/urls-and-fetching.html#attr-fetchpriority-high) - The developer considers the resource as being important relative to the default priority for resources of the same type.
+  * [`low`](https://html.spec.whatwg.org/multipage/urls-and-fetching.html#attr-fetchpriority-low) - The developer considers the resource as being less important relative to the default priority for resources of the same type.
+  * [`auto`](https://html.spec.whatwg.org/multipage/urls-and-fetching.html#attr-fetchpriority-auto) - The developer does not indicate a preference and defers to the browser's default heuristics. This also serves as the default value if the attribute is not specified.
 
-* With the `fetchpriority` attribute, the browser should make an effort to respect the developer's preference for the priority of a resource when fetching it. Note that this is intentionally weak language, allowing for a browser to apply its own preferences for resource priority or heuristics if deemed important.
+* With the [`fetchpriority` attribute](https://html.spec.whatwg.org/multipage/urls-and-fetching.html#fetch-priority-attribute), the browser should make an effort to respect the developer's preference for the priority of a resource when fetching it. Note that this is intentionally weak language, allowing for a browser to apply its own preferences for resource priority or heuristics if deemed important.
 
 * Priority Hints compliment existing browser loading primitives such as preload. Preload is a mandatory fetch for a resource that is necessary for the current navigation. Priority Hints can hint that a resource's priority should be lower or higher than its default, and can also be used to provide more granular prioritization to preloads.
 
-* The JavaScript fetch() API exposes the priority hint as a [`priority` property of RequestInit](https://fetch.spec.whatwg.org/#dom-requestinit-priority) using the same `high`, `low` and `auto` values as the HTML `fetchpriority` attribute.
+* The JavaScript fetch() API exposes the priority hint as a [`priority` property of RequestInit](https://fetch.spec.whatwg.org/#dom-requestinit-priority) using the same `high`, `low` and `auto` values as the HTML [`fetchpriority` attribute](https://html.spec.whatwg.org/multipage/urls-and-fetching.html#fetch-priority-attribute).
 
 This is how we conceptually think about different resource types under the hood in browsers today.
 It may translate well to user-space where different types of content share similar properties.
@@ -108,6 +108,3 @@ function autocomplete() {
 
 ...
 ```
-## Further reading
-
-For a more complete overview of Priority Hints, please see the [specification](https://wicg.github.io/priority-hints/).
