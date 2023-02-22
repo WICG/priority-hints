@@ -25,7 +25,11 @@ Default Highlight: js
     </p>
   </section>
   <script>
-  window.location.replace("https://github.com/WICG/priority-hints/blob/main/EXPLAINER.md");
+  (function() {
+    if (location.host == 'wicg.github.io') {
+      location.replace('https://github.com/WICG/priority-hints/blob/main/EXPLAINER.md');
+    }
+  })();
   </script>
 </body>
 
